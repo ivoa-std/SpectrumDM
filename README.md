@@ -1,6 +1,6 @@
 # Spectum DM
 
-- This repository has been after am IPAC request (Interop Nov 2020) for model enhancements
+- This repository has been open after an IPAC request (Interop Nov 2020) for some model enhancements
 
 # doc-template
 document template
