@@ -1,0 +1,21 @@
+#
+# Project specific excludes
+#
+#
+# Binaries
+00spec11_clean
+
+# LaTex products
+*.pdf
+*.ps
+*.log
+*.dvi
+*.out
+*.aux
+*.toc
+
+# Original Spectrum model workspace
+Spectrum1.1.tar
+
+# Misc
+*.swp

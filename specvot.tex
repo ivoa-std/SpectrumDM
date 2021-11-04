@@ -1,0 +1,292 @@
+
+\section{VOTABLE serialization}
+
+\subsection{Mapping Schema to VOTABLE}
+
+We reproduce below the XML schema instance example as a VOTABLE instance example.
+To go from the XML instance to the VOTABLE
+instance, we:
+\begin{itemize}
+\item  - map the top level element to a RESOURCE
+\item  - map all elements with simple content to PARAM
+\item  - map all elements with complex content to GROUP
+\item  - map the element names (with appropriate path) to values of the
+utype attribute,
+\item  - but, handle the FIELDS and Data elements in a special way.
+The FIELDS element is used to define the table fields and the Data
+element is used to define the table data. 
+\item  - but, also,  all the second level elements below RESOURCE
+except SPECTRUM map to an initial TABLE, while we map SPECTRUM 
+to a second TABLE.
+\item  - most of the elements extend the Param element, to which I have added
+an optional name attribute that I have not used in the instance.
+If this attribute is used, it can hold the name attributes of the PARAM and
+FIELD; otherwise the relevant attributes could be filled with the
+same value as the utype (without namespace prefix).
+
+\end{itemize}
+
+How can this be generalized to mapping an arbitrary data model
+schema to VOTABLE? The only tricky parts are 
+\begin{itemize}
+\item  {\bf Spotting where the tabledata parts are. } 
+We could require any DM schema that maps to VOTABLE
+to include elements called FIELDS and Data (perhaps ROWS would be 
+a better name), otherwise you would get a VOTABLE with no data section.
+\item  {\bf Spotting where to start the main TABLE (i.e. the fact that
+SPECTRUM is special). }  We could change the schema to
+have an explicit attribute, annotation or other marker to tell us this.
+\end{itemize}
+
+These issues will require further discussion for future models.
+
+\subsection{A VOTABLE instance}
+
+The VOTable version of Spectrum uses a single VOTable {\lcaret}TABLE{\rcaret}
+(Note that this may appear as one of many tables within an SED VOTable).
+The data model fields described above as arrays map to
+VOTable FIELDs, while the remaining fields map to PARAM.
+
+We use nested GROUP constructs to delimit data model objects within the
+main object, and PARAM and FIELD tags for attributes.
+The nesting beyond a single GROUP is optional, as for cases for which
+the utypes are unique within a group, the utypes can be used to infer
+the datamodel structure. See
+http://webtest.aoc.nrao.edu/ivoa-dal for a service returning VOTABLE
+Spectrum instances with only one level of GROUP.
+
+Names of fields and parameters are left to the data provider.
+The utype and ucd attributes are used to denote data model and UCD tags.
+The schema and namespace for the utypes is the XML schema given in section 8.4.
+We have made up arbitrary NAME attributes for the PARAM and these
+are not to be considered standard; the name fields are free
+to be whatever the data provider wants, allowing compatibility with
+local archive nomenclature. The NAME attributes for the FIELD elements
+are also not standardized (of course they must be the same as in the
+matching FIELDrefs); it is the utype attribute which is standardized.
+
+The one departure from the XML schema below is that the `Data'
+element and the individual `Point' elements are implicitly represented
+by the table structure itself. Perhaps a UTYPE attribute to the
+TABLEDATA element could be used to make this explicit.
+
+The examples below describe a single SPECTRUM.
+
+
+
+{ \footnotesize
+\begin{flushleft}
+
+
+\begin{fmpage}
+
+\begin{verbatim}
+<?xml version="1.0" encoding="UTF-8"?>
+<VOTABLE version="1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="xmlns:http://www.ivoa.net/xml/VOTable/VOTable-1.1.xsd" 
+  xmlns:spec="http://www.ivoa.net/xml/SpectrumModel/v1.01"
+  xmlns="http://www.ivoa.net/xml/VOTable/v1.1">
+<RESOURCE utype="spec:Spectrum">
+
+<TABLE utype="spec:Spectrum">   
+<GROUP utype="spec:Target">
+ <PARAM name="Target" utype="spec:Target.Name" datatype="char" arraysize="*" value="Arp 220"/>
+ <PARAM name="TargetPos" utype="spec:Target.pos" unit="deg" datatype="double" 
+                                 arraysize="2" value="233.737917 23.503330"/>
+ <PARAM name="z" utype="spec:Target.redshift" datatype="float" value="0.0018"/>
+</GROUP>
+
+<!-- SegmentType can be Photometry, TimeSeries or Spectrum -->
+<PARAM name="Segtype" utype="spec:SegmentType" datatype="char" arraysize="*" 
+                                                  value="Photometry" ucd="meta.code"/>
+<GROUP name="CoordSys" utype="spec:CoordSys">
+ <GROUP utype="CoordSys.SpaceFrame">
+   <PARAM name="System" utype="spec:CoordSys.SpaceFrame.Name" ucd="pos.frame" 
+                                         datatype="char" arraysize="*" value="ICRS"/>
+   <PARAM name="Equinox" utype="spec:CoordSys.SpaceFrame.Equinox" ucd="time.equinox;pos.eq" 
+                                         datatype="float" value="2000.0" />
+ </GROUP>
+ <GROUP utype="spec:CoordSys.TimeFrame">
+  <PARAM name="TimeFrame" utype="spec:CoordSys.TimeFrame.Name" ucd="time.scale" datatype="char" 
+                                       arraysize="*" value="UTC"/>
+ </GROUP>
+ <GROUP utype="spec:CoordSys.SpectralFrame">
+  <PARAM name="SpectralFrame" utype="spec:CoordSys.SpectralFrame.RefPos" ucd="sdm:spect.frame" 
+                                      datatype="char" arraysize="*" value="BARYCENTER"/>
+ </GROUP>
+</GROUP>
+
+\end{verbatim}
+\end{fmpage}
+
+\begin{fmpage}
+\begin{verbatim}
+
+
+<GROUP utype="spec:Char">
+ <GROUP utype="spec:Char.SpatialAxis">
+   <PARAM name="SpatialAxisName" utype="name" ucd="pos.eq" unit="deg" value="Sky"/>
+   <GROUP utype="spec:Char.SpatialAxis.Coverage">
+    <GROUP utype="spec:Char.SpatialAxis.Coverage.Location">
+     <PARAM name="SkyPos" utype="Char.SpatialAxis.Coverage.Location.Value" 
+                                   ucd="pos.eq" unit="deg" 
+                                   datatype="double" arraysize="2" value="132.4210 12.1232"/>
+   </GROUP>
+   <GROUP utype="Bounds">
+     <PARAM name="SkyExtent" utype="Char.SpatialAxis.Coverage.Extent" ucd="pos.angDistance;instr.fov" 
+                     datatype="double" unit="arcsec" value="20"/>
+   </GROUP>
+  </GROUP>
+ </GROUP>
+
+
+
+ <GROUP utype="spec:Char.TimeAxis">
+  <PARAM name="TimeAxisName" utype="Char.TimeAxis.Name" ucd="time" unit="d" value="Time"/>
+  <GROUP utype="Char.TimeAxis.Coverage">
+   <GROUP utype="Char.TimeAxis.Coverage.Location">
+    <PARAM name="TimeObs" utype="Char.TimeAxis.Coverage.Location.Value" ucd="time.epoch;obs"
+                                   datatype="double" value="52148.3252"/>
+   </GROUP>
+   <GROUP utype="Char.TimeAxis.Coverage.Bounds">
+    <PARAM name="TimeExtent" utype="Char.TimeAxis.Coverage.Bounds.Extent" ucd="time.duration"
+                     unit="s" datatype="double" value="1500.0" />
+    <PARAM name="TimeStart" utype="Char.TimeAxis.Coverage.Bounds.Start" ucd="time.start" unit="s" 
+                                     datatype="double" value="52100.000" />
+    <PARAM name="TimeStop" utype="Char.TimeAxis.Coverage.Bounds.Stop" ucd="time.end" unit="s" 
+                                     datatype="double" value="52300.000" />
+   </GROUP>
+   <GROUP utype="Char.TimeAxis.Coverage.Support">
+    <PARAM name="TimeExtent" utype="Char.TimeAxis.Coverage.Support.Extent" ucd="time.duration;obs.exposure"
+                     unit="s" datatype="double" value="1500.0" />
+    <PARAM name="TimeStart" utype="Char.TimeAxis.Coverage.Bounds.Start" ucd="time.start" unit="s" 
+                                     datatype="double" value="52100.000" />
+    <PARAM name="TimeStop" utype="Char.TimeAxis.Coverage.Bounds.Stop" ucd="time.end" unit="s" 
+                                     datatype="double" value="52300.000" />
+   </GROUP>
+
+  </GROUP>
+ </GROUP>
+
+ <GROUP utype="spec:Char.SpectralAxis">
+  <PARAM name="SpectralAxisName" utype="Char.SpectralAxis.Name" ucd="em.wl" unit="angstrom" value="Wavelength"/>
+  <GROUP utype="Char.SpectralAxis.Coverage">
+   <GROUP utype="Char.SpectralAxis.Coverage.Bounds">
+    <PARAM name="SpectralExtent" utype="Char.SpectralAxis.Coverage.Bounds.Extent" ucd="instr.bandwidth" 
+                     unit="angstrom" datatype="double" value="3000.0"/>
+   </GROUP>
+  </GROUP>
+ </GROUP>
+</GROUP>
+\end{verbatim}
+\end{fmpage}
+
+\begin{fmpage}
+\begin{verbatim}
+
+<GROUP utype="spec:Curation">
+ <PARAM name="Publisher" utype="spec:Curation.Publisher" ucd="meta.curation" 
+                       datatype="char" arraysize="*" value="SAO"/>
+ <PARAM name="PubID" utype="spec:Curation.PublisherID" ucd="meta.ref.url;meta.curation" datatype="char" 
+                                       arraysize="*" value="ivo://cfa.harvard.edu"/>
+ <PARAM name="Contact" utype="spec:Curation.Contact.Name" ucd="meta.bib.author;meta.curation" 
+                       datatype="char" arraysize="*" value="Jonathan McDowell"/>
+ <PARAM name="email" utype="spec:Curation.Contact.Email" ucd="meta.email" datatype="char" 
+                                      arraysize="*" value="jcm@cfa.harvard.edu"/>
+</GROUP>
+
+
+<GROUP utype="spec:DataID">
+ <PARAM name="Title" utype="spec:DataID.Title" datatype="char" arraysize="*" value="Arp 220 SED"/>
+ <PARAM name="Creator" utype="spec:Segment.DataID.Creator" ucd="meta.curation" datatype="char" 
+                                      arraysize="*" value="ivo://sao/FLWO"/>
+ <PARAM name="DataDate" utype="spec:DataID.Date" ucd="time.epoch;meta.dataset"
+                      datatype="char" arraysize="*" value="2003-12-31T14:00:02Z"/>
+ <PARAM name="Version" utype="spec:DataID.Version" ucd="meta.version;meta.dataset"
+                      datatype="char" arraysize="*" value="1"/>
+ <PARAM name="Instrument" utype="spec:DataID.Instrument" ucd="meta.id;instr" datatype="char" 
+                                    arraysize="*" value="BCS"/>
+ <PARAM name="Filter" utype="spec:DataID.Collection" ucd="inst.filter.id" datatype="char" 
+                                   arraysize="*" value="G300"/>
+ <PARAM name="CreationType" utype="spec:DataID.CreationType" datatype="char" arraysize="*" value="Archival"/>
+ <PARAM name="Logo" utype="spec:DataID.Logo" ucd="meta.ref.url" datatype="char" 
+                                        arraysize="*" value="http://cfa-www.harvard.edu/nvo/cfalogo.jpg"/>
+</GROUP>
+
+<GROUP utype="spec:Derived">
+ <PARAM name="SNR" utype="spec:Derived.SNR" datatype="float" value="3.0"/>
+</GROUP>
+
+<GROUP utype="spec:Data">
+
+<GROUP utype="spec:Data.SpectralAxis">
+ <FIELDref ref="Coord"/>
+
+ <GROUP utype="spec:Data.SpectralAxis.Accuracy">
+  <FIELDref ref="BinLow"/>
+  <FIELDref ref="BinHigh"/>
+ </GROUP>
+<!-- In this case Resolution is demoted from Field to Param since it is constant -->
+ <PARAM name="Resolution" utype="spec:Data.SpectralAxis.Resolution" 
+      ucd="spect.resolution;em.wl"    unit="angstrom" datatype="float" value="14.2"/>
+</GROUP>
+
+\end{verbatim}
+\end{fmpage}
+
+\begin{fmpage}
+\begin{verbatim}
+<GROUP utype="spec:Data.FluxAxis">
+ <FIELDref ref="Flux1"/>
+ <GROUP utype="spec:Data.FluxAxis.Accuracy">
+  <FIELDref ref="ErrorLow"/>
+  <FIELDref ref="ErrorHigh"/>
+  <PARAM name="SysErr" utype="SysErr" unit="" datatype="float" value="0.05"/>
+ </GROUP>
+ <FIELDref ref="Quality"/>
+</GROUP>
+</GROUP>
+
+<FIELD name="Coord" ID="Coord" utype="spec:Data.SpectralAxis.Value" ucd="em.wl"
+              datatype="double" unit="angstrom"/>
+<FIELD name="BinLow" ID="BinLow" utype="spec:Data.SpectralAxis.BinLow" 
+              ucd="em.wl;stat.min"
+              datatype="double" unit="angstrom"/>
+<FIELD name="BinHigh" ID="BinHigh" utype="spec:Data.SpectralAxis.BinHigh"
+               ucd="em.wl;stat.max"
+              datatype="double" unit="angstrom"/>
+<FIELD name="Flux" ID="Flux1" utype="spec:Data.FluxAxis.value" ucd="phot.flux.density;em.wl"
+              datatype="double" unit="erg cm**(-2) s**(-1) angstrom**(-1)"/>
+<FIELD name="ErrorLow" ID="ErrorLow" utype="spec:Data.FluxAxis.Accuracy.StatErrLow" 
+              datatype="double" unit="erg cm**(-2) s**(-1) angstrom**(-1)"/>
+<FIELD name="ErrorHigh" ID="ErrorHigh" utype="spec:Data.FluxAxis.Accuracy.StatErrHigh" 
+              datatype="double" unit="erg cm**(-2) s**(-1) angstrom**(-1)"/>
+<FIELD name="Quality" ID="Quality" datatype="int" utype="spec:Data.FluxAxis.Quality"/>
+<DATA>
+<TABLEDATA>
+<!-- Note slightly nonlinear wavelength solution -->
+<!-- Second row is upper limit -->
+<!-- Third row has quality mask set -->
+<TR><TD>3200.0</TD><TD>3195.0</TD><TD>3205.0</TD><TD>1.38E-12</TD><TD>5.2E-14</TD><TD>6.2E-14</TD>
+                                                                                    <TD>0</TD></TR>
+<TR><TD>3210.5</TD><TD>3205.0</TD><TD>3216.0</TD><TD>1.12E-12</TD><TD>1.12E-12</TD>
+                                                                     <TD>0</TD><TD>0</TD></TR>
+<TR><TD>3222.0</TD><TD>3216.0</TD><TD>3228.0</TD><TD>1.42E-12</TD><TD>1.3E-14</TD>
+                                                                     <TD>0.2E-14</TD><TD>3</TD></TR>
+</TABLEDATA>
+</DATA>
+</TABLE>
+</RESOURCE>
+</VOTABLE>
+
+\end{verbatim}
+\end{fmpage}
+
+\end{flushleft}
+}
+
+A second example, based on the reference SSAP proxy service for
+the JHU SDSS spectrum archive:
+
+\input{doug.vot}

@@ -1,0 +1,295 @@
+
+
+\begin{landscape}
+
+\begin{flushleft}
+\colorbox{iblue}{
+\small
+\begin{minipage}[l]{10.0in}
+\begin{tabular}{llp{1.8in}p{2.0in}ll}
+\hline
+\multicolumn{5}{c}{Table 1: Spectrum metadata fields}\\
+\hline
+\hline
+ Field    & FITS & UCD1+  & Meaning & Req & Default\\
+\hline
+\\
+{\bf DataModel } &VOCLASS    &  & Data model name and version & MAN & Spectrum-1.0\\
+Type    & VOSEGT & - & Dataset or segment type & OPT  & Spectrum\\
+Length  & DATALEN & meta.number & Number of points & OPT & (must be derived)\\ 
+TimeSI  & TIMESDIM & -        & SI factor and dimensions  & REC\\
+SpectralSI&SPECSDIM   & -      & SI factor and dimensions  & REC \\
+FluxSI    &FLUXSDIM& -      & SI factor and dimensions  & REC \\
+CoordSys.ID &VOCSID &         & ID string for coordinate system & OPT\\
+CoordSys.SpaceFrame.Name&RADECSYS   &    & ICRS or FK5  & REC & ICRS\\
+CoordSys.SpaceFrame.UCD &SKY\_UCD&meta.ucd   &  Space frame UCD & OPT & Char.SpatialAxis.UCD \\
+CoordSys.SpaceFrame.RefPos& SKY\_REF &    & Origin of SpaceFrame  &  OPT   & UNKNOWN\\
+CoordSys.SpaceFrame.Equinox& EQUINOX  & time.equinox;pos.frame   &  Equinox & OPT & 2000.0\\
+CoordSys.TimeFrame.Name &TIMESYS  &time.scale       & Timescale   & OPT & TT\\
+CoordSys.TimeFrame.UCD & -  & meta.ucd   &  Time frame UCD & OPT & time \\
+CoordSys.TimeFrame.Zero&MJDREF      & arith.zp;time      & Zero point of timescale in MJD & OPT & 0.0 \\
+CoordSys.TimeFrame.RefPos &-  &time.scale       & Times of photon arrival are at this location & OPT & TOPOCENTER \\
+CoordSys.SpectralFrame.Name &SPECNAME&  -   &  Spectral frame name & OPT & (None)\\
+CoordSys.SpectralFrame.UCD &TUCDn&  meta.ucd   &  Spectral frame UCD & OPT & Char.SpectralAxis.ucd \\
+CoordSys.SpectralFrame.RefPos & SPECSYS&  sdm:spect.frame   &  Spectral frame origin & OPT & TOPOCENTER\\
+CoordSys.SpectralFrame.Redshift &REST\_Z&     & If restframe corrected & OPT & 0.0\\
+CoordSys.RedshiftFrame.Name &ZNAME &  -   &  Redshift frame name & OPT & (None)\\
+CoordSys.RedshiftFrame.DopplerDefinition &TCTYPnZ&  -   &  Opt, Radio, or Rel. & OPT & UNKNOWN\\
+CoordSys.RedshiftFrame.RefPos &  SPECSYSZ &-  &  Redshift frame origin & OPT & UNKNOWN\\
+{\bf Curation.Publisher }&VOPUB    &meta.curation   & Publisher  & MAN  & \\
+Curation.PublisherID     &VOPUBID     &meta.ref.url;meta.curation    & URI for VO Publisher & OPT & UNKNOWN\\
+Curation.Date        &VODATE & & Date curated dataset last modified & OPT & UNKNOWN \\
+Curation.Version     &VOVER  &meta.version;meta.curation      & Version info & OPT & UNKNOWN\\
+Curation.Rights      &VORIGHTS   & & Restrictions: public, proprietary, mixed & REC & Public\\
+Curation.Reference   & VOREF&meta.bib.bibcode     & URL or Bibcode for documentation & REC & UNKNOWN\\
+Curation.Contact.Name &CONTACT       & meta.bib.author;meta.curation    & Contact name& OPT & UNKNOWN\\
+Curation.Contact.Email &EMAIL     &meta.ref.url;meta.email    & Contact email & OPT & UNKNOWN\\
+Curation.PublisherDID  &DS\_IDPUB       &meta.ref.url;meta.curation   & Publisher's ID for the dataset ID & REC & DataID.DatasetID\\
+\end{tabular}
+
+\end{minipage}
+}
+\end{flushleft}
+
+\begin{flushleft}
+\colorbox{iblue}{\small
+\begin{minipage}[l]{10.0in}
+\begin{tabular}{llp{1.8in}p{2.0in}ll}
+\hline
+  Field    &FITS& UCD1+  & Meaning & Req & Default\\
+\hline
+
+DataID.Title   &TITLE       &   meta.title;meta.dataset              & Dataset Title & MAN & None\\
+DataID.Creator &AUTHOR     &       & VO Creator ID & OPT  & UNKNOWN\\
+DataID.Collection&COLLECTn      &                  & Collection name(s) & OPT & None\\
+DataID.DatasetID &DS\_IDENT     &  meta.id;meta.dataset  & IVOA Dataset ID& OPT  & UNKNOWN\\
+DataID.CreatorDID&CR\_IDENT    &    meta.id             & Creator's ID for the dataset & OPT & None\\
+DataID.Date     &DATE      & time;meta.dataset      & Data processing/creation date& OPT & UNKNOWN\\
+DataID.Version  &VERSION  & meta.version;meta.dataset    & Version of dataset & OPT & UNKNOWN \\
+DataID.Instrument&INSTRUME    & meta.id;instr   & Instrument ID & OPT  & UNKNOWN\\
+DataID.Bandpass  &SPECBAND    & instr.bandpass       & Band, consistent with RSM Coverage.Spectral &   OPT & UNKNOWN\\
+DataID.CreationType &CRETYPE    &                          & dataset creation type (archive, cutout,derived) & OPT & Archival\\
+DataID.Logo       & VOLOGO  &meta.ref.url  & URL for creator logo & OPT  & UNKNOWN\\
+DataID.Contributor &CONTRIBn   &     & Contributor (may be many) & OPT & UNKNOWN\\
+DataID.DataSource  &DSSOURCE  & & Original data type: survey, pointed, theory, artificial, composite& OPT & UNKNOWN\\
+Derived.SNR        &DER\_SNR    & stat.snr       & Signal-to-noise for spectrum  & OPT & UNKNOWN\\
+Derived.Redshift.Value &DER\_Z      &       & Measured redshift for spectrum & OPT  &  UNKNOWN (may be undefined)\\
+Derived.Redshift.StatError& DER\_ZERR  & stat.error;src.redshift & Error on measured redshift & OPT & UNKNOWN\\
+Derived.Redshift.Confidence & DER\_ZCNF &                        &Confidence value on redshift &OPT & UNKNOWN\\
+Derived.VarAmpl      & DER\_VAR    & src.var.amplitude;arith.ratio  & Variability amplitude as fraction of mean  & OPT & UNKNOWN\\
+{\bf Target.Name } & OBJECT             &  meta.id;src  & Target name  & MAN\\
+Target.Description & OBJDESC     & meta.note;src  & Target descriptive text      & OPT   & UNKNOWN\\ 
+Target.Class        &SRCCLASS      &  src.class   & Target or object class & OPT & UNKNOWN\\
+Target.SpectralClass &SPECTYPE     &  src.spType  & Object spectral class & OPT & UNKNOWN\\
+Target.Redshift      &REDSHIFT   & src.redshift & Target redshift & OPT & UNKNOWN\\
+Target.Pos           &RA\_TARG, DEC\_TARG  & pos.eq;src   & Target RA and Dec & REC  & UNKNOWN (may be variable)\\
+Target.VarAmpl       &TARGVAR  &src.var.amplitude  & Target variability amplitude, typical & OPT & UKNOWN\\
+\end{tabular}
+
+\end{minipage}
+}
+\end{flushleft}
+
+\begin{flushleft}
+\colorbox{iblue}{\small
+\begin{minipage}[l]{10.0in}
+\begin{tabular}{llp{1.8in}p{2.0in}lp{1.5in}}
+\hline
+  Field  &FITS  & UCD1+  & Meaning & Req & Default\\
+\hline
+
+
+&&\\
+\multicolumn{4}{c}{Spectrum.Char Axis definition fields}\\
+&&\\
+{Char.FluxAxis.Name }    & (as Data) &                    & name for flux & OPT &Flux\\
+{\bf Char.FluxAxis.ucd } & (as Data) &     meta.ucd               & ucd for flux & MAN\\
+{\bf Char.FluxAxis.unit      }  & (as Data)              &    meta.unit                & Unit for flux& MAN\\
+
+{Char.SpectralAxis.Name }      &(as Data)                &                    & name for spectral axis & OPT & SpectralCoord\\
+{\bf Char.SpectralAxis.ucd    }&(as Data)                   &   meta.ucd                 & ucd for spectral coord& MAN\\
+{\bf Char.SpectralAxis.unit   }&(as Data)                  &    meta.unit                & Unit for spectral coord& MAN\\
+Char.TimeAxis.Name             &-          &                    & name for time axis& OPT & Time\\
+Char.TimeAxis.ucd              &-        &    meta.ucd                & ucd for time& REC  & time\\
+Char.TimeAxis.unit             &-        &    meta.unit                & Unit for time& REC &  d\\
+Char.SpatialAxis.Name          &-           &  meta.id                  & name for spatial axis& OPT& Sky\\
+Char.SpatialAxis.ucd           &SKY\_UCD           &    meta.ucd       & ucd for spectral coord& REC & pos.eq\\
+Char.SpatialAxis.unit          &-            &   meta.unit       & Unit for spectral coord& REC& deg\\
+Char.FluxAxis.Calibration     &  FLUX\_CAL &        & Type of coord calibration & OPT  & CALIBRATED\\
+Char.SpectralAxis.Calibration & SPEC\_CAL   &  meta.code.qual  & Type of coord calibration & OPT  & CALIBRATED\\
+Char.TimeAxis.Calibration     & TIME\_CAL&  meta.code.qual     & Type of coord calibration & OPT  & CALIBRATED\\
+Char.SpatialAxis.Calibration  & SKY\_CAL   &  meta.code.qual & Type of coord calibration & OPT    & CALIBRATED \\
+&&\\
+&&\\
+\multicolumn{5}{c}{Spectrum.Char Coverage Fields}\\
+&&\\
+{\bf Char.SpatialAxis.Coverage.Location.Value} & RA,DEC &  pos.eq  & Position, usually ICRS &  MAN  &  \\
+{\bf Char.SpatialAxis.Coverage.Bounds.Extent   }&APERTURE      & instr.fov             & Aperture angular size, deg & MAN\\
+Char.SpatialAxis.Coverage.Support.Area        & REGION           & Aperture region  & REC & UNKNOWN\\
+Char.SpatialAxis.Coverage.Support.Extent      & AREA   & instr.fov             & Field of view area, sq deg & OPT\\
+%Spectrum.Char.SpatialAxis.Coverage.Support.Fill           &  stat.{\it fill};pos.eq                & Sampling Filling factor & OPT& 1.0\\
+{\bf Char.TimeAxis.Coverage.Location.Value  }& TMID  & time.epoch  & Exposure midpoint (MJD, d)& MAN\\
+{\bf Char.TimeAxis.Coverage.Bounds.Extent   }&TELAPSE       & time.duration  & Total elapsed time  & MAN\\
+{Char.TimeAxis.Coverage.Bounds.Start } & TSTART& time.start;obs.exposure     & Start  time & REC & UNKNOWN\\
+{Char.TimeAxis.Coverage.Bounds.Stop }  &TSTOP& time.stop;obs.exposure & Stop  time & REC & UNKNOWN\\
+%Spectrum.Char.TimeAxis.Coverage.Support.Fill       &  time;stat.{\it fill};time              & Sampling Filling factor & OPT & UNKNOWN\\
+{Char.TimeAxis.Coverage.Support.Extent   } &EXPOSURE      & time.duration;obs.exposure  & Effective exposure time  & OPT\\
+{\bf Char.SpectralAxis.Coverage.Location.Value  }&SPEC\_VAL& em.*;instr.bandpass       & Spectral coord value &   MAN & \\
+{\bf Char.SpectralAxis.Coverage.Bounds.Extent  } &SPEC\_BW      & instr.bandwidth        & Width of spectrum in A or other spec. coord. (See text) & MAN\\
+{\bf Char.SpectralAxis.Coverage.Bounds.Start} &TDMINn  & em.*;stat.min   & Start in spectral coordinate& MAN & \\
+{\bf Char.SpectralAxis.Coverage.Bounds.Stop}  &TDMAXn & em.*;stat.max   & Stop in spectral coordinate &MAN & \\
+{Char.SpectralAxis.Coverage.Support.Extent  } & SPECWID & instr.bandwidth        & Effective width of spectrum in A & OPT\\
+%Spectrum.Char.SpectralAxis.Coverage.Support.Fill      &  stat.{\it fill};em.*           & Sampling Filling factor  & OPT & 1.0\\
+\end{tabular}
+
+\end{minipage}
+}
+\end{flushleft}
+
+\begin{flushleft}
+\colorbox{iblue}{\small
+\begin{minipage}[l]{10.0in}
+\begin{tabular}{llp{1.8in}p{1.5in}ll}
+\hline
+  Field &FITS   & UCD1+  & Meaning & Req & Default\\
+\hline
+&&\\
+\multicolumn{4}{c}{Spectrum.Char Sampling Fields}\\
+&&\\
+Char.SpectralAxis.SamplingPrecision. &&&\\
+\quad SampleExtent&SPEC\_BIN  &   em.*;spect.binSize& Wavelength bin size  & OPT   & = Accuracy.BinSize\\
+Char.SpatialAxis.SamplingPrecision.  &&&\\
+\quad SampleExtent&TCDLTn & phys.angSize;instr.pixel & spatial bin size  & OPT   & Pixel size in deg\\
+Char.TimeAxis.SamplingPrecision.     &&&\\
+\quad SampleExtent &TIMEDEL &   time.interval&  time bin size  & OPT   & = Accuracy.BinSize\\
+Char.SpatialAxis.SamplingPrecision.  &&& \\
+\quad   SamplingPrecisionRefVal.FillFactor  &SKY\_FILL         &  stat.filling;pos.eq                & Sampling Filling factor & OPT& 1.0\\
+Char.SpectralAxis.SamplingPrecision. &&& \\
+\quad  SamplingPrecisionRefVal.FillFactor&SPEC\_FIL    &  stat.filling;em.*           & Sampling Filling factor  & OPT & 1.0\\
+Char.TimeAxis.SamplingPrecision. &&& \\
+\quad   SamplingPrecisionRefVal.FillFactor  &DTCOR    & stat.filling;time              & Sampling Filling factor & OPT & UNKNOWN\\
+&&\\
+\multicolumn{4}{c}{Spectrum.Char Accuracy Fields - global} \\
+&&\\
+Char.FluxAxis.Accuracy.StatError &(as Data)      & stat.error;phot.flux.density;em.{*}     &  error & REC & UNKNOWN\\
+Char.FluxAxis.Accuracy.SysError  &(as Data)      & stat.error.sys;phot.flux.density;em.{*}     & Systematic error & REC   & UNKNOWN\\
+
+
+Char.SpectralAxis.Accuracy.BinSize&SPEC\_BIN     & em.*;spect.binSize& Wavelength bin size  & OPT   & UNKNOWN \\
+&&& &(may be undefined)\\
+Char.SpectralAxis.Accuracy.StatError&SPEC\_ERR  & stat.error;em.*  & Spectral coord measurement error & REC  & 0\\
+Char.SpectralAxis.Accuracy.SysError &SPEC\_SYE & stat.error.sys;em.*  & Spectral coord measurement error & REC& 0 \\
+Char.SpectralAxis.Resolution  &SPEC\_RES   & spect.resolution; em.*   & Spectral resolution FWHM & OPT & Accuracy.BinSize\\
+Char.SpectralAxis.ResPower    &SPEC\_RP    & spect.resolution   & Spectral resolving power & OPT & \\
+& & & \\
+Char.TimeAxis.Accuracy.BinSize &TIMEDEL    & time.interval  & Time bin size & OPT  &  UNKNOWN (undefined)\\
+Char.TimeAxis.Accuracy.StatError&(as Data)   &stat.error;time  & Time coord measurement statistical error & OPT & UNKNOWN\\
+Char.TimeAxis.Accuracy.SysError &(as Data)       &  stat.error.sys;time   & Time coord measurement systematic error & OPT  & UNKNOWN\\
+Char.TimeAxis.Resolution      &(as Data)  & time.resolution   & Temporal resolution FWHM & OPT & Accuracy.BinSize \\
+& & & \\
+Char.SpatialAxis.Accuracy.StatError& SKY\_ERR     & stat.error;pos.eq  & Astrometric statistical error & OPT   & UNKNOWN\\
+Char.SpatialAxis.Accuracy.SysError & SKY\_SYE    & stat.error.sys;pos.eq  & Systematic error & OPT   &  UNKNOWN\\
+Char.SpatialAxis.Resolution     &   SKY\_RES &  pos.angResolution        & Spatial resolution of data & OPT & UNKNOWN\\
+&  & & \\
+
+\end{tabular}
+
+\end{minipage}
+}
+\end{flushleft}
+
+
+\begin{flushleft}
+\colorbox{iblue}{\small
+\begin{minipage}[l]{10.0in}
+\begin{tabular}{llp{1.8in}p{2.5in}ll}
+\hline
+ Field  &FITS  & UCD1+  & Meaning & Req & Default\\
+\\
+\hline
+\multicolumn{4}{c}{Data Fields}\\
+\hline
+{\bf Data.FluxAxis.Value      } &TTYPEn = 'FLUX'             & (see sec 4.1, table 3)  & Flux values for points& MAN\\
+Data.FluxAxis.ucd               &TUCDn        &     meta.ucd               & ucd for flux & OPT & Char.FluxAxis.ucd\\
+Data.FluxAxis.unit              &TUNITn        &   meta.unit                 & Unit for flux& OPT & Char.FluxAxis.unit\\
+{\bf Data.SpectralAxis.Value      }   &TTYPEn ='WAVE' & (see sec 4.2, table 2) &  Spectral coordinates for points& MAN & (Char.SpectralAxis.Location)\\
+ & or 'ENER' or 'FREQ' &&\\
+{Data.SpectralAxis.ucd    }  &TUCDn                 &   meta.ucd                 & ucd for spectral coord& OPT & Char.SpectralAxis.ucd\\
+{Data.SpectralAxis.unit   } &TUNITn          &         meta.unit           & Unit for spectral coord& OPT & Char.SpectralAxis.unit\\
+{Data.TimeAxis.Value      } & TTYPEn ='TIME'               &                    &Time coordinates for points & OPT & Char.TimeAxis.Location\\
+Data.TimeAxis.ucd           &TUCDn          &        meta.ucd            & ucd for time& OPT  & Char.TimeAxis.ucd\\
+Data.TimeAxis.unit          &TUNITn     &           meta.unit         & Unit for time& OPT &  Char.TimeAxis.Unit\\
+{Data.BackgroundModel.Value      } &TTYPEn='BGFLUX'& &Flux values for points& OPT &  No background model\\
+{Data.BackgroundModel.ucd }        &TUCDn              &       meta.ucd             & ucd for background flux & OPT & Points.FluxAxis.ucd\\
+{Data.BackgroundModel.unit      }  &TUNITn        &           meta.unit         & Unit for background flux& OPT & Points.FluxAxis.unit\\
+\end{tabular}
+
+\end{minipage}
+}
+\end{flushleft}
+
+
+\begin{flushleft}
+\colorbox{iblue}{\small
+\begin{minipage}[l]{10.0in}
+\begin{tabular}{llp{1.8in}p{2.0in}ll}
+\hline
+ Field    &FITS& UCD1+  & Meaning & Req & Default\\
+\hline
+\multicolumn{4}{c}{Accuracy Fields - per data point (default to corresponding Spectrum.Char values)} \\
+\hline
+Data.FluxAxis.Accuracy.StatError   &TTYPEn = 'ERR'    & stat.error;phot.flux.density; em.*   & symmetric error & OPT & (Char)\\
+Data.FluxAxis.Accuracy.StatErrLow &TTYPEn='ERR\_LO'       & stat.error;phot.flux.density; em.*;stat.min     & Lower error & OPT & (Char)\\
+Data.FluxAxis.Accuracy.StatErrHigh&TTYPEn='ERR\_HI'       & stat.error;phot.flux.density; em.*;stat.max     & Upper error & OPT & (Char)\\
+Data.FluxAxis.Accuracy.SysError&TTYPEn='SYS\_ERR'        & stat.error.sys;phot.flux.density; em.{\it  ..}    & Systematic error & OPT  & (Char)\\
+Data.FluxAxis.Quality     &TTYPEn='QUALITY'   & meta.code.qual; phot.flux.density, em.*   & Quality mask& OPT    &  0\\
+Data.FluxAxis.Quality.n   &TTYPEn='QUALn'   &     & String value, for n = 0,1,2..; meaning of quality value &OPT & None \\
+Data.SpectralAxis.Accuracy.BinSize &TTYPEn='WAVE\_BIN',etc  & em.*;spect.binSize  & Wavelength bin size  & OPT & (Char)\\
+Data.SpectralAxis.Accuracy.BinLow  & TTYPEn ='WAVE\_LO',etc   & em.*;stat.min & Spectral coord bin lower end & OPT & \\
+Data.SpectralAxis.Accuracy.BinHigh & TTYPEn ='WAVE\_HI',etc   & em.*;stat.max  &Spectral coord bin upper end & OPT & \\
+Data.SpectralAxis.Accuracy.StatError&TTYPEn ='WAVE\_ERR',etc    &  stat.error;em.*  & Spectral coord measurement error & OPT & (Char)\\
+Data.SpectralAxis.Accuracy.StatErrLow&TTYPEn='WAVE\_ELO',etc    & stat.error; em.*;stat.min  & Spectral coord measurement lower error & OPT & (Char)\\
+Data.SpectralAxis.Accuracy.StatErrHigh&TTYPEn='WAVE\_EHI',etc   & stat.error; em.*;stat.max  & Spectral coord measurement upper error & OPT & (Char)\\
+Data.SpectralAxis.Accuracy.SysError &TTYPEn='WAVE\_SYE',etc        & stat.error.sys;em.*  & Spectral coord systematic error & OPT & (Char)\\
+Data.SpectralAxis.Resolution   & TTYPEn ='WAVE\_RES',etc  & spect.resolution; em.*   & Spectral resolution FWHM & OPT & (Char)\\
+\end{tabular}
+
+\end{minipage}
+}
+\end{flushleft}
+
+
+\begin{flushleft}
+\colorbox{iblue}{\small
+\begin{minipage}[l]{10.0in}
+\begin{tabular}{llp{1.8in}p{2.0in}ll}
+\hline
+ Field    &FITS& UCD1+  & Meaning & Req & Default\\
+\hline
+\multicolumn{4}{c}{Accuracy Fields - per data point (continued)}\\
+\hline
+Data.TimeAxis.Accuracy.BinSize & TIMEDEL  & time.interval  & Time bin size & OPT    & (Char)\\
+Data.TimeAxis.Accuracy.BinLow  & TTYPEn='TIME\_LO'   &time.start;time.interval & Time bin start & OPT &  \\
+Data.TimeAxis.Accuracy.BinHigh & TTYPEn='TIME\_HI'   &time.end;time.inverval & Time bin stop & OPT  &  \\
+Data.TimeAxis.Accuracy.StatError&TTYPEn='TIME\_ERR'            &  stat.error;time  & Time coord measurement statistical error & OPT & (Char)\\
+Data.TimeAxis.Accuracy.StatErrLow&TTYPEn='TIME\_ELO'            &  stat.error;time; stat.min   & Time coord measurement lower error & OPT & (Char)\\
+Data.TimeAxis.Accuracy.StatErrHigh&TTYPEn='TIME\_EHI'            & stat.error;time; stat.max   & Time coord measurement upper error& OPT &(Char)\\
+Data.TimeAxis.Accuracy.SysError&TTYPEn='TIME\_SYE'        &  stat.error.sys;time  & Time coord  systematic error & OPT  & (Char)\\
+Data.TimeAxis.Resolution     & TTYPEn='TIME\_RES'   & time.resolution   & Temporal resolution FWHM & OPT & (Char)\\
+Data.BackgroundModel.Accuracy. &&&&\\
+ StatError& TTYPEn='BG\_ERR'      & stat.error;phot.flux.density; em.*  & Symmetric error & OPT & (Char)\\
+Data.BackgroundModel.Accuracy. &&&&\\
+ StatErrLow&TTYPEn='BG\_ELO'        & stat.error;phot.flux.density; em.*;stat.min     & Lower error & OPT & (Char)\\
+Data.BackgroundModel.Accuracy. &&&&\\
+ StatErrHigh&TTYPEn='BG\_EHI'       & stat.error;phot.flux.density; em.*;stat.max     & Upper error & OPT & (Char)\\
+Data.BackgroundModel.Accuracy. &&&& \\
+SysError &TTYPEn='BG\_SYE'       & stat.error.sys;phot.flux.density; em.*  & Systematic error & OPT  & (Char)\\
+Data.BackgroundModel.Quality     & TTYPEn ='BGQUAL'   & meta.code.qual;phot.flux.density, em.*   & Quality mask& OPT    &  0\\
+&&\\
+ \end{tabular}
+
+\end{minipage}
+}
+\end{flushleft}
+\end{landscape}
+

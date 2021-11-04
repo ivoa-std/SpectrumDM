@@ -1,0 +1,2015 @@
+\documentclass[11pt]{article}
+\renewcommand{\familydefault}{\sfdefault}
+\newcommand{\photfluxucd}{phot.flux.density}
+\newcommand{\httitle}[1]{}
+\newcommand{\htwidth}[1]{}
+\newcommand{\hdebug}{}
+\newcommand{\htzero}{}
+\newcommand{\htmtitle}[2]{\parbox{6.0in}{ \bf \huge #1 \\  \Large  #2}}
+\newcommand{\htpart}[1]{\centerline{\bf #1}}
+\newcommand{\heol}{} % HTML ignore rest of line
+\usepackage[usenames]{color}
+\usepackage{graphicx}
+\usepackage{psfig}
+\usepackage{epsf}
+\usepackage{html}
+\usepackage{lscape}
+\textheight 9.0in
+\textwidth 6.0in
+\hoffset -0.7in
+\voffset -0.5in
+\newcommand{\lcaret}{\mbox{$<$}}
+\newcommand{\rcaret}{\mbox{$>$}}
+\newcommand{\link}[1]{{\color{dblue}\htmladdnormallink{#1}\par}}
+\newcommand{\m}[1]{\mbox{#1}}
+%\newcommand{\change}[1]{{\color{red}\it #1}}
+\newcommand{\change}[1]{{ #1}}
+\newsavebox{\fmbox}
+\newenvironment{fmpage}
+     {\begin{lrbox}{\fmbox}\begin{minipage}{6.5in}}
+     {\end{minipage}\end{lrbox}\colorbox{iblue}{\fbox{\usebox{\fmbox}}}}
+
+\newenvironment{fmlpage}
+     {\begin{lrbox}{\fmbox}\begin{minipage}{9.3in}}
+     {\end{minipage}\end{lrbox}\colorbox{iblue}{\fbox{\usebox{\fmbox}}}}
+
+\newenvironment{fmppage}
+     {\begin{lrbox}{\fmbox}\begin{minipage}{6.5in}}
+     {\end{minipage}\end{lrbox}\colorbox{ipink}{\fbox{\usebox{\fmbox}}}}
+
+\httitle{IVOA Spectral Data Model}
+
+\begin{document}
+
+\vskip -1in
+\heol\psfig{file=ivoa.ps,width=5.0in}
+
+\definecolor{ipink}{rgb}{1.0,0.937,0.957}
+\definecolor{dblue}{rgb}{0.60,0.60,1.0}
+\definecolor{ddblue}{rgb}{0.20,0.20,1.0}
+\definecolor{iblue}{rgb}{0.9,0.9,1.0}
+\color{dblue}
+\vskip 0.2in
+\par\noindent \htmtitle{IVOA Spectral Data Model}{Version 1.01}
+\Large
+\vskip 0.1in
+\par\noindent{\bf IVOA Proposed Recommendation 2007-05-15}
+\color{Black}
+\vskip 0.2in
+
+\normalsize
+
+\par\noindent{\bf This version (Release Candidate 2 Rev 15 )}
+
+
+{\color{dblue}
+\htmladdnormallink{http://www.ivoa.net/Documents/WD/DM/SpectrumDM-20070515.html}
+
+}
+
+\par\noindent{\bf Latest version:}
+
+{\color{dblue}
+\link{http://www.ivoa.net/Documents/latest/SpectrumDM.html}
+
+}
+\par\noindent{\bf Previous versions:}
+
+{\color{dblue}
+\link{http://www.ivoa.net/Documents/WD/DM/SpectrumDM-20061024.pdf}
+}
+
+\centerline{\it Note: ivoa.net links are not yet active; the above
+are placeholders.}
+
+\vskip 0.2in
+
+\noindent{\bf Editors:}
+
+Jonathan McDowell, Doug Tody
+
+\noindent{\bf Contributors:}
+
+Jonathan McDowell, Doug Tody, 
+Tamas Budavari,  Markus Dolensky, Inga Kamp, 
+Kelly McCusker, Pavlos Protopapas, Arnold Rots, Randy Thompson, Frank Valdes,
+and the IVOA Data Access Layer and Data Model Working Groups.
+
+
+\begin{abstract}
+
+We present a data model describing the structure of spectrophotometric
+datasets with spectral and temporal coordinates and associated metadata.
+This data model may be used to represent 
+spectra, time series data,
+segments of SED (Spectral Energy Distributions) and other
+spectral or temporal associations.
+
+\end{abstract}
+
+\clearpage
+
+\subsection*{ Status of this document }
+
+This is a Proposed Recommendation, developed with the intention to support the
+Simple Spectral Access Protocol. 
+The working group seeks confirmation that comments have been
+addressed to the satisfaction of the full IVOA community. 
+
+This document has been developed with support from the National Science
+Foundation's \link{http://www.nsf.gov}/ Information Technology Research
+Program under Cooperative Agreement AST0122449 with The Johns Hopkins
+University, from the UK Particle Physics and Astronomy Research Council
+(PPARC) \link{http://www.pparc.ac.uk}, 
+and from the Eurpean Commission's
+Sixth Framework Program \link{http://fp6.cordis.lu/fp6/home.cfm}
+via the
+Optical Infrared Coordination Network (OPTICON),
+\link{http://www.astro-opticon.org}.
+
+The {\bf Virtual Observatory (VO)} is general term for a collection of
+federated resources that can be used to conduct astronomical research,
+education, and outreach. 
+
+The {\bf International Virtual Observatory Alliance
+(IVOA)} (\link{http://www.ivoa.net}) is a global collaboration of separately
+funded projects to develop standards and infrastructure that enable VO
+applications.
+
+\clearpage
+
+\tableofcontents
+
+\newpage
+
+\addcontentsline{toc}{part}{Part 1 - Spectrum Data Model}
+
+\htzero
+
+{\Large
+\vfill
+\htpart{Part 1: Spectrum Data Model}
+\vfill
+}
+\newpage
+\section{Introduction and Motivation}
+
+Spectra are stored in many different ways within the astronomical
+community. In this document we present a proposed abstraction for
+spectral data and serializations in VOTABLE, FITS, and XML, for use as a
+standard method of spectral data interchange.
+
+We distinguish in several places between the implementation proposed in
+this document, referred to as Version 1, and capabilities proposed for
+possible later implementation.
+
+
+
+\subsection{Change Log}
+
+\begin{verbatim}
+2007 May 15  V1.01 RC2 Rev 15
+ - Proposed recommendation.
+
+2007 May  1  V1.01 RC2 Rev 14
+ - Trivial cover formatting
+
+2007 Apr 30 V1.01 RC2 Rev 13
+ - Added Support.Extent as suggested by A. Micol
+ - Improved text in several places
+
+2007 Apr 26 V1.01 RC2 Rev 12
+ - UCD time.expo updated to time.duration/stop/start;obs.exposure
+ - Updated VOTABLE examples
+
+2007 Apr 25 V1.01 RC2 Rev 11
+ - Included the correct file; Rev 10 was bogus
+
+2007 Apr 17 V1.01 RC2 Rev 10
+ - Fixed errors in XSD and in text
+ - Revised Characterization text
+ - Added REST_Z FITS keyword for CoordSys.SpectralFrame.Redshift
+
+2007 Apr 12 V1.01 RC2 Rev 9
+ - Incorporate D Tody comments
+ - DataID.Title mandatory
+ - Changes to recommended case of Utype fields e.g. Redshift not redshift.
+ - Utypes involving stat.error changed to put the stat.error first.
+
+2007 Apr 4 V1.01 RC2 Rev 8
+ - FITS keyword TMID added; TDMINn/TDMAXn
+
+2007 Apr 1 V1.01 RC2 Rev 7
+ - Modifications for compatibility with Char working draft:
+   Moved Calibration utype from CharAxis.Accuracy to CharAxis
+   Added SamplingPrecision.SampleExtent and
+   SamplingPrecision.SamplingPrecisionRefVal.FillFactor
+   
+ 
+2007 Feb 12 V1.01 RC2 Rev 5
+ - Curation.Reference can have multiple instances
+
+
+2007 Jan 17 V1.01 RC2 Rev 4
+ - Changed FITS keyword SIZE to DATALEN (D Tody request)
+ - Added text describing use of non standard units.
+- Reformat units in Tables 2,3 to OGIP convention
+
+2006 Dec 11 V1.01 RC2 Rev 3
+ - Fixd more typos in XSD and XML example
+
+2006 Dec 6 V1.01 RC2 Rev 2
+ - Upgraded UCDs to version 1.21
+ - Added SpectralAxis.ResPower and SPEC_RP keyword
+   for resolving power; added element to XSD.
+ - XSD changed segmentType definition to put Data element at end of sequence.
+ - XSD corrected type errors in a few cases in Curation type.
+ - XSD added missing elements CreatorDID, Bandpass to DataID.
+ - XML instance example corrected errors in Characterization axes. 
+ - FITS keywords changed: CREATOR to AUTHOR; DER_ERR to DER_ZERR  
+ - FITS added more TUTYPn keyword examples.
+ - FITS added comment on VOCSID
+ - Corrected mistakes in FITS and VOT examples
+ - Clarified role of Aperture
+ - Further clarified CreatorDID, PublisherDID, DatasetID distinction.
+ - Clarifications and corrections in text
+
+2006 Oct 22 V1.0 RC1 (since V0.98d Rev 4)
+- Added table numbers
+- Changed some defaults in Table 1
+- Added flux UCDs for transmission curves, polarized flux
+- Amplified discussion of RedshiftFrame
+- Added Spectral location and bounds
+- Reorganized order of some sections
+- Further rationalization of FITS keywords, rewrote FITS section
+- Added TUCDn and TUTYPn
+\end{verbatim}
+
+\clearpage
+
+\section{Requirements}
+
+We need to represent a single 1-dimensional spectrum in sufficient
+detail to understand the differences between two spectra of the same
+object and between two spectra of different objects.
+
+We need to represent time series photometry, with many photometry points
+of the same object at different times.
+
+Finally, we need to represent associations of spectra,
+such as the segments of an echelle spectrum, or
+spectral energy distributions (SED) which
+consist of multiple spectra and photometry points, usually for a single
+object. The 'Spectral Associations' model will be described in
+a separate document which builds on the structures described here.
+
+\section{Spectral Data Model summary}
+
+\subsection{Model Components}
+
+Our model for a spectrum is a set of one or more data points (photometry)  each of
+which share the same contextual metadata  (aperture, position,
+etc.). Specifically, a spectrum
+will have arrays of the following values:
+
+\vskip 0.1in
+
+\colorbox{ipink}{
+\begin{minipage}{0.9\textwidth}
+
+\begin{itemize}
+\item Flux value, with upper and lower statistical (uncorrelated) errors 
+\item Spectral coordinate  (e.g. wavelength), central and bin min and max 
+\item (Optionally) Time coordinate, convertible to MJD UTC
+\item Optional Quality mask
+\item Optional spectral resolution array
+\end{itemize}
+\end{minipage}
+}
+
+\vskip 0.1in
+
+and will have associated metadata including, for example,
+
+\vskip 0.1in
+
+\colorbox{ipink}{
+\begin{minipage}{0.9\textwidth}
+\begin{itemize}
+\item Data collection and Dataset ID
+\item Exposure time in seconds
+\item Position of aperture center, given as ICRS degrees
+(similar to J2000)
+\item Aperture size in degrees
+\item Systematic (correlated) error
+\item Bibcode
+\end{itemize}
+\end{minipage}
+}
+
+\vskip 0.1in
+
+In section 4 we elaborate these concepts in detail, including some
+complications that we explicitly do not attempt to handle in this
+version.
+The data model fields and possible values
+are listed. We distinguish between optional and required fields in the
+text, as well as via a 
+"Req" column in the tables which has values of R (Required) and O (Optional).
+Where appropriate we list those values of the physical units which interoperable
+implementations are required to recognize.
+
+
+\begin{figure}[h]
+
+
+
+\colorbox{iblue}{
+\psfig{file=specumln3.eps,width=6.0in}
+}
+
+
+
+{
+\colorbox{iblue}{
+\begin{minipage}{6.0in}
+Figure 1: 
+UML class diagram for the spectral data model.
+
+The Characterization, Curation, DataID and Derived classes are 
+shown in detail below in diagram form and
+with further text description in Section 5.
+
+The minimal required content is:
+
+\begin{itemize}
+\item Spectrum model version
+\item Target name and dataset title DataID.Title (which may be the same as each other)
+\item  Characterization Coverage.Location and Coverage.Bounds (Extent or Start/Stop range) descriptions
+       of the location and extent of the data in the RA, Dec, time and spectral domains
+\item  The Curation.Publisher field
+\item  The descriptions of the spectral coordinate and flux
+fields including UCD and units  (Spectrum.Char.SpectralAxis, Spectrum.Char.FluxAxis)
+\item  For each point: the values of the spectral coordinate and flux.
+\end{itemize}
+
+
+Note that each Spectrum instance has only one spectral coordinate axis.
+If you want to provide *both* flux-vs-wavelength and flux-vs-frequency
+for a single dataset, you must (in this version of the model)
+make two separate instances (VO resources).
+
+\end{minipage}
+}
+}
+\end{figure}
+
+\begin{figure}[h]
+
+\colorbox{iblue}{
+\psfig{file=ndataf1.eps,width=6.0in}
+}
+{
+\colorbox{iblue}{
+\begin{minipage}{6.0in}
+Figure 2: Diagram for Data object
+
+\end{minipage}
+}
+}
+
+\colorbox{iblue}{
+\psfig{file=ncharf2.eps,width=6.0in}
+}
+{
+\colorbox{iblue}{
+\begin{minipage}{6.0in}
+Figure 3: Diagram for Characterization object
+\end{minipage}
+}
+}
+
+\end{figure}
+
+
+\begin{figure}[h]
+
+
+\colorbox{iblue}{
+%\psfig{file=spec97f4.eps,width=3.0in}
+\psfig{file=specstc.eps,width=6.0in}
+}
+{
+\colorbox{iblue}{
+\begin{minipage}{6.0in}
+Figure 4: Diagram for CoordSys object
+
+\end{minipage}
+}
+}
+\end{figure}
+
+
+\begin{figure}[h]
+
+\colorbox{iblue}{
+\psfig{file=specu3f.eps,width=6.0in}
+}
+{
+\colorbox{iblue}{
+\begin{minipage}{6.0in}
+Figure 5:  Diagram for remaining metadata:
+Curation, DataID, Derived, Target objects 
+
+\end{minipage}
+}
+}
+\end{figure}
+
+
+
+
+
+\clearpage
+
+\subsection{Units}
+
+We adopt the WCS/OGIP convention for units: 
+Document OGIP 93-001 \\
+(http://legacy.gsfc.nasa.gov/docs/heasarc/ofwg/docs/general/ogip\_93\_001/ogip\_93\_001.html).
+
+Briefly, units are given in the form
+\begin{verbatim}
+10**(-14) erg/cm**2/s/Hz, 10**3 Jy Hz
+\end{verbatim}
+
+i.e. with exponents denoted by **, division by /, multiplication by a space.
+
+This format is mostly consistent with the 
+AAS standards for online tables in journals
+(http://grumpy.as.arizona.edu/$\sim$gschwarz/unitstandards.html)
+except for the use of space rather than "." for multiplication and the 
+fact that we do not require the use of SI units.
+
+SI prefixes for units are to be recognized; for instance, the listing of
+"m" as a known unit for wavelength implies that "cm", "nm", and "um" (with
+"u" the OGIP convention for rendering "micro") are also acceptable.
+
+Until IVOA generic unit conversion software is mature and widely deployed, 
+it is helpful to interoperable applications to include a representation
+of the units in "base SI form", including only the base units kg, m, s (and
+possibly A, sr) with a numeric prefix. Pedro Osuna and Jesus Salgado have proposed
+a representation in the spirit of dimensional analysis, using the symbols
+M, L, T to signify kg, m, s respectively and omitting the ** for powers, so
+that 
+\begin{verbatim}
+10**3 Jy Hz
+\end{verbatim}
+which is equivalent to
+\begin{verbatim}
+10**-23 kg s**-2
+\end{verbatim}
+is written compactly as
+\begin{verbatim}
+10-23MT-2
+\end{verbatim}
+
+This alternate representation is supported for the
+main model fields (time, spectral coordinate and flux) only.
+
+
+
+Although the spectral model is flexible enough to permit different units
+for each field, as a matter of style we strongly recommend that whenever
+possible the
+same units should be used for compatible fields (e.g. flux and error on flux).
+
+\subsection{UCDs}
+
+UCDs or Uniform Content Descriptors are the IVOA's standardized vocabulary
+for astronomical concepts. In this document we use UCDs as field attributes
+(for example, element attributes in XML) to distinguish alternate 
+physics within the same data model roles - for example, to distinguish
+frequency versus wavelength on the spectral coordinate `X-axis'.
+
+The current list of UCDs is
+http://cdsweb.u-strasbg.fr/UCD/ucd1p-words.txt
+with syntax defined in the UCD recommendation
+http://www.ivoa.net/Documents/latest/UCD.html.
+
+UCDs should be case insenstive.
+
+\subsection{UTYPEs}
+
+UTYPE was a concept introduced in VOTABLE to label fields of a hierarchical
+data model. The word is now used generally to mean a standard identifier
+for a data model field. They are also case-insensitive and are of the
+form a.b.c.d  where the dots indicate a 'has-a' hierarchy
+with the leftmost element being the containing model and the rightmost
+element being the lowest level element referred to. This is quite close
+to a simple XPATH in an XML schema, but we chose not to use slash instead of
+dot to emphasize that we are only specifiying the element type, not the
+exact position in an instance (so no sophisticated query syntax).
+We use the terms 'data model field' and 'UTYPE' interchangeably.
+
+\subsection{Packaging model}
+
+The simple Packaging model for SSA 
+describes the format of the associated dataset.
+Allowed values for the format are briefly listed here;
+Detailed serialization for
+formats 4 to 6 are not specified;
+The metadata (format 7)
+is not returned by the standard SSA call; it instead uses a new getCapabilities option. 
+See the SSA protocol definition document for details of this.
+These packaging values will be part of the SSA protocol response,
+and are implicit in the individual serializations. We only discuss formats 1 to 3
+in this document.
+
+
+
+\colorbox{ipink}{
+\begin{minipage}{0.9\textwidth}
+\begin{itemize}
+\item (1) FITS (standard BINTABLE for Spectrum, defined in this document)
+\item (2) VOTABLE  
+\item (3) XML  (native XML for web services and XML tools)
+\item (4) text  (simple text table with columns of data and no markup)
+\item (5) text/html
+\item (6) graphics; a JPG, GIF etc. representation of the data
+\item (7) metadata; only the XML metadata.
+
+\end{itemize}
+\end{minipage}
+}
+
+\subsection{Data Model Fields}
+
+The DM fields (or UTYPEs) for the Spectrum DM are tabulated on the following 
+pages. The field names are to be used as the UTYPE values in VOTABLE serializations
+and in the TUTYPn keys in the FITS serialization.
+
+We specify fields that are MANDATORY (MUST), RECOMMENDED (SHOULD), or
+OPTIONAL (MAY).
+MANDATORY fields are
+in bold. MANDATORY means that the document must provide a value; however,
+the value may be UNKNOWN (the value exists but is not known) or N/A
+(not applicable: for example, RA and DEC for a moving object or
+absolute time for a theory simulation). RECOMMENDED means that
+a data provider should try to fill the relevant fields if possible,
+but the document is still compliant if they are omitted.
+However, particular serializations (FITS, VOTABLE, etc) may 
+amend these requirements by specifying default values for the
+serialization.
+
+
+These requirements apply specifically
+for the spectrum application of this model; the VO may specify different
+MANDATORY/RECOMMENDED/OPTIONAL requirements for time series and other
+applications of the same model.
+
+Some optional ID and UCD fields are allowed but are not listed below.
+
+The fields are explained in more detail in the following
+sections.
+
+
+\clearpage
+
+\htwidth{700}
+
+\begin{landscape}
+
+\begin{flushleft}
+\colorbox{iblue}{
+\small
+\begin{minipage}[l]{10.0in}
+\begin{tabular}{lp{1.8in}p{2.0in}ll}
+\hline
+\multicolumn{4}{c}{Table 1: Spectrum metadata fields}\\
+\hline
+\hline
+ Field    & UCD1+  & Meaning & Req & Default\\
+\hline
+\\
+{\bf Spectrum.DataModel }     &  & Data model name and version & MAN & Spectrum-1.0\\
+Spectrum.Type    &  & Dataset or segment type & OPT  & Spectrum\\
+Spectrum.Length  & meta.number & Number of points & OPT & (must be derived)\\ 
+Spectrum.TimeSI     & time;arith.zp      & SI factor and dimensions  & REC\\
+Spectrum.SpectralSI   & -      & SI factor and dimensions  & REC \\
+Spectrum.FluxSI & -      & SI factor and dimensions  & REC \\
+Spectrum.CoordSys.ID        &         & ID string for coordinate system & OPT\\
+Spectrum.CoordSys.SpaceFrame.Name   &    & ICRS or FK5  & REC & ICRS\\
+Spectrum.CoordSys.SpaceFrame.UCD &  -   &  Space frame UCD & OPT & Char.SpatialAxis.UCD \\
+Spectrum.CoordSys.SpaceFrame.RefPos &    & Origin of SpaceFrame  &  OPT   & UNKNOWN\\
+Spectrum.CoordSys.SpaceFrame.Equinox  & time.equinox;pos.frame   &  Equinox & OPT & 2000.0\\
+Spectrum.CoordSys.TimeFrame.Name   &time.scale       & Timescale   & OPT & TT\\
+Spectrum.CoordSys.TimeFrame.UCD &  -   &  Time frame UCD & OPT & time \\
+Spectrum.CoordSys.TimeFrame.Zero      & time;arith.zp      & Zero point of timescale in MJD & OPT & 0.0 \\
+Spectrum.CoordSys.TimeFrame.RefPos   &time.scale       & Times of photon arrival are at this location & OPT & TOPOCENTER \\
+Spectrum.CoordSys.SpectralFrame.Name &  -   &  Spectral frame name & OPT & (None)\\
+Spectrum.CoordSys.SpectralFrame.UCD &  -   &  Spectral frame UCD & OPT & Char.SpectralAxis.ucd \\
+Spectrum.CoordSys.SpectralFrame.RefPos &  ?   &  Spectral frame origin & OPT & TOPOCENTER\\
+Spectrum.CoordSys.SpectralFrame.Redshift &     & If restframe corrected & OPT & 0.0\\
+Spectrum.CoordSys.RedshiftFrame.Name &  -   &  Redshift frame name & OPT & (None)\\
+Spectrum.CoordSys.RedshiftFrame.DopplerDefinition &  -   &  Opt, Radio, or Rel. & OPT & UNKNOWN\\
+Spectrum.CoordSys.RedshiftFrame.RefPos &  -   &  Redshift frame origin & OPT & UNKNOWN\\
+%CoordSys.TimeFrame.RefDir   &time.scale       & RA and Dec of assumed direction, 
+%omit if RefPos is TOPOCENTRIC  & OPT \\
+{\bf Spectrum.Curation.Publisher }    &meta.curation   & Publisher  & MAN  & \\
+Spectrum.Curation.PublisherID         &meta.ref.url;meta.curation    & URI for VO Publisher & OPT & UNKNOWN\\
+Spectrum.Curation.Date         & & Date curated dataset last modified & OPT & UNKNOWN \\
+Spectrum.Curation.Version       &meta.version;meta.curation      & Version info & OPT & UNKNOWN\\
+Spectrum.Curation.Rights         & & Restrictions: public, proprietary, mixed & REC & Public\\
+Spectrum.Curation.Reference &meta.bib.bibcode     & URL or Bibcode for documentation & REC & UNKNOWN\\
+Spectrum.Curation.Contact.Name        & meta.bib.author;meta.curation    & Contact name& OPT & UNKNOWN\\
+Spectrum.Curation.Contact.Email      &meta.ref.url;meta.email    & Contact email & OPT & UNKNOWN\\
+Spectrum.Curation.PublisherDID         &meta.ref.url;meta.curation   & Publisher's ID for the dataset ID & REC & DataID.DatasetID\\
+\end{tabular}
+
+\end{minipage}
+}
+\end{flushleft}
+
+\begin{flushleft}
+\colorbox{iblue}{\small
+\begin{minipage}[l]{10.0in}
+\begin{tabular}{lp{1.8in}p{2.0in}ll}
+\hline
+  Field    & UCD1+  & Meaning & Req & Default\\
+\hline
+
+Spectrum.DataID.Title          &   meta.title;meta.dataset              & Dataset Title & MAN & None\\
+Spectrum.DataID.Creator      &       & VO Creator ID & OPT  & UNKNOWN\\
+Spectrum.DataID.Collection      &                  & Collection name(s) & OPT & None\\
+Spectrum.DataID.DatasetID      &  meta.id;meta.dataset  & IVOA Dataset ID& OPT  & UNKNOWN\\
+Spectrum.DataID.CreatorDID     &    meta.id             & Creator's ID for the dataset & OPT & None\\
+Spectrum.DataID.Date           & time;meta.dataset      & Data processing/creation date& OPT & UNKNOWN\\
+Spectrum.DataID.Version        & meta.version;meta.dataset    & Version of dataset & OPT & UNKNOWN \\
+Spectrum.DataID.Instrument    & meta.id;instr   & Instrument ID & OPT  & UNKNOWN\\
+Spectrum.DataID.Bandpass      & instr.bandpass       & Band, consistent with RSM Coverage.Spectral &   OPT & UNKNOWN\\
+Spectrum.DataID.CreationType     &                          & dataset creation type (archive, cutout,derived) & OPT & Archival\\
+Spectrum.DataID.Logo         &meta.ref.url  & URL for creator logo & OPT  & UNKNOWN\\
+Spectrum.DataID.Contributor    &     & Contributor (may be many) & OPT & UNKNOWN\\
+Spectrum.DataID.DataSource   & & Original data type: survey, pointed, theory, artificial, composite& OPT & UNKNOWN\\
+Spectrum.Derived.SNR            & stat.snr       & Signal-to-noise for spectrum  & OPT & UNKNOWN\\
+Spectrum.Derived.Redshift.Value       &       & Measured redshift for spectrum & OPT  &  UNKNOWN (may be undefined)\\
+Spectrum.Derived.Redshift.StatError  & stat.error;src.redshift & Error on measured redshift & OPT & UNKNOWN\\
+Spectrum.Derived.Redshift.Confidence  &                        &Confidence value on redshift &OPT & UNKNOWN\\
+Spectrum.Derived.VarAmpl        & src.var.amplitude;arith.ratio  & Variability amplitude as fraction of mean  & OPT & UNKNOWN\\
+{\bf Spectrum.Target.Name }              &  meta.id;src  & Target name  & MAN\\
+Spectrum.Target.Description      & meta.note;src  & Target descriptive text      & OPT   & UNKNOWN\\ 
+Spectrum.Target.Class              &  src.class   & Target or object class & OPT & UNKNOWN\\
+Spectrum.Target.SpectralClass      &  src.spType  & Object spectral class & OPT & UNKNOWN\\
+Spectrum.Target.Redshift          & src.redshift & Target redshift & OPT & UNKNOWN\\
+Spectrum.Target.Pos             & pos.eq;src   & Target RA and Dec & REC  & UNKNOWN (may be variable)\\
+Spectrum.Target.VarAmpl        &src.var.amplitude  & Target variability amplitude, typical & OPT & UKNOWN\\
+\end{tabular}
+
+\end{minipage}
+}
+\end{flushleft}
+
+\begin{flushleft}
+\colorbox{iblue}{\small
+\begin{minipage}[l]{10.0in}
+\begin{tabular}{lp{1.8in}p{2.0in}lp{1.5in}}
+\hline
+  Field    & UCD1+  & Meaning & Req & Default\\
+\hline
+
+
+&&\\
+\multicolumn{3}{c}{Spectrum.Char Axis definition fields}\\
+&&\\
+{ Spectrum.Char.FluxAxis.Name }                      &                    & name for flux & OPT &Flux\\
+{\bf Spectrum.Char.FluxAxis.ucd }                      &                    & ucd for flux & MAN\\
+{\bf Spectrum.Char.FluxAxis.unit      }                &                    & Unit for flux& MAN\\
+
+{ Spectrum.Char.SpectralAxis.Name }                      &                    & name for spectral axis & OPT & SpectralCoord\\
+{\bf Spectrum.Char.SpectralAxis.ucd    }                   &                    & ucd for spectral coord& MAN\\
+{\bf Spectrum.Char.SpectralAxis.unit   }                  &                    & Unit for spectral coord& MAN\\
+Spectrum.Char.TimeAxis.Name                       &                    & name for time axis& OPT & Time\\
+Spectrum.Char.TimeAxis.ucd                     &                    & ucd for time& REC  & time\\
+Spectrum.Char.TimeAxis.unit                     &                    & Unit for time& REC &  d\\
+Spectrum.Char.SpatialAxis.Name                       &  meta.id                  & name for spatial axis& OPT& Sky\\
+Spectrum.Char.SpatialAxis.ucd                      &    meta.ucd       & ucd for spectral coord& REC & pos.eq\\
+Spectrum.Char.SpatialAxis.unit                      &   meta.unit       & Unit for spectral coord& REC& deg\\
+Spectrum.Char.FluxAxis.Calibration     &           & Type of coord calibration & OPT  & CALIBRATED\\
+Spectrum.Char.SpectralAxis.Calibration     &  meta.code.qual  & Type of coord calibration & OPT  & CALIBRATED\\
+Spectrum.Char.TimeAxis.Calibration     &  meta.code.qual     & Type of coord calibration & OPT  & CALIBRATED\\
+Spectrum.Char.SpatialAxis.Calibration     &  meta.code.qual & Type of coord calibration & OPT    & CALIBRATED \\
+&&\\
+&&\\
+\multicolumn{3}{c}{Spectrum.Char Coverage Fields}\\
+&&\\
+{\bf Spectrum.Char.SpatialAxis.Coverage.Location.Value} &  pos.eq  & Position, usually ICRS &  MAN  &  \\
+{\bf Spectrum.Char.SpatialAxis.Coverage.Bounds.Extent   }      & instr.fov             & Aperture angular size, deg & MAN\\
+Spectrum.Char.SpatialAxis.Coverage.Support.Area        &            & Aperture region  & REC & UNKNOWN\\
+Spectrum.Char.SpatialAxis.Coverage.Support.Extent         & instr.fov             & Field of view area, sq deg & OPT\\
+%Spectrum.Char.SpatialAxis.Coverage.Support.Fill           &  stat.{\it fill};pos.eq                & Sampling Filling factor & OPT& 1.0\\
+{\bf Spectrum.Char.TimeAxis.Coverage.Location.Value  }  & time.epoch  & Exposure midpoint (MJD, d)& MAN\\
+{\bf Spectrum.Char.TimeAxis.Coverage.Bounds.Extent   }       & time.duration  & Total elapsed time  & MAN\\
+{Spectrum.Char.TimeAxis.Coverage.Bounds.Start } & time.start;obs.exposure     & Start  time & REC & UNKNOWN\\
+{Spectrum.Char.TimeAxis.Coverage.Bounds.Stop }  & time.stop;obs.exposure & Stop  time & REC & UNKNOWN\\
+%Spectrum.Char.TimeAxis.Coverage.Support.Fill       &  time;stat.{\it fill};time              & Sampling Filling factor & OPT & UNKNOWN\\
+{Spectrum.Char.TimeAxis.Coverage.Support.Extent   }       & time.duration;obs.exposure  & Effective exposure time  & OPT\\
+{\bf Spectrum.Char.SpectralAxis.Coverage.Location.Value  }& instr.bandpass       & Spectral coord value &   MAN & \\
+{\bf Spectrum.Char.SpectralAxis.Coverage.Bounds.Extent  }       & instr.bandwidth        & Width of spectrum in A or other spec. coord. (See text) & MAN\\
+{\bf Spectrum.Char.SpectralAxis.Coverage.Bounds.Start}  & em.*;stat.min   & Start in spectral coordinate& MAN & \\
+{\bf Spectrum.Char.SpectralAxis.Coverage.Bounds.Stop}   & em.*;stat.max   & Stop in spectral coordinate &MAN & \\
+{ Spectrum.Char.SpectralAxis.Coverage.Support.Extent  }       & instr.bandwidth        & Effective width of spectrum in A & OPT\\
+%Spectrum.Char.SpectralAxis.Coverage.Support.Fill      &  stat.{\it fill};em.*           & Sampling Filling factor  & OPT & 1.0\\
+\end{tabular}
+
+\end{minipage}
+}
+\end{flushleft}
+
+\begin{flushleft}
+\colorbox{iblue}{\small
+\begin{minipage}[l]{10.0in}
+\begin{tabular}{lp{1.8in}p{1.5in}ll}
+\hline
+  Field    & UCD1+  & Meaning & Req & Default\\
+\hline
+&&\\
+\multicolumn{3}{c}{Spectrum.Char Sampling Fields}\\
+&&\\
+Spectrum.Char.SpectralAxis.SamplingPrecision. &&&\\
+\quad SampleExtent  &   em.*;spect.binSize& Wavelength bin size  & OPT   & = Accuracy.BinSize\\
+Spectrum.Char.SpatialAxis.SamplingPrecision.
+\quad SampleExtent  & instr.pixel & spatial bin size  & OPT   & Pixel size in deg\\
+Spectrum.Char.TimeAxis.SamplingPrecision.
+\quad SampleExtent  &   time.interval&  time bin size  & OPT   & = Accuracy.BinSize\\
+Spectrum.Char.SpatialAxis.SamplingPrecision.  &&& \\
+\quad   SamplingPrecisionRefVal.FillFactor           &  stat.{\it fill};pos.eq                & Sampling Filling factor & OPT& 1.0\\
+Spectrum.Char.SpectralAxis.SamplingPrecision. &&& \\
+\quad  SamplingPrecisionRefVal.FillFactor    &  stat.{\it fill};em.*           & Sampling Filling factor  & OPT & 1.0\\
+Spectrum.Char.TimeAxis.SamplingPrecision. &&& \\
+\quad   SamplingPrecisionRefVal.FillFactor      & time;stat.{\it fill};time              & Sampling Filling factor & OPT & UNKNOWN\\
+&&\\
+\multicolumn{3}{c}{Spectrum.Char Accuracy Fields - global} \\
+&&\\
+Spectrum.Char.FluxAxis.Accuracy.StatError        & stat.error;phot.flux;em.{\it  ..}     &  error & REC & UNKNOWN\\
+Spectrum.Char.FluxAxis.Accuracy.SysError        & stat.error.sys;phot.flux;em.{\it  ..}     & Systematic error & REC   & UNKNOWN\\
+
+
+Spectrum.Char.SpectralAxis.Accuracy.BinSize     & em.*;spect.binSize& Wavelength bin size  & OPT   & UNKNOWN \\
+&&& &(may be undefined)\\
+Spectrum.Char.SpectralAxis.Accuracy.StatError   & stat.error;em.*  & Spectral coord measurement error & REC  & 0\\
+Spectrum.Char.SpectralAxis.Accuracy.SysError         & stat.error.sys;em.*  & Spectral coord measurement error & REC& 0 \\
+Spectrum.Char.SpectralAxis.Resolution     & spect.resolution; em.*   & Spectral resolution FWHM & OPT & Accuracy.BinSize\\
+Spectrum.Char.SpectralAxis.ResPower       & spect.resolution   & Spectral resolving power & OPT & \\
+& & & \\
+Spectrum.Char.TimeAxis.Accuracy.BinSize     & time.interval  & Time bin size & OPT  &  UNKNOWN (undefined)\\
+Spectrum.Char.TimeAxis.Accuracy.StatError           &stat.error;time  & Time coord measurement statistical error & OPT & UNKNOWN\\
+Spectrum.Char.TimeAxis.Accuracy.SysError        &  stat.error.sys;time   & Time coord measurement systematic error & OPT  & UNKNOWN\\
+Spectrum.Char.TimeAxis.Resolution        & time.resolution   & Temporal resolution FWHM & OPT & Accuracy.BinSize \\
+& & & \\
+Spectrum.Char.SpatialAxis.Accuracy.StatError      & stat.error;pos.eq  & Astrometric statistical error & OPT   & UNKNOWN\\
+Spectrum.Char.SpatialAxis.Accuracy.SysError       & stat.error.sys;pos.eq  & Systematic error & OPT   &  UNKNOWN\\
+Spectrum.Char.SpatialAxis.Resolution     &     pos.angResolution        & Spatial resolution of data & OPT & UNKNOWN\\
+&  & & \\
+
+\end{tabular}
+
+\end{minipage}
+}
+\end{flushleft}
+
+
+\begin{flushleft}
+\colorbox{iblue}{\small
+\begin{minipage}[l]{10.0in}
+\begin{tabular}{lp{1.8in}p{2.5in}ll}
+\hline
+ Field    & UCD1+  & Meaning & Req & Default\\
+\\
+\hline
+\multicolumn{4}{c}{Data Fields}\\
+\hline
+{\bf Spectrum.Data.FluxAxis.Value      }                &                    & Flux values for points& MAN\\
+ Spectrum.Data.FluxAxis.ucd                       &                    & ucd for flux & OPT & Char.FluxAxis.ucd\\
+ Spectrum.Data.FluxAxis.unit                      &                    & Unit for flux& OPT & Char.FluxAxis.unit\\
+{\bf Spectrum.Data.SpectralAxis.Value      }                &                    &  Spectral coordinates for points& MAN & (Char.SpectralAxis.Location)\\
+
+{Spectrum.Data.SpectralAxis.ucd    }                   &                    & ucd for spectral coord& OPT & Char.SpectralAxis.ucd\\
+{Spectrum.Data.SpectralAxis.unit   }                  &                    & Unit for spectral coord& OPT & Char.SpectralAxis.unit\\
+{Spectrum.Data.TimeAxis.Value      }                &                    &Time coordinates for points & OPT & Char.TimeAxis.Location\\
+Spectrum.Data.TimeAxis.ucd                     &                    & ucd for time& OPT  & Char.TimeAxis.ucd\\
+Spectrum.Data.TimeAxis.unit                     &                    & Unit for time& OPT &  Char.TimeAxis.Unit\\
+{ Spectrum.Data.BackgroundModel.Value      }                &                    & Flux values for points& OPT &  No background model\\
+{ Spectrum.Data.BackgroundModel.ucd }                      &                    & ucd for background flux & OPT & Points.FluxAxis.ucd\\
+{ Spectrum.Data.BackgroundModel.unit      }                &                    & Unit for background flux& OPT & Points.FluxAxis.unit\\
+
+\end{tabular}
+
+\end{minipage}
+}
+\end{flushleft}
+
+
+\begin{flushleft}
+\colorbox{iblue}{\small
+\begin{minipage}[l]{10.0in}
+\begin{tabular}{lp{1.8in}p{2.0in}ll}
+\hline
+ Field    & UCD1+  & Meaning & Req & Default\\
+\hline
+\multicolumn{4}{c}{Accuracy Fields - per data point (default to corresponding Spectrum.Char values)} \\
+\hline
+Spectrum.Data.FluxAxis.Accuracy.StatError        & phot.flux;em.{\it  ..};stat.error   & symmetric error & OPT & (Char)\\
+Spectrum.Data.FluxAxis.Accuracy.StatErrLow        & phot.flux;em.{\it  ..};stat.error;stat.min     & Lower error & OPT & (Char)\\
+Spectrum.Data.FluxAxis.Accuracy.StatErrHigh       & phot.flux;em.{\it  ..};stat.error;stat.max     & Upper error & OPT & (Char)\\
+Spectrum.Data.FluxAxis.Accuracy.SysError        & phot.flux;em.{\it  ..};stat.error.sys     & Systematic error & OPT  & (Char)\\
+Spectrum.Data.FluxAxis.Quality       & meta.code.qual;phot.flux,em.{\it ..}   & Quality mask& OPT    &  0\\
+Spectrum.Data.FluxAxis.Quality.n     &     & String value, for n = 0,1,2..; meaning of quality value &OPT & None \\
+&&\\
+Spectrum.Data.SpectralAxis.Accuracy.BinSize     & em.*;spect.binSize  & Wavelength bin size  & OPT & (Char)\\
+Spectrum.Data.SpectralAxis.Accuracy.BinLow     & em.*;stat.min & Spectral coord bin lower end & OPT & Midpoint of values\\
+Spectrum.Data.SpectralAxis.Accuracy.BinHigh    & em.*;stat.max  &Spectral coord bin upper end & OPT & Midpoint of values\\
+Spectrum.Data.SpectralAxis.Accuracy.StatError    & em.*; stat.error  & Spectral coord measurement error & OPT & (Char)\\
+Spectrum.Data.SpectralAxis.Accuracy.StatErrLow    & em.*; stat.error; stat.min  & Spectral coord measurement lower error & OPT & (Char)\\
+Spectrum.Data.SpectralAxis.Accuracy.StatErrHigh   & em.*; stat.error; stat.max  & Spectral coord measurement upper error & OPT & (Char)\\
+Spectrum.Data.SpectralAxis.Accuracy.SysError         & em.*; stat.error.sys  & Spectral coord systematic error & OPT & (Char)\\
+Spectrum.Data.SpectralAxis.Resolution     & spect.resolution; em.*   & Spectral resolution FWHM & OPT & (Char)\\
+  & & \\
+Spectrum.Data.TimeAxis.Accuracy.BinSize     & time.interval  & Time bin size & OPT    & (Char)\\
+Spectrum.Data.TimeAxis.Accuracy.BinLow     & time;stat.min  & Time bin start & OPT &  Midpoint of values\\
+Spectrum.Data.TimeAxis.Accuracy.BinHigh    & time;stat.max  & Time bin stop & OPT  &  Midpoint of values\\
+Spectrum.Data.TimeAxis.Accuracy.StatError            & time; stat.error  & Time coord measurement statistical error & OPT & (Char)\\
+Spectrum.Data.TimeAxis.Accuracy.StatErrLow            & time; stat.error, stat.min   & Time coord measurement lower error & OPT & (Char)\\
+Spectrum.Data.TimeAxis.Accuracy.StatErrHigh            & time; stat.error, stat.max   & Time coord measurement upper error& OPT &(Char)\\
+Spectrum.Data.TimeAxis.Accuracy.SysError        &  time; stat.error.sys   & Time coord measurement systematic error & OPT  & (Char)\\
+Spectrum.Data.TimeAxis.Resolution        & time.resolution   & Temporal resolution FWHM & OPT & (Char)\\
+  & & \\
+\\
+Spectrum.Data.BackgroundModel.Accuracy.StatError        & phot.flux;em.{\it  ..};stat.error     & Symmetric error & OPT & (Char)\\
+Spectrum.Data.BackgroundModel.Accuracy.StatErrLow        & phot.flux;em.{\it  ..};stat.error;stat.min     & Lower error & OPT & (Char)\\
+Spectrum.Data.BackgroundModel.Accuracy.StatErrHigh       & phot.flux;em.{\it  ..};stat.error;stat.max     & Upper error & OPT & (Char)\\
+Spectrum.Data.BackgroundModel.Accuracy.SysError        & phot.flux;em.{\it  ..};stat.error.sys     & Systematic error & OPT  & (Char)\\
+Spectrum.Data.BackgroundModel.Quality       & meta.code.qual;phot.flux,em.{\it ..}   & Quality mask& OPT    &  0\\
+
+&&\\
+
+ \end{tabular}
+
+\end{minipage}
+}
+\end{flushleft}
+
+\end{landscape}
+
+\htwidth{0}
+
+\section{Spectral data model Measurement objects}
+
+\subsection{Spectral coordinate}
+
+Astronomers use a number of different spectral coordinates
+to label the electromagnetic spectrum. The cases enumerated
+by Greisen et al. (2006) are listed below with their UCDs.
+
+{\bf REQUIRED: Exactly one Spectrum.Char.SpectralAxis field should be present,
+with units and one of the UCD values listed below.}
+We distinguish between the VO data model field name (which might
+be used for VOTABLE UTYPE),
+the FITS WCS name (provided for comparison only), and the UCD1+ names.
+
+Note 1: For this version, only the first four entries, Wavelength,
+Frequency, Energy, and spectral channel, should be used for
+interoperable transmission of data - implementations are not required to
+understand (convert) the other UCD values. 
+
+Note 2: For the velocity cases, the UCD uses a spect.dopplerVeloc tree
+rather than a {\it src.veloc } tree, because the velocity here
+is really a labelling of a spectral coordinate, and the link to
+the physical radial velocity of the different emission sources contributing
+to the spectrum is rather indirect.
+
+
+\begin{flushleft}
+\colorbox{iblue}{\small
+\begin{minipage}[l]{6.5in}
+\begin{tabular}{lllll}
+\hline
+\multicolumn{4}{c}{Table 2: Spectral coordinate options}\\
+\hline
+\hline
+Field & FITS WCS & UCD1+ & Meaning & Units \\
+\hline
+   PREFERRED CHOICES  \\
+  SpectralAxis.ucd &{ \bf WAVE}        & em.wl     &Wavelength &Angstrom, m \\
+  SpectralAxis.ucd &{ \bf FREQ}        & em.freq    &Frequency of photon &Hz \\
+  SpectralAxis.ucd &{ \bf ENER}        & em.energy    &Photon energy &erg, eV, J \\
+  SpectralAxis.ucd &{ \bf -}      & instr.pixel;em.wl     &Instrumental spectral bin &chan \\
+ \\
+   ALTERNATIVE CHOICES  \\
+ \\
+  SpectralAxis.ucd &{ \bf WAVN}        & em.wavenumber    &Wavenumber &m**(-1) \\
+  SpectralAxis.ucd &{ \bf AWAV}        & em.wl;obs.atmos   &Air wavelength &Angstrom, m \\
+  SpectralAxis.ucd &{ \bf WAVE-LOG}        & em.wl    &Log wavelength \\
+  SpectralAxis.ucd &{ \bf FREQ-LOG}        & em.freq   &Log frequency of photon \\
+  SpectralAxis.ucd &{ \bf ENER-LOG}        & em.energy &Log photon energy \\
+  SpectralAxis.ucd &{ \bf VELO}        &spect.dopplerVeloc  &Apparent radial velocity &m/s \\
+  SpectralAxis.ucd &{ \bf VRAD}        &spect.dopplerVeloc.radio   &Radio velocity &m/s \\
+  SpectralAxis.ucd &{ \bf VOPT}        &spect.dopplerVeloc.opt  &Optical velocity &m/s \\
+  SpectralAxis.ucd &{ \bf BETA}        &spect.dopplerVeloc   &Velocity (c=1) &- \\
+\end{tabular}
+\end{minipage}
+}
+\end{flushleft}
+
+\subsection{Flux (Spectral Intensity) Object}
+
+ 
+Two instances of the Flux object are supported:
+Flux and BackgroundModel.
+The Flux may be either the background-subtracted net flux
+or the total flux
+(the source+background), in the latter case hopefully with the BackgroundModel (see below).
+Net and total flux are distinguished by the `src.net' UCD adjective.
+ 
+For each of these cases, there are many slightly different physical quantities
+covered by the general concept of Flux; we distinguish them
+by their UCD. The table contains a list of flux quantities that applications
+should expect to read and handle. If you create a Spectrum instance with
+a flux quantity or flux unit not in the list below, you should expect that applications will be
+able to propagate it and recognize it, but not be able to merge it or compare it
+with other Spectrum instances. (For example, an application trying to measure
+line wavelengths shouldn't care too much that it doesn't understand what the
+flux units are).
+  
+Note in particular the distinction between the unit {\bf count }  (an
+instrumental value) and the unit {\bf photon }  (used in the photon number flux, i.e.
+the number of photons incident; photon number flux = energy flux divided by photon
+energy).
+
+
+
+Note: The concept of the "nu L-nu" or "lambda L-lambda" luminosity flux, or equivalently the luminosity per logarithmic
+energy interval L(log nu), is a distinct concept in the world of spectral energy
+distributions - and it's a different concept from the bolometric luminosity, which has the same units.
+The UCD board has not yet approved a UCD expressing
+this concept; we have to use phys.luminosity and infer the concept from the units.
+My solution for brightness temperature is also rather questionable.
+
+
+Note: we propose the UCD spect.continuum to represent continuum flux.
+
+\begin{flushleft}
+\colorbox{iblue}{\small
+\begin{minipage}[l]{7.0in}
+\begin{tabular}{lp{1.5in}p{1.6in}p{2.2in}}
+\multicolumn{3}{c}{Table 3: Flux Value options} \\
+\hline
+Field  
+&UCD1+  
+&Meaning  
+&Unit (OGIP style)
+\\
+\hline
+ FluxAxis.ucd &  \photfluxucd;em.wl    &  Flux density per unit wave. &  
+erg cm**(-2) s**(-1) angstrom**(-1),\\
+&&& W m**(-2) m**(-1),\\
+&&& keV cm**(-2) s**(-1) angstrom**(-1)\\
+%$\mbox{erg cm}^{-2}s^{-1}\AA^{-1}$\\
+%&&& $\m{W} \m{m}^{-2} \m{m}^{-1},$\\
+%&&& $\mbox{keV} \mbox{cm}^{-2}s^{-1}\AA^{-1}$\\
+  FluxAxis.ucd &  \photfluxucd;em.freq   &   Flux density per unit freq. &
+  erg cm**(-2) s**(-1) Hz**(-1),\\
+&&& Jy, W m**(-2) Hz**(-1)\\
+% $\mbox{erg cm}^{-2}s^{-1}\mbox{Hz}^{-1}$\\
+%&&& Jy, $W m^{-2}\mbox{Hz}^{-1}$\\
+ FluxAxis.ucd &  \photfluxucd;em.energy  &  Flux density per energy interval &
+ keV cm**(-2) s**(-1) kev**(-1)\\
+%$\mbox{keV\quad cm}^{-2}s^{-1}\mbox{keV}^{-1}$\\
+ FluxAxis.ucd & \photfluxucd;em.energy; meta.number &  Photons per unit area, time, energy &
+photon cm**(-2) s**(-1) keV**(-1)\\
+%$\mbox{photon cm}^{-2}s^{-1}\mbox{keV}^{-1}$\\
+ FluxAxis.ucd &  \photfluxucd;em.wl  &  Flux density per log wave interval ($\nu F(\nu)$) &Jy Hz \\
+ FluxAxis.ucd & \photfluxucd.sb;em.wl &  Surface brightness per unit wavelength &
+erg cm**(-2) s**(-1) angstrom**(-1) arcsec**(-2)\\
+%$\mbox{erg cm}^{-2}s^{-1}\AA^{-1}\mbox{arcsec}^{-2}$\\
+ FluxAxis.ucd & \photfluxucd.sb;em.freq &  Surface brightness per unit frequency & 
+Jy sr**(-1)\\
+%$\mbox{Jy sr}^{-1}$ \\
+ FluxAxis.ucd &  phot.count  &  Counts in spectral channel &count \\
+ FluxAxis.ucd &  arith.rate;phot.count  &  Count rate in spectral channel &count/s \\
+ FluxAxis.ucd &  arith.ratio;\photfluxucd  & Flux ratio of two spectra &- \\
+ FluxAxis.ucd &  phys.luminosity;em.wl &  Luminosity per unit wave  & 
+%$\mbox{erg} s^{-1}\AA^{-1}$, 
+erg s**(-1) angstrom**(-1),
+W/m \\
+ FluxAxis.ucd &  phys.luminosity;em.freq  &  Luminosity per unit freq  &
+%$\mbox{erg} s^{-1} Hz^{-1}$, W/Hz \\
+erg s**(-1) Hz**(-1), W/Hz\\
+ FluxAxis.ucd &         phys.luminosity;em.energy &  Luminosity per unit energy  &
+%$\mbox{erg} s^{-1} \mbox{keV}^{-1}$\\
+erg s**(-1) keV**(-1)\\
+ FluxAxis.ucd &          phys.luminosity;em.energy&  Luminosity per log frequency  &
+%$\mbox{erg s}^{-1}$, W \\
+erg s**(-1), W\\
+ FluxAxis.ucd &     phys.energy.density &  Radiation energy density per unit 
+  volume, per unit wave etc. &
+% $ \mbox{erg cm}^{-3}$, $\mbox{W m}^{-3}$\\
+erg cm**(-3), W m**(-3)\\
+ FluxAxis.ucd & phot.fluence;em.wl  & Photon number flux per unit wave. &
+% $\mbox{photon cm}^{-2}s^{-1}\AA^{-1}$\\
+ photon cm**(-2) s**(-1) angstrom**(-1)\\
+ FluxAxis.ucd & \photfluxucd;em.wl; phys.polarization &Polarized flux per unit wavelength &
+%$\mbox{erg cm}^{-2}s^{-1}\AA^{-1}\mbox{arcsec}^{-2}$\\
+erg cm**(-2) s**(-1) angstrom**(-1) 
+arcsec**(-2)\\
+FluxAxis.ucd & phys.polarization &Polarized fraction vs spectral coord & (dimensionless)\\
+ FluxAxis.ucd &    phys.luminosity; phys.angArea;em.wl  &   Flux per unit solid angle (at source) &
+% $ \mbox{erg cm}^{-2}s^{-1}sr^{-1}\AA^{-1}$\\
+erg cm**(-2) s**(-1) sr**(-1) angstrom**(-1)\\
+ FluxAxis.ucd &     phot.antennaTemp  &  Antenna temperature 
+&K \\
+ FluxAxis.ucd &    {\photfluxucd; phys.temperature} &  Brightness temperature &K \\
+ FluxAxis.ucd &     phot.mag  &  Magnitude in defined band &mag \\
+ FluxAxis.ucd &     phot.mag  &  AB (spectrophotometric) magnitude &mag \\
+ FluxAxis.ucd &   \photfluxucd;instr.beam &  Flux per resolution element (e.g. Jy/beam) &Jy/beam \\
+ FluxAxis.ucd &   phot.mag.sb  &  Surface brightness in magnitudes &mag arcsec**(-2)\\
+  FluxAxis.ucd &   phys.transmission & Filter transmission, 0.0 to 1.0 &  (dimensionless)\\
+ FluxAxis.ucd &   phys.area;phys.transmission & Effective area & cm**(-2)\\
+ FluxAxis.ucd & \photfluxucd;em.wl; spect.continuum &  Continuum only &
+%$\mbox{erg cm}^{-2}s^{-1}\AA^{-1}\mbox{arcsec}^{-2}$\\
+erg cm**(-2) s**(-1) angstrom**(-1) arcsec**(-2)\\
+\end{tabular}
+\end{minipage}
+}
+\end{flushleft}
+
+\hdebug
+ 
+\subsection{BackgroundModel Object}
+
+We optionally allow a BackgroundModel value for each Flux value.
+We define NetFlux = TotalFlux - BackgroundModel.
+The name BackgroundModel,
+rather than Background, reminds us that it is an estimate:
+often, the BackgroundModel will be generated by taking a flux measurement
+at another location and rescaling it for any difference in exposure time or 
+extraction aperture.
+ 
+The BackgroundModel array is required to have the same UCD and units as
+the Flux array. It represents a model for the expected flux values
+if the Target had zero flux.
+  
+{\bf  OPTIONAL: There may be at most one BackgroundModel.Value
+field present. It must have the same UCD as the Flux.
+} 
+
+
+\subsection{Time coordinate}
+
+For data with a time-series component, whether regularly sampled or
+sparse photometry points, the time coordinate is given by an elapsed
+time in some physical units (e.g. seconds or days) relative to a
+reference time. 
+
+This reference time is given in MJD as the field Spectrum.Char.TimeAxis.Coverage.Location,
+as described in the Characterization section. For a simple spectrum
+with no time-resolved data, this is the time of the observation (ideally
+the midpoint).
+
+For time-resolved data, the time coordinate 
+Spectrum.Data.TimeAxis.Value
+refers to the
+midpoint of the sample interval. See the Space-Time Coordinates document
+for details of time coordinate complexity.
+  
+The time unit is specified by a string, and the only valid values for this unit
+are 's' (seconds) and 'd' (days).
+
+\subsection{Position coordinate}
+
+In general we may consider position coordinates as part of the
+measurement (and possibly varying from point to point), but this capability is not
+included in the current document. The (celestial) position of the aperture
+for the spectrum is given in the spatial
+Spectrum.Char.SpatialAxis.Coverage.Location field. The 
+Spectrum.Char.SpatialAxis.Coverage.Location.Value field
+is in the coordinates of CoordSys.SpaceFrame. The default is ICRS
+RA,Dec in decimal degrees.
+
+
+\subsection{Accuracy Fields}
+
+We include accuracy models for both the coordinates (spectral, spatial
+and temporal) and the fluxes.  The accuracy can appear in two places:
+in the global characterization, where it represents typical accuracy
+for the dataset, and in the data points themselves, providing a 
+way to provide per-data-point errors.
+All the Accuracy fields are optional, both in the per-data-point fields and
+in the Characterization instances; the per-data fields default to
+the values in Characterization.
+
+
+    
+\subsubsection{Coordinate bins}
+
+We express the bandpass for each spectral bin as a low and high value
+for the spectral coordinate, or as a width.
+The same is done for photometry points, which
+amounts to approximating a filter by a rectangular bandpass.
+Time bins are also given as low and high values or as a width.
+Note that the width values are suitable for Spectrum.Char (the global accuracy)
+while the bin low/high values only have meaning for Spectrum.Data (the per-data-point
+values).
+
+Only one of BinSize, or both
+BinLow and BinHigh, must be present  (possibly as a header parameter
+implying a constant value for each flux point). 
+If absent, the bin limits are assumed to be halfway between the
+coordinate values and bounded by the range given in Char.*.Coverage.Extent.
+
+\subsubsection{Uncertainties}
+
+In addition to the binning, we allow the model to express uncertainties
+(which may be larger than the bin width), both statistical and systematic.
+We allow one or two-sided statistical errors but only one-sided systematic errors.
+You can specify StatErr, or StatErrHigh/StatErrLow, but not both.
+Statistical errors which have the same units as
+the data, and systematic errors which are dimensionless fractions
+(e.g. a 5 percent systematic error is expressed as 0.05).
+
+
+For position we have a single statistical error - a two-sided error
+doesn't make sense for a 2D coordinate. Eventually we may want a full
+error ellipse, but this is too complicated for the present model.
+  
+We also use a very simple error model for the fluxes: we include plus and minus flux
+errors, and a quality flag. The errors are understood as
+1 sigma gaussian errors which are uncorrelated for different points
+in the spectrum. If the data provider has only upper limit
+information, it should be represented by setting the flux value and
+the lower error value equal to the limit, and the upper error value
+equal to zero (e.g.  5 (+0,-5)). In general applications
+may choose to render measurements as upper limits if the flux value
+is less than some multiple (e.g. 3) of the lower error.
+We also allow a systematic error value, assumed constant across
+a given spectrum and fully correlated (so that, e.g. it does not enter
+into estimating spectral slopes).
+
+
+{\bf CLARIFICATION: }  the two-sided errors StatErrLow and StatErrHigh are the plus/minus ERRORS,
+not the (value+error, value-error). In other words, if Value = 10 and there
+is a symmetric uncertainty of 3, the ErrorLow and ErrorHigh are both +3.0,
+and NOT 7.0, 13.0. This is different from the sampling description BinLow
+and BinHigh, which give the VALUES at the low and high end of the bin. Thus
+if the central wavelength of the bin is 4200.0, and the bin size is 10, then
+the BinLow and BinHigh values are 4195.0, 4205.0 and NOT 10.0, 10.0. Note that
+because of this, 0.0 is NOT an acceptable default for BinLow and BinHigh, while
+it IS acceptable (albeit unlikely) for StatErrLow and StatErrHigh.
+  
+The StatErrLow, StatErrHigh, SysError fields for
+SpectralCoord, Time, Sky and Flux are optional; however, omitting these fields
+indicates that the errors are unknown. Data providers are STRONGLY
+encouraged to provide explicit error measures whenever possible. 
+
+ 
+
+\subsubsection{Resolution}
+
+We also include a trivial resolution model: a single number
+nominally representing a FWHM spectral or time resolution expressed in the
+same units as the spectral or time coordinate. The default is to assume
+that the resolution is equal to the BinSize if defined.
+The spatial (sky) resolution may be useful to know if it exceeds the
+aperture size; the default is to assume it is equal to the aperture size.
+
+For the spectral characterization, we allow an alternative 
+field called the spectral resolving power: Spectrum.Char.SpectralAxis.ResPower:
+this is the dimensionless $\lambda/\Delta\lambda$. It is often preferred
+for spectra because it is often more constant across the spectrum
+than the resolution. 
+ResPower and Resolution can be interchanged by dividing out 
+Coverage.Location.
+
+
+Similar quantities can't really be defined for
+temporal and spatial resolving power since there's no absolute
+time or spatial scale, so we call the spectral one out as a special case.
+One could define a temporal or
+spatial frequency using the bounds - i.e. just the number
+of resolution elements in the spectrum - but that's a slightly
+different concept.
+
+
+\subsubsection{Quality}
+  
+The Quality model represents quality by an integer, with the following
+meanings: 0 is good data, 1 is data which is bad for an unspecified
+reason (e.g., no data in the sample interval), and other positive
+integers greater than 1 may be used to flag data which is bad or dubious
+for specific reasons. 
+
+The data provider may also define scalar string-valued
+metadata fields Quality.2, Quality.3...  to define specific quality flags
+on a per-spectrum basis. Bitmasks, used in some archives such as SDSS,
+should be remapped to such independent Quality fields.
+
+Quality defaults to zero, i.e. good data.
+
+\subsubsection{Calibration}
+
+{We also introduce a Calibration field which can have
+the values ABSOLUTE, RELATIVE or UNCALIBRATED. This is expected
+to be particularly useful to describe the flux. ABSOLUTE indicates
+that the values in the data are expected to be correct within the
+given uncertainty. RELATIVE indicates that although an unknown
+systematic error is present, the ratio of any two values will be
+correct. UNCALIBRATED indicates that although the values reflect a
+measurement of the given UCD, they are modified by an unspecified
+coordinate-dependent correction. Such values may be useful in the
+case of a spectrum with ABSOLUTE calibration on the wavelengths
+but UNCALIBRATED fluxes; the wavelengths of discontinuous features 
+such as spectral lines can be
+measured on the assumption that the missing calibration function
+has no sharp discontinuities in the region of interest.
+}
+
+The Calibration fields are present in the CharacterizationAxis elements.
+
+
+
+\clearpage
+
+\section{Associated Metadata Fields}
+
+Most of the associated metadata are generic observational
+metadata that can be applied to future data models, and are
+not specific to spectra.
+
+\subsection{CoordSys Fields}
+
+The CoordSys object is a simplified instance of the STC CoordSystem object.
+For XML serializations, it can be replaced by an actual STC CoordSystem
+instance.
+
+  CoordSys consists of 1 or more CoordFrame objects, each of which defines
+the coordinates for a particular axis. The CoordSys has an overall ID string,
+which is user-defined and arbitrary. 
+Each CoordFrame also has a type, a UCD and a ReferencePosition; the Reference
+Position gives the origin of the coordinate system (and thus also its rest frame).
+
+For the space, time, and spectral axes we define specialized CoordFrames
+for convenience: SpaceFrame, TimeFrame and SpectralFrame. The
+CoordFrame names (types) for SpaceFrame and TimeFrame must be from a
+controlled list; for other frames, the type is an arbitrary string.
+
+Note: For compatibility with the Characterization schema, data model
+elements Spectrum.Char.SpatialAxis.CoordSys, etc. are allowed, but
+in Spectrum these must be trivial references to the overall
+Spectrum.CoordSys.
+
+
+\setcounter{table}{3}
+
+\begin{table}[h]
+\small
+
+\begin{tabular}{|lll|}
+\hline
+Token  &  Meaning & Note \\
+\hline
+UNKNOWN     &  Unknown origin&\\   %UNKNOWNRefPos in XML
+RELOCATABLE & Relative origin& Suitable for simulations\\
+CUSTOM      &  Origin specified wrt another system&\\
+TOPOCENTER &  Location of the observing device &(telescope)\\
+&&\\
+BARYCENTER &  Solar system barycenter&\\
+HELIOCENTER &  Center of the Sun&\\
+GEOCENTER   &  Center of the Earth&\\
+&&\\
+EMBARYCENTER & Earth-Moon barycenter&\\
+MOON         & Center of the Moon&\\
+MERCURY      & Center of Mercury&\\
+VENUS        & Center of Venus &\\
+MARS & Center of Mars&\\
+JUPITER& Center of Jupiter&\\
+SATURN & Center of Saturn&\\
+URANUS & Center of Uranus&\\
+NEPTUNE & Center of Neptune&\\
+PLUTO   & Center of Pluto&\\
+&&\\
+LSRK        & Kinematic local standard of rest& Redshift frame only\\
+LSRD        & Dynamic local standard of rest& Redshift frame only\\
+GALACTIC\_CENTER& Center of the Galaxy&\\
+LOCAL\_GROUP\_CENTER&  Barycenter of the Local Group&\\
+\hline
+\end{tabular}
+\caption{Allowed values for CoordFrame.ReferencePosition}
+
+\end{table}
+
+
+
+\subsubsection{SpaceFrame}
+
+The SpaceFrame has an optional Equinox attribute which is used
+if the frame name is FK4 or FK5. The allowed frame names for
+SpaceFrame are listed below.
+
+\begin{table}[h]
+\small
+\begin{tabular}{|lll|}
+\hline
+Token  &  Meaning & Parameter(s) \\
+\hline
+UNKNOWN  & Unknown frame & \\
+CUSTOM  & Custom frame & Pole, axis \\
+AZ\_EL   & Azimuth and elevation & \\
+BODY    & Generic body (eg planet) & \\
+&&\\
+ICRS  & The ICRS frame & \\
+FK4  &   FK4     &  Equinox \\
+FK5  &   FK5      & Equinox\\
+ECLIPTIC& Ecliptic l,b & Equinox\\
+GALACTIC\_I& Old galactic LI,BI & \\
+GALACTIC\_II& Galactic LII,BII  & \\
+SUPER\_GALACTIC& SGL, SGB   & \\
+&&\\
+MAG   & Geomagnetic ref frame & \\
+GSE   & Geocentric Solar Ecliptic  &\\
+GSM  & Geocentric Solar Magnetic &\\
+SM   & Solar Magnetic & \\
+HGC & Heliographic  & \\
+HEE  & Heliocentric Earth Ecliptic & \\
+HEEQ & Heliocentric Earth Equatorial & \\
+HCI  & Heliocentric Inertial & \\
+HCD  & Heliocentric of Date & \\
+&&\\
+GEO\_C  & Geocentric corotating & \\
+GEO\_D  & Geodetic ref frame  & Spheroid\\
+MERCURY\_C & Corotating planetocentric & \\
+VENUS\_C & Corotating planetocentric & \\
+LUNA\_C & Corotating planetocentric & \\
+MARS\_C & Corotating planetocentric & \\
+JUPITER\_C\_III & Corotating planetocentric & \\
+SATURN\_C\_III& Corotating planetocentric & \\
+URANUS\_C\_III& Corotating planetocentric & \\
+NEPTUNE\_C\_III& Corotating planetocentric & \\
+PLUTO\_C  &Corotating planetocentric & \\
+MERCURY\_G & Corotating planetographic&\\
+VENUS\_G   & Corotating planetographic&\\
+LUNA\_G & Corotating planetographic&\\
+MARS\_G & Corotating planetographic&\\
+JUPITER\_G\_III&Corotating planetographic&\\
+SATURN\_G\_III&Corotating planetographic&\\
+URANUS\_G\_III&Corotating planetographic&\\
+NEPTUNE\_G\_III&Corotating planetographic&\\
+PLUTO\_G&Corotating planetographic&\\
+\hline
+\end{tabular}
+\caption{Allowed values for CoordSys.SpaceFrame.Name}
+\end{table}
+
+
+\subsubsection{TimeFrame}
+
+The TimeFrame is defined by the frame name and the ReferencePosition.
+Allowed values of the name are given below.
+
+One standard reference time in astronomy is the origin 
+of Julian Day Number on the TT (Terrestrial
+Time) timescale, BC 4713 Nov  24 at 11:59:27.81 (Gregorian).
+Using TT is preferable to UTC because it does not
+contain leap seconds, so the elapsed time in days is just equal to the
+difference in JD values.
+  
+The ISO-8601 calendar format standard
+does not support dates before AD 1, so cannot express this reference
+time. Therefore, it is not a suitable format for internal
+representations of such reference times. However, non-default choices of 
+reference time may be specified in external serializations
+by a date in ISO-8601 format, e.g. "2004-11-30T11:59:00.01".
+ 
+In this version of the model we require use of MJD as the time type
+for absolute times.
+(ISO dates and JD are other possibilities covered by the STC document).
+Relative times in a time series may be in other units, relative to
+the TimeFrame.Zero value.
+
+    
+(Note that in the FITS serialization, the MJDREF keyword allows
+definition of reference times in decimal days relative to MJD 0.0 = JD 2400000.5.)
+
+\begin{table}[h]
+\small
+\begin{tabular}{|lll|}
+\hline
+Token  &  Meaning & Note \\
+\hline
+&&\\
+LOCAL & Relocatable (simulation) time&\\
+&&\\
+TT      & Terrestrial Time &\\
+UTC     & Coordinated Universal Time &\\
+ET      & Ephemeris Time&\\
+TDB     & Barycentric dynamical time&\\
+TCG   & Terrestrial Coordinate Time&\\
+TCB  & Barycentric Coordinate Time&\\
+TAI  & International Atomic Time&\\
+LST  & Local Sidereal Time&\\
+\hline
+\end{tabular}
+\caption{Allowed values for CoordSys.TimeFrame.Name}
+\end{table}
+
+
+\subsubsection{SpectralFrame}
+
+The spectral frame is defined by its ReferencePosition.
+Once the choice of wavelength versus frequency or energy
+has been made, the only free parameter is the location
+at which the spectrum would have the given spectral coordinates.
+For directly observed data this is the topocenter (location
+of the observation); spectra may be velocity-corrected
+to a given velocity frame, which may be defined by
+the location which is at rest in that velocity frame (e.g.
+the heliocenter). Strictly, the correction may not be just
+a velocity shift, but any kind of spectral shift including
+e.g. gravitational redshifts; it is still true that such
+a shift corresponds to a location (e.g. surface of a white
+dwarf star) that can be quoted as a reference position.
+
+Since the frame is defined by its ReferencePosition, the frame
+name is not important, and will not be significant to software.
+We suggest that it may be filled by the name of the spectral
+coordinate, using FITS names such as 'WAVE', 'FREQ' or 'ENER'.
+
+The spectral frame has an optional Redshift attribute to specify a rest
+frame; it is used only if the the frame's ReferencePosition is "CUSTOM".
+This redshift is measured in dimensionless units, defined as
+$\Delta\lambda/\lambda$ and may be negative. No specific interpretation
+of the shift as a cosmological or velocity shift effect is implied;
+we note for the record that some co-authors object to using the word `redshift'
+in this generic sense.
+
+\subsubsection{RedshiftFrame (also the Velocity frame)}
+
+When you convert the spectral coordinate to velocity or redshift
+(relative to some assumed rest-frame spectral feature) you need
+to record some other metadata. Our field name containing this
+metadata is RedshiftFrame, but we emphasize that the name redshift
+does not imply that blueshifts are excluded, merely that, in both
+galactic and extragalactic astronomy, when a shift is interpreted
+as a velocity a positive value indicates a shift to the red.
+The concept of Redshift frame includes both cosmological and
+local Doppler velocities.
+
+Note that you only use RedshiftFrame if you're measuring things
+in velocities; a rest-frame spectrum of a redshifted quasar
+whose spectral axis is in Angstroms will be described by a SpectralFrame.
+The reason we have BOTH SpectralFrame and RedshiftFrame is to support
+certain data products, particularly used in spectral line radioastronomy,
+in which a spectrum (possibly obtained in piecewise spectral regions)
+is refactored into a set of separate spectral segments 
+centered on different spectral lines; each segment is assigned a velocity
+axis centered on that line (and the same pixel from the original spectrum
+can appear in multiple segments each with a different velocity coordinate);
+you then consider the data as a 2D array with a spectral axis (indexing the
+segments) and a velocity axis (for each segment/spectral line).
+
+Other coordinate system information needed for velocity spectral coordinates
+include the observation-fixed spectral frame, the observatory location,
+the source redshift, and the velocity zero point (in Greisen et al,
+SSYSOBS, OBSGEO, VELOSYS, RESTFRQ/RESTWAV). However, we omit these
+in the current model.
+The only metadata we provide is the Doppler Definition - optical,
+radio or pseudo-relativistic.
+
+
+
+
+\subsubsection{STC}
+ 
+ {\bf Notes on compatibility with, and differences from, STC 1.0:  } 
+\begin{itemize}
+%%\item We include the types (e.g. MJD, Cartesian) with the CoordSys (STC's CoordSys), while STC
+%puts them with the individual Coords instances. Implicitly, this
+%requires that within a spectrum, 
+%all coordinate values for a particular coordinate be of the same type.
+\item We add the extra Redshift attribute in the SpectralFrame, instead of the
+more complex CustomReferencePosition approach used in STC.
+\item In STC's XML serialization, the frame types and reference positions are enumerated
+defined elements. Here they are strings, and we require that the frame name is the frame type.
+\item We don't explicitly include the coordinate flavor.
+\end{itemize}
+
+ 
+{\bf OPTIONAL: All CoordSys values are optional } , but data providers
+should take special care to check whether or not the defaults are appropriate for
+their data. The implications of the defaults are:
+\begin{itemize}
+\item Positions are given in ICRS RA,Dec in degrees and are 
+heliocentric values (i.e. corrected for annual parallax and aberration,
+as normally found in source catalogs).
+\item Times are given in MJD days and represent times of photon arrival
+at the telescope.
+\item Spectral coordinates are as observed at the telescope, and
+not corrected for redshift, the motion of the Earth, etc.
+%\item Note: we are considering making the CoordSys values required,
+%particularly the SIDIM entries.
+\end{itemize}
+
+ 
+ 
+
+
+\clearpage
+
+
+ 
+
+\subsection{Characterization}
+
+The Characterization metadata in this document are consistent with
+the IVOA Characterization
+data model draft as of March 2007. The Characterization model has
+a set of CharacterizationAxis objects.  Each CharacterizationAxis
+describes
+the axis, and contains a Coverage describing the scope of the data, and optionally
+a Resolution and a Sampling object. 
+
+The CharacterizationAxis is identified by its UCD attribute.
+Spectrum instances should have Spatial, Time and Spectral characterization axes
+as well as FluxAxis.
+
+%The AxisFrame has the name, UCD and unit of the axis, as well as a (redundant)
+%pointer to the CoordSys object.
+
+To simplify things for the common axes, we define SpatialAxis, SpectralAxis,
+TimeAxis objects as special cases of CharacterizationAxis.
+
+The CoordSystem element in CharacterizationAxis is there for
+compatibility with the Characterization document and, if present, should be a simple
+reference to the main Spectrum CoordSystem.
+
+The Characterization fields will have a constant value for a given spectrum.
+
+Note: In the SSA protocol/query response, we
+will restrict the Char units to meters (spectral coord),
+seconds (time coord), and decimal degrees (spatial),
+for simplicity and consistency with other parameters.
+We allow a more general approach for the full Spectrum 
+instance (returned serializations); the units may be
+as described elsewhere in this document.
+
+
+\subsubsection{Coverage Fields}
+                        
+
+The coverage fields will have a constant value for a given spectrum.
+They describe the region of space, time and spectrum from which the data
+were taken. In the Characterization model, we define progressively more
+accurate descriptions of this region: Location gives a single
+characteristic point, Bounds gives a range within which the data lies,
+and Support gives the detailed spatial field of view footprint, on/off
+time ranges (including gaps) and spectral ranges. (A fourth level not
+yet supported, Sensitivity, will provide detailed depth information:
+exposure map, time sensitivity variation, spectral transmission curve).
+  
+There is a field for giving the effective exposure time (useful 
+for selecting among multiple spectra from the same instrument). 
+The aperture field is 
+important to determine what part of an extended object is contributing
+to the spectrum; we allow a simple aperture description (Char.SpatialAxis.Coverage.Bounds.Extent)
+consisting of a single number representing the aperture size in decimal degrees.
+For a slit spectrum, the effective aperture on the sky is usually the slit width
+in the cross-dispersion direction, while for a fiber it may be a circular
+region. For an accurate description, a full region polygon is allowed in the Area field.
+Note that since the goal of the VO Spectrum description is to describe
+the data as it is now, not to describe where it came from, our 'aperture'
+is always the effective extraction aperture, not the original instrument
+aperture if that is different.
+
+
+%The spatial Coverage.Location element might have an HTMID (Hierarchical Triangular Mesh)
+%integer value as well as an RA and Dec; this is provided mainly for Sloan Survey use.
+ 
+The units of the spectral Coverage.Bounds.Extent (or Coverage.Bounds.Start/Stop) 
+and Coverage.Support should be the same as those of SpectralCoord.
+
+    
+For time, the Coverage.Bounds.Start/Stop is a pair of values giving the start and stop time.
+Coverage.Bounds.Extent is the total elapsed time (Stop - Start) while Coverage.Support.Extent
+is the effective exposure time (total length of all observing intervals times any statistical
+dead-time
+filling factor).
+In the full Characterization model,
+Coverage.Support provides a whole array of start-stop pairs indicating data
+accumulated over a series of intervals. We may add this to the Spectrum model
+in a later revision.
+
+The SpatialAxis.Coverage.Location 
+and  SpatialAxis.Coverage.Bounds.Extent, 
+TimeAxis.Coverage.Location are required, as are
+either  TimeAxis.Coverage.Bounds.Extent or TimeAxis.Coverage.Bounds.Start and Stop.
+If Extent is provided, Start and Stop are defined to be (Location - 0.5* Extent,
+Location +0.5*Extent).
+
+The spectral equivalents, SpectralAxis.Coverage.Location and
+SpectralAxis.Bounds.Start/Stop, are also required in the model;
+serializations may decide to omit them since they  are easily derived from the data.
+
+% Support.Range is
+% used for known discrete ranges of valid data - two separated spatial
+% regions, discrete observation time intervals, etc. 
+
+The SamplingPrecision.SamplingPrecisionRefVal.FillFactor
+(previously Coverage.Support.Fill) fields give the filling factor, a statistical
+way of indicating that an axis is only partly sampled. The full
+IVOA Characterization data model provides a more detailed SamplingPrecision
+tree; although we fill only part of this we retain the field names
+for compatibility.
+
+FillFactor is used 
+for dead time corrections (time axis), statistical corrections for gaps
+between active pixels (spatial axis),  and so on. Its value should be
+between 0 and 1, with the default being 1. (Although we provide a
+SpectralAxis FillFactor for symmetry and completeness, we are not
+aware of any practical application for it).
+
+
+\subsubsection{Region definitions}
+
+In the optional Char.SpatialAxis.Coverage.Support.Area we describe the detailed aperture shape
+in absolute coords on the sky. However, we don't allow a full STC region description.
+Our simplified region model allows for 
+(1) a circle and (2) a polygon in a string representation: either
+
+\begin{quote}
+circle x0 y0 r
+\end{quote}
+or
+\begin{quote}
+polygon x1 y1 x2 y2 x3 y3 ...
+\end{quote}
+for example
+\begin{verbatim}
+circle 233.70 -13.32 0.00043
+polygon 233.70 -13.32 233.71 -13.30 ...
+\end{verbatim}
+where the positions and radii are required to be in degrees, in the coordinate
+system defined by CoordSys.
+
+
+\subsection{Derived Data Fields}
+
+The Derived (short for Derived Data) object has useful, and optional, summary information
+about the spectrum. For now, we include the option of adding
+signal-to-noise and variability indicators and a measurement of the
+redshift.
+
+\subsubsection{Signal-to-noise}
+
+The signal-to-noise is provided mainly as a way for searches to
+exclude data whose quality is insufficient for a particular
+study. Data providers may use their own definition, as we do not
+prescribe a uniform method to calculate it. A suitable method,
+used by the STScI MAST group, is to define the noise by
+the median absolute value of the 
+difference between adjacent independent flux values
+in the spectrum. (The MAST definition multiplies this noise
+value by a 1.048 correction factor for precise applications).
+This method describes the high-spectral-frequency noise
+but does not take into account intermediate-spectral-frequency 
+background `noise'; projects which are background dominated
+may wish to include this in the noise definition. Furthermore
+most spectra vary in SNR across their waveband; users
+should therefore only use this single SNR as a crude selection
+parameter.
+
+
+\subsubsection{Redshift measurement model}  
+
+One common piece of derived data for a spectrum is the source redshift.
+We provide fields for both the redshift measured value and statistical error.
+As above, we define the redshift to be $\Delta\lambda/\lambda$ and it
+may be positive or negative. The Derived field represents a measurement
+of the redshift from the data; a field in the Target object is available
+to store the redshift of the source as known from other means. 
+
+We add a further optional measure of accuracy, the Confidence, which expresses
+a probability between 0 and 1 that the quoted errors do apply. This measure
+is used in the Sloan spectral service to provide a way of describing the
+estimated probability that the redshift is completely in error because
+the lines have been misidentified. Its default value is 1.0.
+
+In general, such a Confidence could be useful for any measurement where
+the error probability distribution has multiple peaks in parameter
+space, and could later be added to the standard Accuracy model.
+
+Note that there are two other redshifts in our model: the Target redshift,
+a useful piece of metadata particularly for extragalactic objects,
+considered as an externally known property of the target (and so defined
+even if no lines are visible in the spectrum); and the SpectralFrame
+redshift, used only if a "rest frame" spectrum is presented and
+representing the assumed redshift used to shift the spectrum.
+
+\subsubsection{Variability amplitude}
+
+The variability amplitude field allows data providers to supply
+a characteristic amplitude (a precise value is not required).
+It is dimensionless; a value of 0.2 implies a 20 percent variation
+around the mean value.
+
+
+
+\subsection{Curation model}
+
+The Curation is an object consistent with the Curation information in
+the document "Resource Metadata for the Virtual Observatory Version
+1.01",
+although some of the fields from RM curation have been moved to the DataID
+object, as discussed in the SSAP protocol document.
+
+
+In Curation, we have added a Reference field for a bibliographic or documentation
+reference (this can occur multiple times), Rights field (same as Resource.Rights)
+for public/proprietary, and PublisherDID
+for a publisher-specified IVORN to the data. The Curation.PublisherDID
+is the same as the Resource Metadata V1.10 Resource.Identifier.
+
+Version is provided by the publisher or creator and may be any string.
+ 
+Curation.Publisher is REQUIRED. All other
+fields are optional.  
+
+
+\subsection{Data Identification model}
+
+
+The Data Identification model gives the dataset ID for a particular
+spectrum, and its membership of larger collections.
+All DataId fields are optional. 
+
+There are three dataset idenfifiers in the model: one under Curation
+and two here. All of them are ivo: URIs
+as specified by the IVOA.
+ 
+The DataID.CreatorDID is the dataset ID defined internally by
+the creator and may be entirely different from the DatasetID described
+above. It is used to identify a particular original exposure in an archive
+and will not necessarily change even if the VO object in question is a cutout or
+is otherwise further processed.
+
+The Curation.PublisherDID is a dataset ID defined by a publisher
+of the data. It may be an internal ID used by the archive.
+
+The DataID.DatasetID may be the same as Curation.PublisherDID;
+for this field we recommend a journal-based URI such
+as the IVOA/ADEC/ADS dataset identifier.
+By agreement between the AAS journals, the ADS and the ADEC (NASA data centers),
+dataset identifiers, described in 
+\link{http://vo.ads.harvard.edu/dv/},
+will be used to link journal articles back
+to the archival datasets containing the relevant observational data.
+If analogous but independent systems of URI designation are later
+adopted by other centers (e.g. by European journals) and accepted by IVOA,
+they will be suitable in this field.
+
+For example, a dataset held by an archive which curates many
+missions and telescopes may have an ID allocated by the original
+mission (CreatorDID), an ID used as an index by the multi-mission archive (PublisherDID),
+and the ADS-style ID (DatasetID). These may all be different, although
+we hope that many archives will choose to use the ADS ID as their index.
+
+We introduce the concept of an dataset creation type, which
+can have one of the following  values, described in more
+detail in the SSAP protocol document.
+
+\begin{itemize}
+
+\item Archival, indicating that it is one of a collection of
+datasets (in this case spectra) generated in a systematic, homogeneous
+way and stored statically (or at least versioned). It will be possible
+to regenerate this dataset at a later date. The remaining types
+imply on-the-fly manipulation.
+
+\item Cutout, indicating that the dataset was created `on-the-fly',
+by subsetting, but not by modifying values.
+
+\item Filtered,  which may involve excluding data prior
+to binning into samples, also on the fly
+
+\item Mosaic, combining multiple original datasets on the fly
+
+\item spectral extraction, e.g. from a spectral data cube;
+
+\item catalog extraction [Not relevant for Spectrum model].
+
+\end{itemize}
+
+
+The dataset is associated with one or more Collections (instrument
+name, survey name. etc.) indicating some degree of compatibility with other
+datasets sharing the same Collection properties. Examples of possible
+Collection values are: "WFC", "Sloan", "BFS Spectrograph", "MSX
+Galactic Plane Survey".
+
+We also include a DataID.Bandpass, which is a string describing the
+pectral range. It can be one of the strings in Resource-Service-Metadata's
+Spectral.Coverage (e.g. "Optical") or Spectral.Coverage.Bandpass (e.g. "B" ).
+At the moment there is no fixed list of values for the RSM
+Spectral.Coverage.Bandpass.
+
+
+For DataSource, see the SSAP protocol document.
+
+\subsection{Target model}
+
+
+In spectral data it is particularly important to be able to
+specify the target of the observation, which may be an astronomical
+source or some other target (calibration, diffuse background, etc.).
+By explicitly including a target model we
+can not only facilitate searches on particular types of target
+but also support archives of model spectra for which the Coverage
+fields may not be relevant.
+The Target.Name field is required; all other Target fields are optional. 
+
+
+The Target.pos field
+gives a nominal RA and Dec for the target, for example the catalog
+position of the source; the Coverage.Location fields in the
+spectrum  indicate the actual telescope pointing position for that
+spectrum. (An SED might have a single Target object with a known
+position, but many
+Spectrum objects with slightly different telescope pointings).
+Similarly, the Target.redshift is the assumed actual
+redshift of the  astronomical object, if applicable (again,
+usually from a catalog, NED, etc.), while the redshifts in the
+Derived objects in the spectrum (segment) indicates a redshift measured from
+that spectrum. The Target.redshift is normally used to store the
+cosmological redshift of extragalactic objects, although it may
+also be used to store the observed redshift of Galactic sources if that
+information is felt by the data provider to be useful.
+
+At the moment there is no international standard list of
+valid values for Target class and spectral class. Nevertheless
+an initial deployment of the VO would gain some benefit from
+using archive-specific classes, and provide a framework for
+converging on a standard list.
+
+
+\subsection{Spectrum top level object}
+
+The Spectrum object contains the Data object with the actual
+data; the Target and Derived objects; and the standard
+dataset metadata of CoordSys, Characterization,
+Curation and DataID. We also add a CustomParams field
+to allow for propagation of unmodelled application-specific metadata.
+
+In addition,
+we add an SIDim field for each axis giving the SI units of the
+values in the Osuna-Salgado dimensional format.
+
+In spectral associations (such as SED applications), 
+the Spectrum model is reused for both Spectrum and
+TimeSeries and is renamed Segment. The Spectrum object is expected to be
+generalized to a higher level Dataset object.
+
+
+Each Spectrum (or Segment) may have a Length attribute giving the
+number of flux points in the data (in some serializations
+this value is deduced from the size of the data arrays, while in
+others it is made explicit).
+
+Each Spectrum (or Segment) may also have a Type attribute indicating
+whether the data is intended as a TimeSeries (data are same spectral
+coord, varying times), Photometry (data are different spectral coords
+with irregular gaps), Spectrum (data are different spectral coords in
+contiguous bins), or Mixed (some mixture of the above). 
+ 
+This attribute is optional and defaults to Spectrum.
+
+Segments are discussed in more detail in the Spectral Associations document
+which describes SEDs and other groupings.
+
+
+\clearpage
+
+
+\section{Relationship to general VO data models}
+
+The Spectrum model involves objects addressed by the proposed VO
+Observation and Quantity data models. Although these models have not yet
+been fully worked out, we may note that a single Spectrum maps to the
+Observation model, which will include the Curation and Characterization objects.
+The Flux and the spectral coordinate entries together with their
+associated errors and quality will be special cases of the Quantity
+model, as will the simpler individual parameters. The field structure
+presented here is consistent with current drafts of the models.
+
+
+\subsection{Extensibility}
+
+The model and serializations defined in this document are
+extensible in the following sense:
+
+\begin{itemize}
+\item Future versions of the abstract (UML) model may add attributes
+or fields, and may deprecate the 'optional' property of existing fields.
+\item The Characterization object may have extra 'generic' axes, but
+these are not considered to be part of the Spectrum model. See Characterization
+specification for more.
+\item For the FITS serialization, implementors may add arbitrary additional keywords
+or table columns; readers must be able to handle files containing extra
+keywords and columns, and are encouraged to propagate such extra information
+when copying files. This permits local conventions to be layered on the
+basic definition.
+\item For the VOTABLE serialization, implementors may add arbitrary additional 
+GROUP, PARAM or FIELDref/FIELD elements, with the restriction that
+the layering of existing elements should not be changed. (e.g.
+within the spectrum:DataID GROUP one may add a new GROUP containing
+newly defined PARAMs, but one may not move the existing Title PARAM inside the
+new group because that would change its indentation level).
+Readers must be able to handle files containing extra elements
+and are encouraged to propagate such extra information
+when copying files. This permits local conventions to be layered on the
+basic definition.
+\item For the XML object-based serialization, 
+the CustomParams element at the top level of Spectrum is intended
+to allow extensibility and is equivalent to the ability to add a new
+GROUP at the top level. Future versions of the schema could use
+type extension to back-compatibly include the current schema as a special case, but
+apart from the CustomParams we have not currently provided for
+local extensibility within the current schema. (We could improve the
+schema by allowing the Group element to have arbitrary extra Param elements.)
+
+\end{itemize}
+
+\section*{References}
+
+Greisen, EW, Valdes F G, Calabretta M R and Allen S L 2006,
+A\&A 446, 747.\\
+\vskip 0.1in
+\par\noindent
+Hanisch, R., (ed)., Resource Metadata for the VO, Version 1.01,
+2004 Apr 26.  \\
+http://www.ivoa.net/Documents/latest/RM.html
+
+\vskip 0.1in
+\par\noindent
+Derriere, S. et al (eds.), UCD, Moving to UCD 1+, 2004 Oct 26.
+\\
+http://www.ivoa.net/Documents/latest/UCD.html
+
+
+\clearpage
+
+
+
+
+\addcontentsline{toc}{part}{Part 2 - XML schema serialization}
+
+{\Large
+\vfill
+\htpart{Part 2: XML schema serialization}
+\vfill
+}
+
+
+\clearpage
+
+\input{specxml2}
+
+
+\clearpage
+
+\addcontentsline{toc}{part}{Part 3 - VOTABLE serialization}
+
+
+{\Large
+\vfill
+\vskip 5.0in
+\htpart{Part 3: VOTABLE serialization}
+\vfill
+}
+
+\clearpage
+\input{specvot}
+\clearpage
+
+
+
+\addcontentsline{toc}{part}{Part 4 - FITS serialization}
+
+{\Large
+\vfill
+\vskip 5.0in
+\htpart{Part 4: FITS serialization}
+\vfill
+}
+
+\clearpage
+\input{fits2}
+
+\end{document}

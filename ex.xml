@@ -1,0 +1,176 @@
+
+
+{ \footnotesize
+\begin{flushleft}
+
+
+\begin{fmpage}
+
+\begin{verbatim}
+
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<Spectrum xmlns="http://www.ivoa.net/xml/Spectrum/Spectrum-1.01.xsd"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+      xsi:schemaLocation="http://www.ivoa.net/xml/Spectrum/Spectrum-1.01.xsd">
+ <Char>
+   <SpatialAxis name="Sky" ucd="pos.eq" unit="deg">
+     <CoordSystem idref="ID000001"/>     
+     <Coverage>
+      <Location><Value ucd="pos.eq.ra" unit="deg">132.4210</Value>
+                <Value ucd="pos.eq.dec">12.1232</Value> </Location>
+      <Bounds>
+       <Extent ucd="pos.angDistance;instr.fov" unit="arcsec">20   </Extent>
+      </Bounds>
+     </Coverage>
+     <Calibration>CALIBRATED</Calibration>
+   </SpatialAxis>
+
+   <TimeAxis name="Time" ucd="time" unit="d">
+      <CoordSystem idref="ID000001"/>
+     
+     <Coverage>
+     <Location><Value ucd="time.obs" unit="d">52148.3252</Value></Location>
+     <Bounds>
+      <Extent ucd="time.duration;obs.exposure" unit="s">1500.0</Extent>
+     </Bounds>
+    </Coverage>
+    <Calibration>CALIBRATED</Calibration>
+  </TimeAxis>
+
+  <SpectralAxis name="SpectralCoord" ucd="em.wl" unit="Angstrom">
+     <CoordSystem idref="ID000001"/>     
+    <Coverage>
+     <Bounds>
+      <Extent ucd="instr.bandwidth" unit="Angstrom">3000.0</Extent>
+     </Bounds>
+    </Coverage>
+    <Accuracy>
+      <BinLow ucd="em.wl;stat.min" unit="Angstrom"/>
+      <BinHigh ucd="em.wl;stat.max" unit="Angstrom"/>
+    </Accuracy>
+    <Calibration>CALIBRATED</Calibration>
+  </SpectralAxis>
+   <!-- Flux density per unit wavelength  -->
+   <FluxAxis name="Flux density" ucd="phot.flux.density;em.wl" unit="erg cm**(-2) s**(-1) Angstrom**(-1)">
+     <Accuracy>
+       <StatErrLow  unit="erg cm**(-2) s**(-1) Angstrom**(-1)"/>
+       <StatErrHigh unit="erg cm**(-2) s**(-1) Angstrom**(-1)"/>
+       <SysError>0.05</SysError>
+     </Accuracy>
+   </FluxAxis>
+
+</Char>
+
+\end{verbatim}
+\end{fmpage}
+
+\begin{fmpage}
+\begin{verbatim}
+
+<!-- STC metadata, with references to defined fields -->
+ <CoordSys id="ID000001">
+        <TimeFrame>
+                <Name>UTC</Name>
+		<ReferencePosition>BARYCENTER</ReferencePosition>
+        </TimeFrame>
+        <SpaceFrame>
+                <Name>ICRS</Name>
+		<ReferencePosition>BARYCENTER</ReferencePosition>
+        </SpaceFrame>
+        <SpectralFrame ucd="em.wl">
+                <Name>Wavelength</Name>
+		<ReferencePosition>HELIOCENTER</ReferencePosition>
+        </SpectralFrame>
+        <GenericCoordFrame id="FD" ucd="phot.flux.density;em.wl">
+                <Name>Flux density</Name>
+        </GenericCoordFrame>
+ </CoordSys>
+
+  <Curation>
+   <Publisher ucd="meta.curation">SAO</Publisher>
+   <PublisherID ucd="meta.ref.url;meta.curation">ivo://cfa.harvard.edu</PublisherID>   
+   <Contact>
+     <Name ucd="meta.bib.author;meta.curation">Jonathan McDowell</Name>
+     <Email ucd="meta.email">jcm@cfa.harvard.edu</Email>
+   </Contact>
+  </Curation>
+
+  <DataID>
+    <Title>Arp 220 SED</Title>
+    <Creator ucd="meta.curation.creator">SAO/FLWO</Creator>
+    <DatasetID>ivo://cfa.harvard.edu/flwo#10314</DatasetID>
+    <Collection>Archival</Collection>
+    <Date ucd="time.epoch;meta.dataset">2003-12-31T14:00:02Z</Date>
+    <Version ucd="meta.version;meta.dataset">1</Version>
+    <Instrument ucd="meta.id;instr">BCS</Instrument>
+    <Logo ucd="meta.ref.url">http://cfa-www.harvard.edu/nvo/cfalogo.jpg</Logo>
+  </DataID>
+
+  <Derived>
+    <SNR>3.0</SNR>
+  </Derived>
+
+
+\end{verbatim}
+\end{fmpage}
+
+\begin{fmpage}
+\begin{verbatim}
+
+  <!-- Use table structure -->
+
+  <ArrayOfPoint>
+   <Point>
+    <SpectralAxis>
+     <Value>3200.0</Value>
+     <Accuracy><BinLow>3195.0</BinLow><BinHigh>3205.0</BinHigh></Accuracy>
+    </SpectralAxis>
+    <FluxAxis>
+      <Value>1.38E-12</Value>
+      <Accuracy><StatErrLow>5.2E-14</StatErrLow><StatErrHigh>6.2E-14</StatErrHigh></Accuracy>
+      <Quality>0</Quality>
+    </FluxAxis>
+   </Point>
+
+   <Point>
+    <SpectralAxis>
+     <Value>3210.5</Value>
+     <Accuracy><BinLow>3205.0</BinLow><BinHigh>3216.0</BinHigh></Accuracy>
+    </SpectralAxis>
+    <FluxAxis>
+      <Value>1.12E-12</Value>
+      <Accuracy><StatErrLow>1.12E-12</StatErrLow><StatErrHigh>0</StatErrHigh></Accuracy>
+      <Quality>0</Quality>
+    </FluxAxis>
+   </Point>
+
+   <Point>
+    <SpectralAxis>
+     <Value>3222.0</Value>
+     <Accuracy><BinLow>3216.0</BinLow><BinHigh>3228.0</BinHigh></Accuracy>
+    </SpectralAxis>
+    <FluxAxis>
+      <Value>1.42E-12</Value>
+      <Accuracy><StatErrLow>1.3E-14</StatErrLow><StatErrHigh>0.2E-14</StatErrHigh></Accuracy>
+      <Quality>3</Quality>
+    </FluxAxis>
+   </Point>
+
+  </ArrayOfPoint>
+
+  <!-- OR -->
+
+  <ArrayOfFlatPoint>
+  <Point SP="3200.0" SP_BinL="3195.0" SP_BinH="3205.0" F="1.48E-12" F_ErrL="2.0E-14"  F_ErrH="2.0E-14"/>
+  <Point SP="3210.0" SP_BinL="3205.0" SP_BinH="3215.0" F="1.48E-12" F_ErrL="3.2E-14"  F_ErrH="3.8E-14"/>
+  <Point SP="3220.0" SP_BinL="3215.0" SP_BinH="3225.0" F="1.48E-12" F_ErrL="1.48E-12"  F_ErrH="0.0" />
+
+ </ArrayOfFlatPoint>
+</Spectrum>
+\end{verbatim}
+%}
+\end{fmpage}
+\end{flushleft}
+}
+
+

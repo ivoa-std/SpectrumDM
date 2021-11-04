@@ -1,0 +1,1044 @@
+\documentclass[11pt]{article}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[usenames]{color}
+\usepackage{graphicx}
+\usepackage{psfig}
+\usepackage{epsf}
+\usepackage{html}
+\usepackage{lscape}
+\textheight 9.0in
+\textwidth 6.0in
+\hoffset -0.7in
+\voffset -0.5in
+\newcommand{\link}[1]{{\color{dblue}\htmladdnormallink{#1}\par}}
+\newcommand{\m}[1]{\mbox{#1}}
+\newcommand{\change}[1]{{\color{red}\it #1}}
+\newsavebox{\fmbox}
+\newenvironment{fmpage}
+     {\begin{lrbox}{\fmbox}\begin{minipage}{6.5in}}
+     {\end{minipage}\end{lrbox}\colorbox{iblue}{\fbox{\usebox{\fmbox}}}}
+
+\newenvironment{fmppage}
+     {\begin{lrbox}{\fmbox}\begin{minipage}{6.5in}}
+     {\end{minipage}\end{lrbox}\colorbox{ipink}{\fbox{\usebox{\fmbox}}}}
+
+
+\begin{document}
+
+\vskip -1in
+\psfig{file=ivoa.ps,width=5.0in}
+
+\definecolor{ipink}{rgb}{1.0,0.937,0.957}
+\definecolor{dblue}{rgb}{0.60,0.60,1.0}
+\definecolor{ddblue}{rgb}{0.20,0.20,1.0}
+\definecolor{iblue}{rgb}{0.9,0.9,1.0}
+\huge
+\color{dblue}
+\vskip 0.2in
+\par\noindent{\bf IVOA Spectral Data Model: SED Supplement}
+\Large
+\par\noindent{\bf Version 0.96}
+\vskip 0.1in
+\par\noindent{\bf IVOA Working Draft \\ 2005-09-18}
+\color{Black}
+\vskip 0.2in
+
+\normalsize
+
+\par\noindent{\bf This version:}
+
+{\color{dblue}
+\htmladdnormallink{http://www.ivoa.net/Documents/WD/SpectrumDM/SpectrumDM-2005XXXX.html}
+
+}
+
+\par\noindent{\bf Latest version:}
+
+{\color{dblue}
+\link{http://www.ivoa.net/Documents/latest/SpectrumDM.html}
+
+}
+\par\noindent{\bf Previous versions:}
+
+{\color{dblue}
+\link{http://hea-www.harvard.edu/$\sim$jcm/vo/docs/spec0.93.html}
+
+}
+
+\centerline{\it Note: ivoa.net links are not yet active; the above
+are placeholders.}
+
+\vskip 0.2in
+
+\noindent{\bf Editors:}
+
+Jonathan McDowell, Doug Tody
+
+\noindent{\bf Authors:}
+
+Jonathan McDowell, Doug Tody, Tamas Budavari,  Markus Dolensky, Frank Valdes,
+Pavlos Protopapas, Arnold Rots,
+and the IVOA Data Access Layer Working Group.
+
+
+
+\begin{abstract}
+
+We present a data model describing the aggregation of spectrophotometric
+datasets with spectral and temporal coordinates and associated metadata
+into a single SED (Spectral Energy Distribution).
+
+\end{abstract}
+
+
+\subsection*{ Status of this document }
+
+This is a Working Draft, developed with the intention to support the
+Simple Spectral Access Protocol. This is the first global release of the
+document. The working group seeks confirmation that comments have been
+addressed to the satisfaction of the community.
+
+Comments on this document are due 30 Aug 2005 for consideration in the
+next version of this document. They should be sent to the dal@ivoa.net
+mailing list.
+
+\par\noindent
+This is an IVOA Working Draft for review by IVOA members and other
+interested parties. It is a draft document and may be updated, replaced,
+or obsoleted by other documents at any time. It is inappropriate to use
+IVOA Working Drafts as reference materials or to cite them as other than
+"work in progress." A list of current IVOA Recommendations and other
+technical documents can be found at
+\link{http://www.ivoa.net/Documents}.
+
+This document has been developed with support from the National Science
+Foundation's \link{http://www.nsf.gov}/ Information Technology Research
+Program under Cooperative Agreement AST0122449 with The Johns Hopkins
+University, from the UK Particle Physics and Astronomy Research Council
+(PPARC) \link{http://www.pparc.ac.uk}, 
+and from the Eurpean Commission's
+Sixth Framework Program \link{http://fp6.cordis.lu/fp6/home.cfm}
+via the
+Optical Infrared Coordination Network (OPTICON),
+\link{http://www.astro-opticon.org}.
+
+The {\bf Virtual Observatory (VO)} is general term for a collection of
+federated resources that can be used to conduct astronomical research,
+education, and outreach. 
+
+The {\bf International Virtual Observatory Alliance
+(IVOA)} (\link{http://www.ivoa.net}) is a global collaboration of separately
+funded projects to develop standards and infrastructure that enable VO
+applications.
+
+\tableofcontents
+
+\newpage
+
+\section{Introduction and Motivation}
+
+One of the advantages of the Virtual Observatory is the ability
+to intelligently combine data from different sources and then 
+to further manipulate the combined data. In order to support
+interoperable implementations of this capability, we need standard
+ways of describing aggregated data that have the power to retain
+the full metadata of their components. In this document we
+describe the spectral version of such a dataset, the Spectral Energy
+Distribution (SED). 
+SED consist of multiple spectra, time series and photometry points, usually for a single
+object. Our model is layered on the related IVOA Spectral data model.
+
+
+\section{SED Data Model summary}
+
+Our model for an SED is a set of spectra and/or time series, some of
+which may have only one or few data points (photometry) and  each of
+which may have different contextual metadata  (aperture, position,
+etc.). An SED is made up by aggregating individual spectra/time-series
+objects as 'segments'.
+
+A general SED may be considered as consisting of {\bf segments}
+for each of which the associated contextual metadata is constant. 
+
+\begin{figure}[h]
+\psfig{file=spec1.eps,width=5.0in}
+\caption[a]{A moderately complicated SED with five segments a through e.
+segments {\bf a} and {\bf b} are photometry points with associated
+errors (vertical bars) and bandpass widths (horizontal bars).
+segment {\bf c} is a time series with four measurements at
+different times with the same instrumental configuration. segment {\bf d }
+is an upper limit measurement. segment {\bf e } is a simple spectrum, with
+point-to-point statistical errors indicated by vertical bars and
+an overall (correlated) systematic error indicated by the dashed lines.}
+\end{figure}
+
+\begin{figure}[h]
+
+\colorbox{iblue}{
+\psfig{file=specuml6s.eps,width=6.0in}
+}
+{
+\colorbox{iblue}{
+\begin{minipage}{6.0in}
+Figure 2: 
+UML class diagram for the SED data model. The SED model
+consists of a number of Segments each of which is consistent
+with the Spectrum model, and which may represent a Spectrum,
+Time Series, or photometry point. In addition, it may have
+a Target object. A single SED object is assumed to correspond 
+to data for a single
+`target', i.e. the same target for each segment.  
+\end{minipage}
+}
+}
+\end{figure}
+
+
+\section{Spectral data model Measurement objects}
+
+\subsection{Spectrum and Time Series}
+
+
+
+A simple Spectrum is an SED object for which the spectral
+coordinate varies but the time coordinate
+is fixed, and for which the associated metadata are constant 
+(i.e. a single segment with a fixed time.)
+
+A simple Time Series is an SED object for which the spectral
+coordinate is constant but the time coordinate
+varies, and for which the associated metadata are constant (i.e. one
+set of metadata for the whole time series; a single segment
+at a fixed spectral coordinate).
+
+\subsection{SED attributes}
+
+The overall SED object may contain values indicating the
+number of SED segments and curation information about their
+assembly into a single SED, as well as their overall
+spectral range (the union of the segment bandpass coverages).
+ 
+We introduce an SED.Type field with values {\bf observed }  or {\bf simulated }  or
+{\bf composite } 
+(default = observed).
+The values indicate whether the data consists of
+actual measurements versus theoretical or empirical calculations, or is a composite
+of several observed datasets.
+ 
+
+
+ {\bf OPTIONAL: The SED attributes are all optional except for DataModel, which
+should have the value "SED-0.96". The NSegments
+and SpectralMin/MaxWavelength can be derived from the metadata in the segments.
+Note that the latter fields, if present, are required to be wavelength in meters
+and are consistent with the Coverage.SpectralMinimumWavelength/SpectralMaximumWavelength
+in the IVOA Resource Metadata document.
+ }  
+
+  
+
+\begin{flushleft}
+\colorbox{iblue}{\small
+\begin{minipage}[l]{6.5in}
+\begin{tabular}{lp{1.4in}p{1.6in}ll}
+\multicolumn{3}{c}{SED Fields}\\
+
+Field      & UCD1+  & Meaning & Unit  & Req \\
+\hline 
+ & & \\
+ 
+SED.Creator         &      meta.id    & Person or organization   & & O\\
+ 
+  & & creating the SED \\
+ 
+SED.DocURL     &    meta.url           & URL for dataset documentation & & O\\
+ 
+SED.Date           & time;meta.dataset      & Data processing/creation date& & O \\
+ 
+SED.Type           &       & SED type, see above & & O\\
+  
+SED.NSegments       & meta.number          & Number of segments & & O \\
+ 
+SED.SpectralMinimumWavelength  &em.wl;stat.min         & Total spectral coord range, wavelength& m & O\\
+ 
+SED.SpectralMaximumWavelength   &em.wl;stat.max          & Total spectral coord range  & m & O\\
+
+ 
+SED.DataModel    & meta.id    & IVOA Data Model version & &R\\
+ 
+\end{tabular}
+ \end{minipage}
+}
+\end{flushleft}
+
+\begin{figure}[h]
+
+\colorbox{iblue}{
+\psfig{file=specu4b.eps,height=3.0in}
+}
+{
+\colorbox{iblue}{
+\begin{minipage}{2.0in}
+Attributes for SED and Target objects
+\end{minipage}
+}
+}
+
+\end{figure}
+
+\section{Serializations}
+
+\subsection{FITS serialization}
+
+The SED FITS serialization is a generalization of the single-segment
+Spectrum serialization.
+
+We define a reference serialization of this data model as a FITS binary table.
+The table represents a single segement - spectrum or photometry point 
+or time series - as a single row of a table.
+Variable-length arrays may be used to contain the array quantities.
+In each case below where a `variable length array' is specified,
+fixed length arrays are
+also acceptable if all rows of the table have the same length.
+(The format is similar in spirit to the X-ray PHA type II spectral dataset).
+
+We adopt the convention that columns which are constant (same value for all rows)
+may if desired be omitted and the value given as a keyword instead. (e.g. the column
+TTYPEn='INSTRUME'  is replaced by a keyword  INSTRUME = 'value'). This is a
+small overhead in the FITS reading interface.
+
+In particular, the SPCO\_UCD and FLUX\_UCD keywords give the spectral coordinate and flux
+UCDs for the spectrum. 
+In an SED if not all the segments use the same flux and spectral coordinate
+UCDs these keywords become columns.
+
+If each segment has the same spectral coordinate UCD, the spectral coordinate 
+may also be identified by optional 1Sn\_1 and 1CTYPn keywords
+as described in the Spectrum serialization.
+
+Several extra keywords are defined for a SED dataset:
+
+\vskip 0.2in
+\colorbox{ipink}{\small
+\begin{minipage}[l]{5.0in}
+\begin{tabular}{lll} 
+FITS keyword  & Data model field   & Value \\
+\hline
+ & & \\
+ 
+VOCREATE      & SED.Creator \\
+ 
+VOCRID        & SED.CreatorID \\
+ 
+DATE          & SED.Date \\
+ 
+BANDPASS      & SED.Bandpass \\
+
+ 
+\end{tabular}
+\end{minipage}
+}
+\vskip 0.1in
+
+In the Spectrum model, the main data columns were declared
+as fixed-length array columns.
+Since different SED segments may have different lengths,
+FITS' variable-length array mechanism may instead be used for these columns
+to save space. However, fixed-length arrays may also be used; in this
+case the SIZE column must be used to 
+specify the number of points in each segment.
+
+
+We summarize this with a full sample FITS extension header with
+multiple SED segments, using variable-length arrays.
+
+{ \color{ddblue} \footnotesize
+\begin{verbatim}
+XTENSION= 'BINTABLE'           / binary table extension
+BITPIX  =                    8 / 8-bit bytes
+NAXIS   =                    2 / 2-dimensional binary table
+NAXIS1  =                   80 / width of table in bytes
+NAXIS2  =                    6 / number of rows in table
+PCOUNT  =                  208 / size of special data area
+GCOUNT  =                    1 / one data group (required keyword)
+TFIELDS =                   15 / number of fields in each row
+EXTNAME = 'SPECTRUM '           / name of this binary table extension
+VOCLASS = 'Spectrum V0.96'      / VO Data Model
+VOCREATE= 'MMT Archive'       / VO Creator
+VOCRID  = 'ivoa://cfa.harvard.edu' / VO Publisher ID URI
+DATE    = '2004-08-30T14:18:17' / Date and time of file creation
+DATE-OBS= '2004-06-03T21:18:17' / Date and time of observation
+BANDPASS= ' '    / SED.Bandpass
+RA_NOM       =     233.72789197     / [deg] Nominal RA    
+DEC_NOM      =      23.49792615     / [deg] Nominal Dec   
+OBJECT  = 'ARP 220 '           / Source name
+SRCCLASS= 'Galaxy'             /
+SPECTYPE= 'ULIRG'              /
+RA_TARG      =     233.73791700     / Observer's specified target RA
+DEC_TARG     =      23.50333300     / Observer's specified target Dec
+REDSHIFT=              0.01812  / Emission redshift
+DS_IDENT= 'cfa://whatever'   /
+TITLE   = 'Observations of Merging Galaxies' /
+VERSION =  2                     / Reprocessed 2004 Aug
+VOPUB   = 'CfA Archive'        / VO Publisher authority
+VOLOGO  = 'http://cfa.harvard.edu/vo/cfalogo.jpg' / VO Creator logo
+SPCO_UCD= 'em.wl'                    /
+FLUX_UCD= 'phot.fluDens;em.wl'     /
+EQUINOX =  2.0000000000000E+03 / default
+RADECSYS= 'ICRS    '           / default
+TIMESYS = 'TT     '           / Time system
+TIMEUNIT= 's'                / Time unit                
+SPECSYS = 'TOPOCENT'            / Wavelengths are as observed
+TIMESDIM= 'T'                  / Time SIDim 
+SPECSDIM= '10-10 L'             / Spectral SIDim
+FLUXSDIM= '10+7 ML-1T-3'       / Flux SDim
+MJDREF  =  0.0                 / MJD zero point for times
+SPEC_RES=              5.0  / [Angstrom] Spectral resolution
+SKY_RES =              1.0  / [arcsec] Spatial.Resolution
+
+TELESCOP= 'MMT '           / Telescope
+INSTRUME= 'BCS    '           / Instrument
+FILTER  = 'G220    '           / Grating
+COMMENT  ---------------------------
+COMMENT  WCS Paper 3 Keywords
+1S11_1   = 'SPCO'            / Column name with spectral coord
+1CTYP11  = 'WAVE-TAB'        / Spectral coord is WAVE 
+1S12_1   = 'SPCO'            / Column name with spectral coord
+1CTYP12  = 'WAVE-TAB'        / Spectral coord is WAVE 
+1S13_1   = 'SPCO'            / Column name with spectral coord
+1CTYP13  = 'WAVE-TAB'        / Spectral coord is WAVE 
+1S14_1   = 'SPCO'            / Column name with spectral coord
+1CTYP14  = 'WAVE-TAB'        / Spectral coord is WAVE 
+COMMENT  ---------------------------
+TTYPE1  = 'INSTRUME  '           / Instrument ID
+TFORM1  = '8A      '           / format of field
+TTYPE2  = 'FILTER  '           / Filter ID
+TFORM2  = '8A      '           / Format
+TTYPE3  = 'RA '                / Position RA of aperture center
+TFORM3  = '1D      '           /
+TUNIT3  = 'deg     '           /
+TTYPE4  = 'DEC     '                / Position Dec of aperture center
+TFORM4  = '1D      '           /
+TUNIT4  = 'deg     '           /
+TTYPE5  = 'APERTURE'           / Aperture diameter (physical or extraction)
+TFORM5  = '1E       ' /
+TUNIT5 =  'arcsec '   /
+TTYPE6 = 'TIME'
+TFORM6 = '1D '
+TUNIT6 =  'd'  /  MJD days
+TTYPE7 = 'EXPOSURE' /  Effective exposure time
+TFORM7 = '1E'
+TUNIT7 = 's' 
+TTYPE8 = 'SYS_ERR' / Fractional systematic error
+TFORM8 = '1E'
+TUNIT8 = ' '
+TTYPE9 = 'SPCO'   / Wavelength
+TFORM9 = '1PE'
+TUNIT9 = 'Angstrom'
+TTYPE10= 'SPCO_LO' /
+TFORM10= '1PE'
+TUNIT10= 'Angstrom'
+TTYPE11= 'SPCO_HI' /
+TFORM11= '1PE'
+TUNIT11= 'Angstrom'
+TTYPE12= 'FLUX' /
+TFORM12= '1PE'
+TUNIT12= 'erg cm**(-2) s**(-1) Angstrom**(-1)'
+TTYPE13= 'ERR_LO' /
+TFORM13 = '1PE'
+TUNIT13 ='erg cm**(-2) s**(-1) Angstrom**(-1)'
+TTYPE14= 'ERR_HI' /
+TFORM14 = '1PE'
+TUNIT14 ='erg cm**(-2) s**(-1) Angstrom**(-1)'
+TTYPE15= 'QUALITY' /
+TFORM15 = '1PI'
+\end{verbatim}
+}
+
+The data would look like
+{\tiny
+\begin{verbatim}
+MMT/BCS  G300  233.73791  23.50333 2.0 52984.301203 1500.0 0.15  3200.0 3195.0 3205.0 1.48E-12 2.0E-14 2.0E-14   0
+                                                                 3210.0 3205.0 3215.0 1.52E-12 3.0E-14 3.0E-14   0
+                                                                 3220.0 3215.0 3225.0 0.38E-12 0.38E-12 0.0      0
+                                                                 3230.0 3225.0 3235.0 1.62E-12 3.0E-14 3.0E-14   0
+MMT/BCS  G300  233.73792  23.50334 2.0 52102.103211 1480.0 0.15  3200.0 3195.0 3205.0 3.48E-12 2.0E-14 2.0E-14   0
+                                                                 3210.0 3205.0 3215.0 2.52E-12 3.0E-14 3.0E-14   0
+                                                                 3220.0 3215.0 3225.0 1.38E-12 0.38E-13 0.38E-13 1
+                                                                 3230.0 3225.0 3235.0 1.62E-12 3.0E-14 3.0E-14   0
+FLWO/4S  B     233.73791  23.50333 4.5 48776.001234  300.0 0.05  4400.0 4200.0 4600.0 1.82E-12 1.2E-14 3.1E-14   0
+FLWO/4S  V     233.73791  23.50333 4.5 48776.012012  300.0 0.05  5400.0 5200.0 5600.0 3.82E-12 1.3E-14 1.5E-14   0
+FLWO/4S  R     233.73791  23.50333 4.5 48776.019013  240.0 0.05  7000.0 6200.0 7500.0 5.82E-12 1.3E-13 2.1E-13   0
+FLWO/4S  I     233.73791  23.50333 4.5 48776.024988  240.0 0.08  9000.0 8200.0 9900.0 8.12E-12 3.3E-13 3.4E-13   0
+\end{verbatim}
+}
+
+\clearpage
+
+\subsection{VOTable serialization}
+
+The VOTable version of Spectrum will represent an SED
+by a series of VOTable \verb+TABLEs+. 
+First there is a table with no fields
+containing the overall SED and target information. Then there
+is one table for each individual spectrum segment.
+The data model fields described above as arrays map to
+VOTable FIELDs, while the remaining fields map to PARAM.
+
+The example below has a single RESOURCE element containing three TABLE
+elements: the first TABLE element contains the top level SED object
+and the second and third TABLE elements contain SED segements.
+
+{\bf If there is only one segment in the SED, the top level SED fields
+may be included in the same TABLE as the segment data }  (so that there
+is only one TABLE element in all.)
+
+{ \footnotesize
+\begin{flushleft}
+
+
+\begin{fmpage}
+
+\begin{verbatim}
+
+<?xml version="1.0" encoding="UTF-8"?>
+<VOTABLE version="1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="http://www.ivoa.net/xml/VOTable/v1.1"
+  xmlns:sed="http://www.ivoa.net/xml/SedModel/v0.94"
+  xmlns="http://www.ivoa.net/xml/VOTable/v1.1">
+<RESOURCE utype="sed:SED">
+
+<TABLE utype="sed:SED">   
+<PARAM name="Date" utype="sed:Date" datatype="char" arraysize="*" value="2004-05-10"/>
+<PARAM name="Nseg" utype="sed:NSegments" ucd="meta.number" datatype="int" value="1"/>
+<PARAM name="Type" utype="sed:Type" datatype="char" arraysize="*" value="observed"/>
+<GROUP utype="sed:Target">
+ <PARAM name="Target" utype="sed:Target.Name" datatype="char" arraysize="*" value="Arp 220"/>
+ <PARAM name="TargetPos" utype="sed:Target.pos" unit="deg" datatype="double" arraysize="2" 
+           value="233.737917 23.503330"/>
+ <PARAM name="z" utype="sed:Target.redshift" datatype="float" value="0.0018"/>
+</GROUP>
+</TABLE>
+
+<TABLE utype="sed:Segment">   
+<!-- SegmentType can be Photometry, TimeSeries or Spectrum -->
+<PARAM name="Segtype" utype="sed:Segment.SegmentType" datatype="char" 
+                              arraysize="*" value="Photometry" ucd="meta.code"/>
+<GROUP name="Frame" utype="sed:Segment.Frame">
+ <GROUP utype="sed:Segment.Frame.Sky">
+   <PARAM name="System" utype="sed:Segment.Frame.Sky.Type" ucd="frame.pos.system" 
+                              datatype="char" arraysize="*" value="ICRS"/>
+   <PARAM name="Equinox" utype="sed:Segment.Frame.Sky.Equinox" ucd="time.equinox;pos.eq"
+                              datatype="float" value="2000.0" />
+ </GROUP>
+ <GROUP utype="sed:Segment.Frame.Time">
+  <PARAM name="TimeFrame" utype="sed:Segment.Frame.Time.Type" ucd="frame.time.scale" 
+                              datatype="char" arraysize="*" value="UTC"/>
+  <PARAM name="TimeZero" utype="sed:Segment.Frame.Time.Zero" ucd="frame.time.zero" 
+                              datatype="double" value="0.0"/>
+ </GROUP>
+ <GROUP utype="sed:Segment.Frame.SpectralCoord">
+  <PARAM name="SpectralFrame" utype="sed:Segment.Frame.SpectralCoord.RefPos" ucd="frame.em.system" 
+                               datatype="char" arraysize="*" value="Barycent"/>
+ </GROUP>
+</GROUP>
+<GROUP utype="sed:Segment.Coverage">
+ <GROUP utype="sed:Segment.Coverage.Location">
+  <PARAM name="SkyPos" utype="sed:Segment.Coverage.Location.Sky.Value" ucd="pos.eq" unit="deg" 
+                                datatype="double" arraysize="2" value="132.4210 12.1232"/>
+  <PARAM name="TimeObs" utype="sed:Segment.Coverage.Location.Time.Value" ucd="time.obs" 
+                                datatype="double" value="52148.3252"/>
+ </GROUP>
+ <GROUP utype="sed:Segment.Coverage.Extent">
+  <PARAM name="SkyExtent" utype="sed:Segment.Coverage.Extent.Sky" ucd="pos.region.diameter" 
+                                datatype="double" unit="arcsec" value="20"/>
+  <PARAM name="TimeExtent" utype="sed:Segment.Coverage.Extent.Time" ucd="time.expo;phot.spectrum" unit="s" 
+                                 datatype="double" value="1500.0" />
+  <PARAM name="SpectralExtent" utype="sed:Segment.Coverage.Extent.Spectral" ucd="instr.bandwidth"
+                                  unit="Angstrom" datatype="double" value="3000.0"/>
+ </GROUP>
+
+\end{verbatim}
+
+\end{fmpage}
+\begin{fmpage}
+
+\begin{verbatim}
+ <GROUP utype="sed:Segment.Coverage.Region">
+  <GROUP utype="sed:Segment.Coverage.Region.Time">
+   <PARAM name="TimeStart" utype="sed:Segment.Coverage.Region.Time.Start" ucd="time" unit="s" 
+                                    datatype="double" value="52100.000" />
+   <PARAM name="TimeStop" utype="sed:Segment.Coverage.Region.Time.Stop" ucd="time" unit="s" 
+                                     datatype="double" value="52300.000" />
+  </GROUP>
+ </GROUP>
+</GROUP>
+
+<GROUP utype="sed:Segment.Curation">
+ <PARAM name="Publisher" utype="sed:Segment.Curation.Publisher" ucd="meta.organization;meta.curation" 
+                         datatype="char" arraysize="*" value="SAO"/>
+ <PARAM name="PubID" utype="sed:Segment.Curation.PubID" ucd="meta.curation.pubid" 
+                         datatype="char" arraysize="*" value="ivoa://cfa.harvard.edu"/>
+ <PARAM name="Logo" utype="sed:Segment.Curation.Logo" ucd="meta.curation.logo" 
+                         datatype="char" arraysize="*" value="http://cfa-www.harvard.edu/nvo/cfalogo.jpg"/>
+ <PARAM name="Contact" utype="sed:Segment.Curation.ContactName" ucd="meta.human;meta.curation" 
+                          datatype="char" arraysize="*" value="Jonathan McDowell"/>
+ <PARAM name="email" utype="sed:Segment.Curation.ContactEmail" ucd="meta.email" 
+                          datatype="char" arraysize="*" value="jcm@cfa.harvard.edu"/>
+</GROUP>
+
+<GROUP utype="sed:Segment.DataID">
+ <PARAM name="Title" utype="sed:Segment.DataID.Title" datatype="char" arraysize="*" value="Arp 220 SED"/>
+ <PARAM name="Creator" utype="sed:Segmenet.DataID.Creator" ucd="meta.curation.creator" 
+                          datatype="char" arraysize="*" value="SAO/FLWO"/>
+ <PARAM name="DateDate" utype="sed:Segment.DataID.Date" ucd="time;soft.dataset;meta.curation" 
+                          datatype="char" arraysize="*" value="2003-12-31T14:00:02Z"/>
+ <PARAM name="Version" utype="sed:Segment.DataID.Version" ucd="soft.dataset.version;meta.curation" 
+                          datatype="char" arraysize="*" value="1"/>
+ <PARAM name="Instrument" utype="sed:Segment.DataID.Instrument" ucd="inst.id" 
+                          datatype="char" arraysize="*" value="BCS"/>
+ <PARAM name="Filter" utype="sed:Segment.DataID.Collection" ucd="inst.filter.id" 
+                          datatype="char" arraysize="*" value="G300"/>
+ <PARAM name="CreationType" utype="sed:Segment.DataID.CreationType" 
+                          datatype="char" arraysize="*" value="Archival"/>
+</GROUP>
+
+<GROUP utype="sed:Segment.Derived">
+ <PARAM name="SNR" utype="sed:Segment.Derived.SNR" datatype="float" value="3.0"/>
+</GROUP>
+
+<GROUP utype="sed:Segment.Points">
+
+<GROUP utype="sed:Segment.Points.SpectralCoord">
+ <FIELDref ref="Coord"/>
+
+ <GROUP utype="sed:Segment.Points.SpectralCoord.Accuracy">
+  <FIELDref ref="BinLow"/>
+  <FIELDref ref="BinHigh"/>
+ </GROUP>
+<!-- In this case Resolution is demoted from Field to Param since it is constant -->
+ <PARAM name="Resolution" utype="sed:Segment.Points.SpectralCoord.Accuracy.Resolution" unit="Angstrom" 
+                           datatype="float" value="14.2"/>
+ <PARAM name="Calibration" value="ABSOLUTE"/>
+</GROUP>
+
+\end{verbatim}
+\end{fmpage}
+
+
+\begin{fmpage}
+\begin{verbatim}
+<GROUP utype="sed:Segment.Points.Flux">
+ <FIELDref ref="Flux1"/>
+ <GROUP utype="sed:Segment.Points.Flux.Accuracy">
+  <FIELDref ref="ErrorLow"/>
+  <FIELDref ref="ErrorHigh"/>
+  <PARAM name="SysErr" utype="sed:Segment.Points.Flux.SysErr" unit="" datatype="float" value="0.05"/>
+ </GROUP>
+ <FIELDref ref="Quality"/>
+</GROUP>
+</GROUP>
+
+<FIELD name="Coord" ID="Coord" utype="sed:Segment.Points.SpectralCoord.Value" ucd="em.wavelength" 
+                                              datatype="double" unit="Angstrom"/>
+<FIELD name="BinLow" ID="BinLow" utype="sed:Segment.Points.SpectralCoord.BinLow" 
+                                    ucd="stat.min;em.wavelength" datatype="double" unit="Angstrom"/>
+<FIELD name="BinHigh" ID="BinHigh" utype="sed:Segment.Points.SpectralCoord.BinHigh" 
+                                    ucd="stat.max;em.wavelength" datatype="double" unit="Angstrom"/>
+<FIELD name="Flux" ID="Flux1" utype="sed:Segment.Points.Flux.Value" ucd="phot.flux;em.wavelength" 
+                                    datatype="double" unit="erg cm**(-2) s**(-1) Angstrom**(-1)"/>
+<FIELD name="ErrorLow" ID="ErrorLow" utype="sed:Segment.Points.Flux.Accuracy.StatErrLow" 
+                                    datatype="double" unit="erg cm**(-2) s**(-1) Angstrom**(-1)"/>
+<FIELD name="ErrorHigh" ID="ErrorHigh" utype="sed:Segment.Points.Flux.Accuracy.StatErrHigh" 
+                                    datatype="double" unit="erg cm**(-2) s**(-1) Angstrom**(-1)"/>
+<FIELD name="Quality" ID="Quality" datatype="int" utype="sed:Segment.Points.Flux.Quality"/>
+
+<DATA>
+<TABLEDATA>
+<!-- Note slightly nonlinear wavelength solution -->
+<!-- Second row is upper limit -->
+<!-- Third row has quality mask set -->
+<TR><TD>3200.0</TD><TD>3195.0</TD><TD>3205.0</TD><TD>1.38E-12</TD><TD>5.2E-14</TD> 
+                                                   <TD>6.2E-14</TD><TD>0</TD></TR>
+<TR><TD>3210.5</TD><TD>3205.0</TD><TD>3216.0</TD><TD>1.12E-12</TD><TD>1.12E-12</TD>
+                                                    <TD>0</TD><TD>0</TD></TR>
+<TR><TD>3222.0</TD><TD>3216.0</TD><TD>3228.0</TD><TD>1.42E-12</TD><TD>1.3E-14</TD>
+                                                    <TD>0.2E-14</TD><TD>3</TD></TR>
+</TABLEDATA>
+</DATA>
+</TABLE>
+
+<!-- The second table below gives a radio light curve, and uses more defaults. -->
+<TABLE utype="sed:Segment">   
+
+<PARAM name="Segtype" utype="sed:Segment.SegmentType" datatype="char" arraysize="*" 
+                    value="TimeSeries" ucd="meta.code"/>
+<GROUP name="Frame" utype="sed:Segment.Frame">
+ <GROUP utype="sed:Segment.Frame.Sky">
+   <PARAM name="System" utype="sed:Segment.Frame.Sky.Type" ucd="frame.pos.system" 
+                               datatype="char" arraysize="*" value="FK5"/>
+   <PARAM name="Equinox" utype="sed:Segment.Frame.Sky.Equinox" ucd="time.equinox;pos.eq" 
+                               datatype="double" value="2000.0"/>
+ </GROUP>
+ <GROUP utype="sed:Segment.Frame.Time">
+  <PARAM name="TimeType" utype="sed:Segment.Frame.Time.Type" datatype="char" arraysize="*" value="MJD"/>
+  <PARAM name="TimeZero" utype="sed:Segment.Frame.Time.Zero" ucd="frame.time.zero" datatype="double" value="0.0"/>
+  <PARAM name="TimeSIDim" utype="sed:Segment.Frame.Time.SIDim" datatype="char" arraysize="*" value="T"/>
+  <PARAM name="TimeSystem"  utype="sed:Segment.Frame.Time.System" ucd="frame.time.scale" 
+                                datatype="char" arraysize="*" value="TT"/>
+  <PARAM name="TimeRefPos"  utype="sed:Segment.Frame.Time.RefPos" ucd="pos.eq.ra" 
+                                datatype="char" arraysize="*" value="TOPOCENTER"/>
+ </GROUP>
+\end{verbatim}
+\end{fmpage}
+
+\begin{fmpage}
+\begin{verbatim}
+ <GROUP utype="sed:Segment.Frame.SpectralCoord">
+  <PARAM name="SpectralRefPos" utype="sed:Segment.Frame.SpectralCoord.RefPos" ucd="frame.em.system" 
+                                datatype="char" arraysize="*" value="Barycent"/>
+  <PARAM name="SpecSIDim"  utype="sed:Segment.Frame.SpectralCoord.SIDim" 
+                                datatype="char" arraysize="*" value="10-10 L"/>
+ </GROUP>
+ <GROUP utype="sed:Segment.Frame.Flux">
+  <PARAM name="FluxSIDim"  utype="sed:Segment.Frame.Flux.SIDim" 
+                                datatype="char" arraysize="*" value="10+7 ML-1T-3"/>
+ </GROUP>
+</GROUP>
+<GROUP utype="sed:Segment.Coverage">
+ <GROUP utype="sed:Segment.Coverage.Location">
+  <PARAM name="SkyPos" utype="sed:Segment.Coverage.Location.Sky.Value" ucd="pos.eq" unit="deg" 
+                                datatype="double" arraysize="2" value="132.4210 12.1231"/>
+  <PARAM name="TimeObs" utype="sed:Segment.Coverage.Location.Time.Value" ucd="time.obs" 
+                                datatype="double" value="0.0"/>
+  <PARAM name="SpectralValue" utype="sed:Segment.Coverage.Location.SpectralCoord.Value" 
+                                ucd="em.freq" unit="MHz" datatype="double" value="1660.0"/>
+ </GROUP>
+ <GROUP utype="sed:Segment.Coverage.Extent">
+  <PARAM name="SkyExtent" utype="sed:Segment.Coverage.Extent.Sky" ucd="pos.region.diameter" 
+                                unit="arcsec" datatype="double" value="2.5"/>
+  <PARAM name="TimeExtent" utype="sed:Segment.Coverage.Extent.Time" ucd="time" unit="d" 
+                                datatype="double" value="1095.0"/>
+  <PARAM name="SpectralExtent" utype="sed:Segment.Coverage.Extent.Spectral" ucd="instr.bandwidth" 
+                                unit="MHz" datatype="double" value="400"/>
+ </GROUP>
+</GROUP>
+
+<GROUP utype="sed:Curation">
+ <PARAM name="Publisher" utype="sed:Segment.Curation.Publisher" ucd="meta.organization;meta.curation"
+                                          datatype="double" arraysize="*" value="NRAO"/>
+</GROUP>
+
+<GROUP utype="sed:DataID">
+ <PARAM name="Title" utype="sed:Segment.DataID.Title" datatype="char" arraysize="*" 
+                                       value="Arp 220 1660 MHz Monitoring"/>
+ <PARAM name="Creator" utype="sed:Segment.DataID.Creator" ucd="meta.curation.creator" 
+                                       datatype="char" arraysize="*" value="NRAO"/>
+ <PARAM name="Instrument" utype="sed:Segment.DataID.Instrument" ucd="inst.id"
+                                      datatype="char"  arraysize="*" value="VLA"/>
+</GROUP>
+
+<GROUP utype="sed:Segment.Points.Time">
+ <FIELDref ref="Time"/>
+</GROUP>
+
+<GROUP utype="sed:Segment.Points.SpectralCoord">
+ <PARAM name="Coord" utype="sed:Segment.Points.SpectralCoord.Value" ucd="em.freq" unit="MHz" 
+                                               datatype="double" value="1660.0"/>
+</GROUP>
+
+\end{verbatim}
+\end{fmpage}
+
+\begin{fmpage}
+\begin{verbatim}
+<GROUP utype="sed:Segment.Points.Flux">
+ <FIELDref ref="Flux2"/>
+ <GROUP utype="sed:Segment.Points.Flux.Accuracy">
+  <PARAM name="ErrorLow" utype="sed:Segment.Points.Flux.Accuracy.StatErrLow" unit="mJy" 
+                                                  datatype="double" value="0.15"/>
+  <PARAM name="ErrorHigh" utype="sed:Segment.Points.Flux.Accuracy.StatErrHigh" unit="mJy" 
+                                                   datatype="double" value="0.15"/>
+  <PARAM name="SysErr" utype="sed:Segment.Points.Flux.Accuracy.SysErr" datatype="double" unit="" value="0.10"/>
+ </GROUP>
+</GROUP>
+
+<FIELD name="Time" ID="Time" utype="sed:Segment.Points.Time.Value" ucd="time" datatype="float" unit="d"/>
+<FIELD name="Flux" ID="Flux2" utype="sed:Segment.Points.Flux.Value" ucd="phot.flux;em.freq" 
+                                                         datatype="double" unit="mJy"/>
+
+<DATA>
+<TABLEDATA>
+<TR><TD>46066.5</TD><TD>5.18</TD></TR>
+<TR><TD>46246.5</TD><TD>6.21</TD></TR>
+<TR><TD>46431.0</TD><TD>11.32</TD></TR>
+<TR><TD>46796.0</TD><TD>15.00</TD></TR>
+<TR><TD>46975.3</TD><TD>7.32</TD></TR>
+<TR><TD>47161.5</TD><TD>3.10</TD></TR>
+</TABLEDATA>
+</DATA>
+</TABLE>
+
+</RESOURCE>
+</VOTABLE>
+\end{verbatim}
+\end{fmpage}
+
+\end{flushleft}
+}
+
+\clearpage
+\subsection{XML serialization: photometry example}
+
+{ \footnotesize
+\begin{flushleft}
+
+
+\begin{fmpage}
+
+
+
+%\colorbox{iblue}{
+\begin{verbatim}
+<?xml version="1.0" encoding="UTF-8"?>
+<SED xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xmlns="http://ivoa.net/xml/SED/SED-0.96.xsd">
+<!-- xml instance example -->
+ <Date>2004-05-10</Date>
+ <NSegments ucd="meta.number">2</NSegments>
+ <Target>
+  <name>Arp 220 </name>
+  <pos>233.737917 23.503330</pos>
+  <redshift>0.0018</redshift>  
+ </Target>
+ <Segment>
+  <SegmentType ucd="meta.code">Spectrum</SegmentType>
+  <Frame>
+   <Sky>
+    <Equinox ucd="time.equinox;pos.eq">2000.0</Equinox>
+    <System ucd="frame.pos.system">ICRS</System>
+   </Sky>
+   <Time>
+     <TimeType ucd="frame.time.system?">MJD</TimeType> 
+     <TimeZero ucd="frame.time.zero">0.0 </TimeZero>
+     <TimeSystem ucd="frame.time.scale">UTC</TimeFrame> 
+     <TimeRefPos ucd="pos;frame.time">TOPOCENTER</TimeZero>
+   </Time>
+   <SpectralCoord>
+     <SpectralRefPos ucd="frame.em.system">Barycent</SpectralRefPos>
+   </SpectralCoord>
+  </Frame>
+  <Coverage>
+  <Location>
+    <Sky ucd="pos.eq" unit="deg">132.4210 12.1232</Sky>
+    <Time ucd="time.obs" unit="d">52148.3252</Time>
+   </Location>
+   <Extent>
+     <Sky ucd="pos.region.diameter" unit="arcsec">20</Sky>
+     <Time ucd="time.expo;phot.spectrum" unit="s">1500.0</Time>
+     <Spectral ucd="instr.bandwidth" unit="Angstrom">3000.0</Spectral>
+   </Extent>
+  </Coverage>
+  <Curation>
+   <Publisher ucd="meta.organization;meta.curation">SAO</Publisher>
+   <PubID ucd="meta.curation.pubid">ivoa://cfa.harvard.edu</PubID>
+   <Logo ucd=meta.curation.logo">http://cfa-www.harvard.edu/nvo/cfalogo.jpg</Logo>
+   <Contact>
+     <Name ucd="meta.human;meta.curation">Jonathan McDowell</Name>
+     <Email ucd="meta.email">jcm@cfa.harvard.edu</Email>
+   </Contact>
+  </Curation>
+  <DataID>
+    <Title>Arp 220 SED</Title>
+    <Creator ucd="meta.curation.creator">SAO/FLWO</Creator>
+    <Date ucd="time;soft.dataset;meta.curation">2003-12-31T14:00:02Z</Date>
+    <Version ucd="soft.dataset.version;meta.curation">1</Version>
+    <Instrument ucd="inst.id">BCS</Instrument>
+    <Collection>Archival</Collection>
+  </DataID>
+  <Derived>
+    <SNR>3.0</SNR>
+  </Derived>
+\end{verbatim}
+\end{fmpage}
+
+\begin{fmpage}
+\begin{verbatim}
+
+  <!-- Define table structure -->
+  <Fields>
+    <SpectralCoord>
+     <Value ucd="em.wavelength" unit="Angstrom"/>    
+     <Accuracy>
+      <BinLow ucd="stat.min;em.wavelength" unit="Angstrom"/> 
+      <BinHigh ucd="stat.max;em.wavelength" unit="Angstrom"/>
+     </Accuracy>
+   </SpectralCoord>
+   <Flux>
+     <Value ucd="phot.flux;em.wavelength" unit="erg cm**(-2) s**(-1) Angstrom**(-1)"/>
+     <Accuracy>
+       <StatErrLow  unit="erg cm**(-2) s**(-1) Angstrom**(-1)"/>
+       <StatErrHigh unit="erg cm**(-2) s**(-1) Angstrom**(-1)"/>
+       <SysErr>0.05</SysErr>
+     </Accuracy>
+     </Quality>
+   </Flux>
+  </Fields>
+  <!-- Use table structure -->
+  <Points>
+   <Point> 
+    <SpectralCoord>
+     <Value>3200.0</Value>
+     <Accuracy><BinLow>3195.0</BinLow><BinHigh>3205.0</BinHigh></Accuracy>
+    </SpectralCoord>
+    <Flux>
+      <Value>1.38E-12</Value>
+      <Accuracy><StatErrLow>5.2E-14</StatErrLow><StatErrHigh>6.2E-14</StatErrHigh></Accuracy>
+      <Quality>0</Quality>
+    </Flux>
+   </Point>
+
+   <Point> 
+    <SpectralCoord>
+     <Value>3210.5</Value>
+     <Accuracy><BinLow>3205.0</BinLow><BinHigh>3216.0</BinHigh></Accuracy>
+    </SpectralCoord>
+    <Flux>
+      <Value>1.12E-12</Value>
+      <Accuracy><StatErrLow>1.12E-12</StatErrLow><StatErrHigh>0</StatErrHigh></Accuracy>
+      <Quality>0</Quality>
+    </Flux>
+   </Point>
+
+   <Point> 
+    <SpectralCoord>
+     <Value>3222.0</Value>
+     <Accuracy><BinLow>3216.0</BinLow><BinHigh>3228.0</BinHigh></Accuracy>
+    </SpectralCoord>
+    <Flux>
+      <Value>1.42E-12</Value>
+      <Accuracy><StatErrLow>1.3E-14</StatErrLow><StatErrHigh>0.2E-14</StatErrHigh></Accuracy>
+      <Quality>3</Quality>
+    </Flux>
+   </Point>
+
+  </Points>
+ </Segment>
+
+\end{verbatim}
+\end{fmpage}
+
+\begin{fmpage}
+\begin{verbatim}
+
+
+ <Segment>
+  <SegmentType ucd="meta.code">TimeSeries</SegmentType>
+  <Frame>
+   <Sky>
+    <Equinox ucd="time.equinox;pos.eq">2000.0</Equinox>
+    <System ucd="frame.pos.system">FK5</System>
+   </Sky>
+   <Time>
+     <TimeType ucd="frame.time.type">MJD</TimeType> 
+     <TimeFrame ucd="frame.time.scale">TT</TimeFrame> 
+     <TimeZero ucd="frame.time.zero">0.0 </TimeZero>
+   </Time>
+   <SpectralCoord>
+     <SpectralRefPos ucd="frame.em.system">Barycent</SpectralRefPos>
+   </SpectralCoord>
+  </Frame>
+
+  <Coverage>
+   <Location>
+    <Sky ucd="pos.eq" unit="deg">132.4210 12.1231</Sky>
+    <Time ucd="time.obs" unit="d">0</Time>
+   </Location>
+   <Extent>
+     <Sky ucd="pos.region.diameter" unit="arcsec">2.5</Sky>
+     <Time ucd="time.expo;phot.spectrum" unit="s">1095.0</Time>
+     <Spectral ucd="instr.bandwidth" unit="Angstrom">400.0</Spectral>
+   </Extent>
+  </Coverage>
+
+  <Curation>
+   <Publisher ucd="meta.organization;meta.curation">NRAO</Publisher>
+  </Curation>
+
+  <DataID>
+    <Title>Arp 220 1660 MHz Monitoring</Title>
+    <Creator ucd="meta.curation.creator">NRAO</Creator>
+    <Instrument ucd="inst.id">VLA</Instrument>
+  </DataID>
+
+  <Fields>
+   <Time>
+     <Value ucd="time" unit="d"/>    
+   </Time>
+   <SpectralCoord>
+     <Value ucd="em.freq" unit="MHz"> 1660.0   </Value>    
+   </SpectralCoord>
+   <Flux>
+     <Value ucd="phot.flux;em.freq" unit="mJy"/>
+     <Accuracy>
+       <StatErrLow  unit="mJy">0.15 </StatErrLow>
+       <StatErrHigh unit="mJy">0.15 </StatErrHigh>
+       <SysErr>0.10</SysErr>
+     </Accuracy>
+   </Flux>
+  </Fields>
+
+\end{verbatim}
+\end{fmpage}
+
+\begin{fmpage}
+\begin{verbatim}
+  <Points>
+
+   <Point> 
+    <Time>
+     <Value>46066.5</Value>
+    </Time>
+    <Flux>
+      <Value>5.18</Value>
+    </Flux>
+   </Point>
+
+   <Point> 
+    <Time>
+     <Value>46246.5</Value>
+    </Time>
+    <Flux>
+      <Value>6.21</Value>
+    </Flux>
+   </Point>
+  <!-- etc. -->
+  </Points>
+</Segment>
+
+</SED>
+
+\end{verbatim}
+%}
+\end{fmpage}
+\end{flushleft}
+}
+
+
+\section*{References}
+
+
+\vskip 0.1in
+\par\noindent
+Hanisch, R., (ed)., Resource Metadata for the VO, Version 1.01,
+2004 Apr 26.  \\
+http://www.ivoa.net/Documents/latest/RM.html
+
+\vskip 0.1in
+\par\noindent
+Derriere, S. et al (eds.), UCD, Moving to UCD 1+, 2004 Oct 26.
+\\
+http://www.ivoa.net/Documents/latest/UCD.html
+
+\end{document}

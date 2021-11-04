@@ -1,0 +1,219 @@
+
+
+{ \footnotesize
+\begin{flushleft}
+
+
+\begin{fmpage}
+
+\begin{verbatim}
+<?xml version="1.0" encoding="UTF-8"?>
+<VOTABLE version="1.1"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="xmlns:http://www.ivoa.net/xml/VOTable/VOTable-1.1.xsd" 
+  xmlns:spec="http://www.ivoa.net/xml/SpectrumModel/v1.2"
+  xmlns="http://www.ivoa.net/xml/VOTable/v1.1">
+<RESOURCE utype="spec:Spectrum">
+
+<TABLE utype="Spectrum">   
+<PARAM name="SegmentType" utype="type" value="PhotometryPoint"/>
+<GROUP utype="Target">
+ <PARAM name="Target" utype="Spectrum.Target.Name" datatype="char" arraysize="*" value="Arp 220"/>
+ <PARAM name="TargetPos" utype="Spectrum.Target.pos" unit="deg" datatype="double" 
+                                 arraysize="2" value="233.737917 23.503330"/>
+ <PARAM name="z" utype="Spectrum.Target.redshift" datatype="float" value="0.0018"/>
+</GROUP>
+
+<!-- SegmentType can be Photometry, TimeSeries or Spectrum -->
+<PARAM name="Segtype" utype="Spectrum.SegmentType" datatype="char" arraysize="*" 
+                                                  value="Photometry" ucd="meta.code"/>
+<GROUP name="CoordSys" utype="Spectrum.CoordSys">
+ <GROUP utype="CoordSys.SpaceFrame">
+   <PARAM name="System" utype="Name" ucd="frame.pos.system" 
+                                         datatype="char" arraysize="*" value="ICRS"/>
+   <PARAM name="Equinox" utype="Equinox" ucd="time.equinox;pos.eq" 
+                                         datatype="float" value="2000.0" />
+ </GROUP>
+ <GROUP utype="Spectrum.CoordSys.TimeFrame">
+  <PARAM name="TimeFrame" utype="Name" ucd="frame.time.scale" datatype="char" 
+                                       arraysize="*" value="UTC"/>
+ </GROUP>
+ <GROUP utype="Spectrum.CoordSys.SpectralFrame">
+  <PARAM name="SpectralFrame" utype="RefPos" ucd="frame.em.system" 
+                                      datatype="char" arraysize="*" value="TOPOCENTER"/>
+ </GROUP>
+
+ <GROUP utype="Spectrum.CoordSys.FluxFrame">
+  <PARAM name="FluxAxisID" utype="Name"  value="V"/>
+  <PARAM name="FluxAxisUCD" utype="UCD"  value="phot,mag"/>
+  <GROUP utype="PhotCal">
+   <GROUP utype="PhotometryFilter">
+    <PARAM name="FluxAxisID" utype="filterName"  value="FLWO CCD V"/>
+    <PARAM name="FluxAxisDesc" utype="filterDescription"  value="Johnson V magnitude photometry"/>
+    <PARAM name="FluxAxisGID" utype="bandName"  value="V"/>
+    <PARAM name="Trans" utype="filterTransmissionCurve" value="ivo://cfa.harvard.edu/vo/bands/FLWOCCD/V"/>
+   </GROUP> 
+   <GROUP utype="ZeroPoint">
+    <PARAM name="FluxAxisRefVal" utype="Flux" value="3548.0" unit="Jy" ucd ="phot.flux.density;em.freq"/>
+    <PARAM name="ZPType" utype="Type" value="Pogson"/>
+   </GROUP>
+   <GROUP utype="MagnitudeSystem">
+     <PARAM name="FluxAxisRefSpec" utype="ReferenceSpectrum" value="ivo://cfa.harvard.edu/vo/templates/Vega"/>
+     <PARAM name="RefSpecType" utype="Type" value="VEGmag"/>
+   </GROUP>
+  </GROUP>
+ </GROUP>
+</GROUP>
+
+\end{verbatim}
+\end{fmpage}
+
+\begin{fmpage}
+\begin{verbatim}
+
+
+<GROUP utype="Spectrum.Char">
+ <GROUP utype="SpatialAxis">
+   <PARAM name="SpatialAxisName" utype="name" ucd="pos.eq" unit="deg" value="Sky"/>
+   <GROUP utype="Coverage">
+    <GROUP utype="Location">
+     <PARAM name="SkyPos" utype="Value" 
+                                   ucd="pos.eq" unit="deg" 
+                                   datatype="double" arraysize="2" value="132.4210 12.1232"/>
+   </GROUP>
+   <GROUP utype="Bounds">
+     <PARAM name="SkyExtent" utype="Extent" ucd="pos.region.diameter" 
+                     datatype="double" unit="arcsec" value="20"/>
+   </GROUP>
+  </GROUP>
+ </GROUP>
+
+
+
+ <GROUP utype="TimeAxis">
+  <PARAM name="TimeAxisName" utype="Name" ucd="time" unit="d" value="Time"/>
+  <GROUP utype="Coverage">
+   <GROUP utype="Location">
+    <PARAM name="TimeObs" utype="Value" ucd="time.obs"
+                                   datatype="double" value="52148.3252"/>
+   </GROUP>
+   <GROUP utype="Bounds">
+    <PARAM name="TimeExtent" utype="Extent" ucd="time.duration"
+                     unit="s" datatype="double" value="1500.0" />
+    <PARAM name="TimeStart" utype="Start" ucd="time" unit="s" 
+                                     datatype="double" value="52100.000" />
+    <PARAM name="TimeStop" utype="Stop" ucd="time" unit="s" 
+                                     datatype="double" value="52300.000" />
+   </GROUP>
+
+  </GROUP>
+ </GROUP>
+
+ <GROUP utype="SpectralAxis">
+  <PARAM name="SpectralAxisName" utype="Char.SpectralAxis.Name" ucd="em.wl" unit="angstrom" value="Wavelength"/>
+  <GROUP utype=Coverage">
+   <GROUP utype="Location">
+    <PARAM name="SpectralExtent" utype="Value" 
+                     unit="angstrom" datatype="double" value="5400.0"/>
+   </GROUP>
+   <GROUP utype="Bounds">
+    <PARAM name="SpectralExtent" utype="Start" 
+                     unit="angstrom" datatype="double" value="5200.0"/>
+    <PARAM name="SpectralExtent" utype="Stop"
+                     unit="angstrom" datatype="double" value="5600.0"/>
+   </GROUP>
+  </GROUP>
+ </GROUP>
+ <GROUP utype="FluxAxis">
+  <GROUP utype=Accuracy">
+   <PARAM name="SysErr" utype="SysErr" unit="" datatype="float" value="0.05"/>
+  </GROUP>
+ </GROUP>
+</GROUP>
+ 
+\end{verbatim}
+\end{fmpage}
+
+\begin{fmpage}
+\begin{verbatim}
+
+<GROUP utype="Spectrum.Correction">
+ <GROUP utype="FluxAxis">
+  <GROUP utype="ApFrac">
+    <PARAM name="ApFrac" utype="value" unit="" datatype="float" value="0.92"/>
+    <PARAM name="ApFracApp" utype="applied" unit="" datatype="boolean" value="T"/>
+  </GROUP>
+ </GROUP>
+</GROUP>
+
+
+<GROUP utype="Spectrum.Curation">
+ <PARAM name="Publisher" utype="Publisher" ucd="meta.organization;meta.curation" 
+                       datatype="char" arraysize="*" value="SAO"/>
+ <PARAM name="PubID" utype="PublisherID" ucd="meta.curation.pubid" datatype="char" 
+                                       arraysize="*" value="ivo://cfa.harvard.edu"/>
+ <GROUP utype="Contact">
+ <PARAM name="Contact" utype="Name" ucd="meta.human;meta.curation" 
+                       datatype="char" arraysize="*" value="Jonathan McDowell"/>
+ <PARAM name="email" utype="Email" ucd="meta.email" datatype="char" 
+                                      arraysize="*" value="jcm@cfa.harvard.edu"/>
+ </GROUP>
+</GROUP>
+
+
+<GROUP utype="Spectrum.DataID">
+ <PARAM name="Title" utype="Spectrum.DataID.Title" datatype="char" arraysize="*" value="Arp 220 SED"/>
+ <PARAM name="Creator" utype="Spectrum.Segment.DataID.Creator" ucd="meta.curation.creator" 
+                               datatype="char"   arraysize="*" value="ivo://sao/FLWO"/>
+ <PARAM name="DataDate" utype="Spectrum.DataID.Date" ucd="time;soft.dataset;meta.curation"
+                      datatype="char" arraysize="*" value="2003-12-31T14:00:02Z"/>
+ <PARAM name="Version" utype="Spectrum.DataID.Version" ucd="soft.dataset.version;meta.curation" 
+                      datatype="char" arraysize="*" value="1"/>
+ <PARAM name="Instrument" utype="Spectrum.DataID.Instrument" ucd="inst.id" datatype="char" 
+                                    arraysize="*" value="48-inch CCD"/>
+ <PARAM name="Filter" utype="Spectrum.DataID.Collection" ucd="inst.filter.id" datatype="char" 
+                                   arraysize="*" value="V"/>
+ <PARAM name="CreationType" utype="Spectrum.DataID.CreationType" datatype="char" arraysize="*" 
+              value="Archival"/>
+ <PARAM name="Logo" utype="Spectrum.DataID.Logo" ucd="meta.curation.logo" datatype="char" 
+                               arraysize="*" value="http://cfa-www.harvard.edu/nvo/cfalogo.jpg"/>
+</GROUP>
+
+
+
+<GROUP utype="Spectrum.Data">
+
+<GROUP utype="Spectrum.Data.FluxAxis">
+ <FIELDref ref="Flux1"/>
+ <GROUP utype="Spectrum.Data.FluxAxis.Accuracy">
+  <FIELDref ref="ErrorLow"/>
+  <FIELDref ref="ErrorHigh"/>
+ </GROUP>
+</GROUP>
+
+</GROUP>
+
+<FIELD name="Flux" ID="Flux1" utype="Spectrum.Data.FluxAxis.value" ucd="phot.flux.density;em.wavelength" 
+              datatype="double" unit="mag"/>
+<FIELD name="ErrorLow" ID="ErrorLow" utype="Spectrum.Data.FluxAxis.Accuracy.StatErrLow" 
+              datatype="double" unit="mag"/>
+<FIELD name="ErrorHigh" ID="ErrorHigh" utype="Spectrum.Data.FluxAxis.Accuracy.StatErrHigh" 
+              datatype="double" unit="mag"/>
+
+<DATA>
+<TABLEDATA>
+<TR><TD>15.52</TD><TD>0.02</TD><TD>0.015</TD></TR>
+</TABLEDATA>
+</DATA>
+</TABLE>
+</RESOURCE>
+</VOTABLE>
+
+\end{verbatim}
+\end{fmpage}
+
+\end{flushleft}
+}
+
+
+

@@ -1,0 +1,622 @@
+
+
+\section{FITS serialization}
+
+
+\subsection{Mapping Spectrum to FITS}
+
+
+\paragraph {\bf FITS serialization design:}
+We define a reference serialization of this data model as a FITS binary table.
+The table represents a spectrum or photometry point as a single row of a table.
+
+This serialization is a special case of an SED (or spectral association)
+serialization which
+uses one row per spectral segment; in that case,
+variable-length arrays may be used to contain the array quantities.
+In each case below where a `variable length array' is specified, fixed length
+arrays are suitable for a single spectrum or for multiple spectra where
+all the arrays are the same length, but readers should be
+prepared to handle the variable length case. 
+
+
+For SEDs, another approach would be to have one FITS HDU per spectrum or
+photometry point. However this was rejected as unworkable, as the
+overhead of 5760 bytes (2 FITS blocks) per photometry point would
+inflate the data for the photometry-only SED case by factors of around
+50-100.
+
+\paragraph {\bf Standard table keywords:}
+In table F.1 we give the mapping of data model fields to FITS columns and keywords.
+For each column, the standard keywords TTYPEn, TUNITn, TFORMn should
+be provided. Order of keywords and columns is not significant,
+except that it is strongly recommended that RA and Dec be in adjacent columns
+or keywords. Additional keywords and columns which are not part of the
+model (including other conventions such as e.g. TDMINn)  are allowed 
+to be present, but are not guaranteed to be propagated by VO software.
+
+\paragraph {\bf Keywords and columns: `Greenbank' convention}
+
+In Table F.1 we give single metadata items as keywords; arrays
+of data (members of the Spectrum.Data classes) are stored as
+columns, and Table F.1 gives the column name, i.e. the value
+of the keyword TTYPEn. The 'Source' column in Table F.1 indicates
+if the name (if keyword) or value (if column) 
+is a FITS standard (S), an existing convention (C) such
+as one of the HEA conventions, or is newly invented (N).
+
+In some cases, the column data arrays may have the same value for each
+data point. In this case we may use the 'Greenbank' convention in which
+the column is omitted and replaced by a keyword whose name is the same
+as the column.  Further, in SED applications when multiple spectrum
+data lines are present, some metadata may differ from line to line and
+be promoted from keyword to column.
+Therefore, implementors should  check both keywords and
+column names for the appropriate tokens.
+
+%We recommend that the same token NOT be used for a keyword and 
+%a column name in the same FITS HDU.
+
+
+
+
+\paragraph {\bf TUTYP and TUCD keywords:}
+We map the FITS columns to the model by using TUTYPn keywords.
+TUTYPn (string-valued) gives the data model field name (UTYPE string)
+for the data in column n. Thus, the x and y axes (i.e. spectral coordinate
+and flux-like axes) of the spectrum
+have TUTYPn value of Spectrum.Data.SpectralAxis.Value and
+Spectrum.Data.FluxAxis.Value respectively. 
+
+
+Different kinds of x and y axis are identified by the
+Spectrum.Data.SpectralAxis.UCD and Spectrum.Data.FluxAxis.UCD data model
+fields, which are mapped to TUCDn keywords. TUCDn (string valued) gives
+the UCD corresponding to the data in column n. Both TUTYPn and TUCDn
+should be present for any column which corresponds to a Spectrum data model
+field; they are optional for any additional data columns which are not part
+of the Spectrum model.
+The units of spectral coordinate and flux
+are given in the TUNITn keys of the corresponding data columns.
+There is no separate provision for units of Char.SpectralAxis or
+Char.FluxAxis; these are required to be the same as for the data.
+
+
+The TTYPEn keywords
+for the x and y columns are free, but it is strongly recommended that
+(for consistency of style with WCS Paper 3) the values for the
+x axis have for their first 4 characters 'WAVE', 'FREQ' and 'ENER'
+for the case of wavelength, frequency and energy respectively.
+We also recommend the value 'FLUX' for the y axis, where appropriate.
+Nevertheless, it is the TUTYPn and TUCDn keywords that should be
+used to interpret the semantics of the file.
+
+
+\paragraph {\bf WAVE, ENER, and FREQ}
+
+In the header metadata, such as the Spectrum.Char entries,
+we use SPEC\_ keywords to denote the spectral axis generically, but
+in the table columns (Spectrum.Data entries) we use the
+terms WAVE\_, ENER\_, and FREQ\_ as appropriate. 
+Thus if the Spectrum.Data.SpectralAxis.Value field is WAVE,
+the SpectralAxis.Accuracy.BinLow field should be WAVE\_LO;
+if Value is FREQ, BinLow should be FREQ\_LO. 
+We believe the small extra parsing overhead is worth it
+for the readability and interoperability (since these names have
+been used in existing FITS files) of the crucial main data table.
+
+
+\paragraph {\bf Char and Data keywords:}
+The model contains both Characterization metadata, giving
+overall typical values for quantities such as spectral resolution,
+and the Data object, which can include such quantities on
+a per-pixel basis. In some cases, the FITS serialization allows
+the same token for both Char (as a keyword) and Data (as a column name).
+The name, unit and UCD fields for Char.FluxAxis and Char.SpectralAxis
+are required to be the same as for Data.FluxAxis and Data.SpectralAxis.
+The case of TimeAxis is a little different, since there may be no
+Data.TimeAxis present, and there exist already some HEA conventions for
+recording TimeAxis characterization, notably the TIMEUNIT keyword.
+Note that TIMESYS, if present, must be TT.
+
+\paragraph {\bf VOCLASS keyword:}
+We add a new keyword VOCLASS to describe the VO object represented by the
+FITS table. The value of VOCLASS should be 'SPECTRUM 1.00'.
+
+
+\paragraph {\bf WCS table keywords:}
+The spectral coordinate
+may also be identified by optional 1Sn\_1 and 1CTYPn keywords
+as per WCS Paper 3. Table 9 of that paper implies that each data column
+which is a function of the spectral coord needs a pair of such keywords.
+Applications which implement the spectrum data model may ignore the WCS keys and interpret
+the file by recognizing 'by spec' (using TUTYPn) 
+which column is the spectral coordinate and that
+FLUX, etc. are functions of it, but the WCS keys give a general FITS application
+a chance at making sense of the file. In the example, TTYPE5='ERR\_LO'
+and TUTYP5='Spectrum.Data.FluxAxis.Accuracy.StatErrLow'; the WCS keyword
+1CTYPE5='WAVE-TAB' indicates that the data in column 5 is a function
+of wavelength, and that the wavelengths are in a lookup table. The WCS
+keyword 1S5\_1='WAVE' indicates that the lookup table for the x-axis of
+column 5 (in this case, the wavelengths that the ERR\_LO values correspond
+to) is in the column with TTYPEn='WAVE', in this case column 1.
+
+Note that APERTURE has also been used elsewere as string-valued
+to indicate a named aperture; this is not allowed here.
+
+The mid-exposure value is a required field for the internal data model;
+however it can be calculated from TSTART and TSTOP if they are
+present, and is then optional for the FITS serialization.
+The dataset start and stop wavelength may be provided in
+standard FITS as TDMINn/TDMAXn
+where n is the number of the column with the wavelengths.
+
+For FITS, CoordSys.SpaceFrame.ucd is required to be the
+same as Char.SpatialAxis.ucd and CoordSys.TimeFrame.ucd
+is required to be equal to the default value "time".
+CoordSys.SpectralFrame.ucd is required to be the same
+as Data.SpectralAxis.ucd, present as a TUCDn value.
+
+To express the CoordSys.RedshiftFrame, we recommend using a FITS WCS
+system with suffix 'Z' applied to the spectral coordinate axis, when
+appropriate. 
+CoordSys.RedshiftFrame.DopplerDefinition is represented by the first four characters
+of TCTYPnZ and should have the values VRAD, VOPT, ZOPT or VELO,
+as per the convention for spectral CTYPE keywords in Paper III of the FITS WCS system.
+CoordSys.RedshiftFrame.RefPos is represented by SPECSYSZ and should have values
+as listed in Paper III of the FITS WCS system.
+
+%The Position.Type field is not explicitly serialized:
+%the names of the two columns used for Position are used
+%to infer the type. 
+
+%In some cases, the characterization and data keywords are the same,
+%e.g. SKY\_RES. The implication here is that if SKY\_RES is provided
+%as a keyword, it represents the characterization and a typical value
+%for the data; if it is provided as a column TTYPEn=SKY\_RES it
+%represents individual values for the data, and is not provided
+%as a generic characterization; the same token should not be a keyword
+%name and a column name in the same dataset.
+
+\vskip 0.2in
+
+{\small
+
+\colorbox{iblue}{
+\begin{minipage}[l]{6.5in}
+\begin{tabular}{llll} 
+\hline
+\multicolumn{3}{c}{Table F.1: FITS keywords for VO Spectrum}\\
+\hline
+Data model field & FITS keyword & Source & Value if fixed \\
+\hline
+ & & \\
+DataModel   & VOCLASS  & N       & SPECTRUM 1.0\\
+Length  & DATALEN & N\\
+Type    & VOSEGT & N\\
+CoordSys.ID  &VOCSID   & N\\
+CoordSys.SpaceFrame.Name &RADECSYS   &S    & e.g. ICRS or FK5 \\
+CoordSys.SpaceFrame.Equinox&EQUINOX  &S   & e.g. 2000.0 \\
+CoordSys.SpaceFrame.ucd &SKY\_UCD &   & pos.eq \\
+CoordSys.SpaceFrame.RefPos &SKY\_REF   &S    &\\
+CoordSys.TimeFrame.Name &TIMESYS     &C   & TT  \\
+CoordSys.TimeFrame.ucd& -    &C   & time \\
+CoordSys.TimeFrame.Zero& MJDREF & C&default 0.0\\
+CoordSys.TimeFrame.RefPos &   & & (not used) \\
+CoordSys.SpectralFrame.RefPos &  SPECSYS&S & (see below)\\
+CoordSys.SpectralFrame.ucd&  TUCDn &C   & = Data.SpectralAxis.ucd \\
+CoordSys.SpectralFrame.Redshift & REST\_Z & N & \\
+CoordSys.SpectralFrame.Name &SPECNAME  &  & \\
+CoordSys.RedshiftFrame.Name &ZNAME  &  & \\
+CoordSys.RedshiftFrame.DopplerDefinition &TCTYPnZ  &  & \\
+CoordSys.RedshiftFrame.RefPos & SPECSYSZ & S  &   \\
+Curation.Publisher &VOPUB &N \\
+Curation.Reference& VOREF &N \\
+Curation.PublisherID &VOPUBID&N    \\
+Curation.Version&VOVER&N\\
+Curation.ContactName&CONTACT&N \\
+Curation.ContactEmail&EMAIL &N \\
+Curation.Rights & VORIGHTS &N\\
+Curation.Date  & VODATE  &N\\
+Curation.PublisherDID  &DS\_IDPUB & N\\
+Target.Name   & OBJECT       &S \\
+Target.Description & OBJDESC&N\\
+Target.Class  & SRCCLASS    &N \\
+Target.spectralClass & SPECTYPE&N\\
+Target.redshift& REDSHIFT  & C\\ 
+Target.pos & RA\_TARG, DEC\_TARG& C\\
+Target.VarAmpl & TARGVAR & N\\
+DataID.Title    & TITLE    & C\\
+DataID.Creator    & AUTHOR &S \\
+DataID.Collection & COLLECTn& N\\ 
+DataID.DatasetID& DS\_IDENT & N\\
+DataID.CreatorDID& CR\_IDENT & N\\
+DataID.Date    & DATE  & S\\
+DataID.Version & VERSION& C \\
+DataID.Instrument & INSTRUME & S\\
+DataID.CreationType    & CRETYPE&N\\
+DataID.Logo&VOLOGO       & N\\
+DataID.Contributor&CONTRIBn&N\\
+DataID.DataSource&DSSOURCE & N\\
+DataID.Bandpass  & SPECBAND & N\\
+\end{tabular}
+\end{minipage}
+}
+
+\colorbox{iblue}{
+\begin{minipage}[l]{6.5in}
+\begin{tabular}{llll} 
+\hline
+Data model field & FITS keyword & Source & Value if fixed \\
+\hline
+ & & \\ 
+Derived.SNR  & DER\_SNR  & N\\
+Derived.redshift.value & DER\_Z & N\\
+Derived.redshift.statError& DER\_ZERR&N\\
+Derived.redshift.Confidence& DER\_ZCNF&N\\
+Derived.VarAmpl  & DER\_VAR & N\\
+TimeSI &TIMESDIM          &N     &\\
+SpectralSI & SPECSDIM    & N&\\
+FluxSI & FLUXSDIM        & N&\\
+\\
+\multicolumn{4}{c}{Omitted Char fields, values inherited from Spectrum.Data}\\
+\\
+Char.FluxAxis.Name & -    & -   & TTYPEn for FLUX \\
+Char.FluxAxis.Unit & -    &-    & Same as Data\\
+Char.FluxAxis.ucd &   - & -      & Same as Data\\
+Char.SpectralAxis.Name & - & -      & Same as Data\\
+Char.SpectralAxis.Unit & - & -      & Same as Data\\
+Char.SpectralAxis.ucd   & - & -      & Same as Data\\
+Char.TimeAxis.Name &  -  & -  & TIME \\
+Char.TimeAxis.ucd  & -    & -& time\\
+Char.SpatialAxis.Name   &  -  &  & (not used) \\
+Char.SpatialAxis.Unit   &  -  &  & deg \\
+\\
+\multicolumn{4}{c}{Char Fields which are the same as for Spectrum.Data}\\
+\\
+Char.FluxAxis.Accuracy.StatError & STAT\_ERR &C\\
+Char.FluxAxis.Accuracy.SysError & SYS\_ERR & C\\
+%Spectrum.Char.FluxAxis.Quality & QUALITY & C \\
+Char.TimeAxis.Accuracy.StatError & TIME\_ERR & N\\
+Char.TimeAxis.Accuracy.SysError &  TIME\_SYE & N\\
+Char.TimeAxis.Resolution & TIME\_RES  & N\\
+\\
+\end{tabular}
+\end{minipage}
+}
+
+
+\colorbox{iblue}{
+\begin{minipage}[l]{7.0in}
+\begin{tabular}{lllp{1.5in}} 
+Data model field & FITS keyword& Source & Value if fixed \\
+\hline
+ & & \\
+\multicolumn{4}{c}{Char Fields which are only present in Char}\\
+\\
+Char.FluxAxis.Calibration & FLUX\_CAL& N\\
+Char.SpectralAxis.Calibration & SPEC\_CAL&N \\
+Char.SpectralAxis.Coverage.Location.Value & SPEC\_VAL &N\\
+Char.SpectralAxis.Coverage.Bounds.Extent & SPEC\_BW & N\\ 
+Char.SpectralAxis.Coverage.Bounds.Start  & TDMINn & \\
+Char.SpectralAxis.Coverage.Bounds.Stop   & TDMAXn & \\
+Char.SpectralAxis.SamplingPrecision. &&\\
+ SamplingPrecisionRefVal.FillFactor & SPEC\_FIL & N\\
+Char.SpectralAxis.SamplingPrecision. &&&\\
+\quad SampleExtent& SPEC\_BIN & N & \\
+Char.SpectralAxis.Accuracy.BinSize & SPEC\_BIN& N& \\
+Char.SpectralAxis.Accuracy.StatError & SPEC\_ERR&N\\
+Char.SpectralAxis.Accuracy.SysError & SPEC\_SYE& N\\
+Char.SpectralAxis.Resolution &  SPEC\_RES & N\\
+Char.SpectralAxis.ResPower &  SPEC\_RP & N\\
+{Char.SpectralAxis.Coverage.Support.Extent  } & SPECWID & N\\
+Char.TimeAxis.Unit   & TIMEUNIT & C\\
+Char.TimeAxis.Accuracy.BinSize & TIMEDEL & C \\
+Char.TimeAxis.Calibration & TIME\_CAL & N\\
+Char.TimeAxis.Coverage.Location.Value & TMID & N\\
+Char.TimeAxis.Coverage.Bounds.Extent& TELAPSE & C\\ 
+Char.TimeAxis.Coverage.Bounds.Start & TSTART & C\\
+Char.TimeAxis.Coverage.Bounds.Stop & TSTOP & C\\
+Char.TimeAxis.Coverage.Support.Extent& EXPOSURE & C\\ 
+Char.TimeAxis.SamplingPrecision. &&\\
+ SamplingPrecisionRefVal.FillFactor & DTCOR & C\\
+Char.TimeAxis.SamplingPrecision.     &&&\\
+\quad SampleExtent &TIMEDEL & S & \\
+Char.SpatialAxis.ucd   & SKY\_UCD& N & pos.eq \\
+Char.SpatialAxis.Accuracy.StatErr & SKY\_ERR & N\\
+Char.SpatialAxis.Accuracy.SysError &SKY\_SYE & N\\
+Char.SpatialAxis.Calibration & SKY\_CAL&N\\
+Char.SpatialAxis.Resolution & SKY\_RES & N\\
+Char.SpatialAxis.Coverage.Location.Value & RA, DEC, etc.& C\\
+Char.SpatialAxis.Coverage.Bounds.Extent & APERTURE & C\\
+Char.SpatialAxis.Coverage.Support.Area& REGION & N & String value\\
+Char.SpatialAxis.Coverage.Support.Extent & AREA &N & \\
+Char.SpatialAxis.SamplingPrecision. &&\\
+ SamplingPrecisionRefVal.FillFactor &SKY\_FILL &N\\
+Char.SpatialAxis.SamplingPrecision.  &&&\\
+\quad SampleExtent& TCDLTn &S &\\
+\end{tabular}
+\end{minipage}
+}
+
+
+\colorbox{iblue}{
+\begin{minipage}[l]{7.0in}
+\begin{tabular}{lllp{1.5in}} 
+Data model field & FITS keyword& Source & Value if fixed \\
+\hline
+ & & \\
+\hline
+\multicolumn{4}{c}{ Per-data-point values }\\
+\hline
+\\
+Data.FluxAxis.Value & TTYPEn & S & FLUX\\
+UTYPE of above ...               & TUTYPn & N & 'Spectrum.Data.FluxAxis.Value'\\\
+Data.FluxAxis.Unit & TUNITn& S\\
+Data.FluxAxis.ucd &   TUCDn  & N& (same as Char)\\
+Data.FluxAxis.Accuracy.StatError & TTYPEn  & N & ERR\\
+Data.FluxAxis.Accuracy.StatErrLow & TTYPEn & C & ERR\_LO\\
+Data.FluxAxis.Accuracy.StatErrHigh& TTYPEn& C & ERR\_HI\\ 
+Data.FluxAxis.Accuracy.SysError & TTYPEn & C & SYS\_ERR \\
+Data.FluxAxis.Quality & TTYPEn & C & QUALITY\\
+Data.FluxAxis.QualityN & TTYPEn & C & QUALn\\
+Data.SpectralAxis.Value  & TTYPEn & S & WAVE,ENER,FREQ\\
+UTYPE of above ...               & TUTYPn & N & 'Spectrum.Data.SpectralAxis.Value'\\
+Data.SpectralAxis.Unit & TUNITn & S & (same as Char)\\
+Data.SpectralAxis.ucd &  TUCDn &N & (same as Char) \\
+Data.SpectralAxis.Accuracy.BinSize& TTYPEn & N & WAVE\_BIN,ENER\_BIN, FREQ\_BIN\\
+Data.SpectralAxis.Accuracy.BinLow & TTYPEn & N & WAVE\_LO,ENER\_LO, FREQ\_LO \\
+Data.SpectralAxis.Accuracy.BinHigh& TTYPEn & N & WAVE\_HI,ENER\_HI, FREQ\_HI \\
+Data.SpectralAxis.Accuracy.StatError & TTYPEn& N & WAVE\_ERR,ENER\_ERR, FREQ\_ERR \\
+Data.SpectralAxis.Accuracy.StatErrLow& TTYPEn& N & WAVE\_ELO,ENER\_ELO, FREQ\_ELO \\
+Data.SpectralAxis.Accuracy.StatErrHigh & TTYPEn& N& WAVE\_EHI,ENER\_EHI, FREQ\_EHI \\
+Data.SpectralAxis.Accuracy.SysError & TTYPEn & N &  WAVE\_SYE,ENER\_SYE, FREQ\_SYE \\
+Data.SpectralAxis.Resolution & TTYPEn & N & WAVE\_RES,ENER\_RES, FREQ\_RES \\
+Data.TimeAxis.Value & TTYPEn & C & TIME\\
+UTYPE of above ...               & TUTYPn & N & 'Spectrum.Data.TimeAxis.Value' \\
+Data.TimeAxis.Unit &  TUNITn& S  & (same as Char)\\
+Data.TimeAxis.ucd  &  TUCDn & N   & time \\
+Data.TimeAxis.Accuracy.BinLow & TTYPEn & N & TIME\_LO \\
+Data.TimeAxis.Accuracy.BinHigh & TTYPEn & N & TIME\_HI \\
+Data.TimeAxis.Accuracy.BinSize & TIMEDEL  & S & \\
+Data.TimeAxis.Resolution& TTYPEn & N  & TIME\_RES \\
+Data.TimeAxis.Accuracy.StatError & TTYPEn & N & TIME\_ERR \\
+Data.TimeAxis.Accuracy.StatErrLow & TTYPEn & N & TIME\_ELO \\
+Data.TimeAxis.Accuracy.StatErrHigh& TTYPEn & N & TIME\_EHI \\
+Data.TimeAxis.Accuracy.SysError & TTYPEn & N  & TIME\_SYE \\
+Data.BackgroundModel.Value & TTYPEn & N  & BGFLUX \\
+UTYPE of above ...               & TUTYPn & N & 'Spectrum.Data.BackgroundModel.Value'\\
+Data.BackgroundModel.Unit & TUNITn  &S&  (same as FluxAxis) \\
+Data.BackgroundModel.ucd & TUCDn & N &  (same as FluxAxis)   \\
+Data.BackgroundModel.Accuracy.StatError & TTYPEn & N & BG\_ERR \\
+Data.BackgroundModel.Accuracy.StatErrLow & TTYPEn & N & BG\_ELO \\
+Data.BackgroundModel.Accuracy.StatErrHigh& TTYPEn & N & BG\_EHI \\ 
+Data.BackgroundModel.Accuracy.SysError & TTYPEn & N & BG\_SYE \\
+Data.BackgroundModel.Quality & TTYPEn & N & BGQUAL\\
+\\
+\end{tabular}
+\end{minipage}
+}
+}
+\vskip 0.2in
+\clearpage
+
+\subsection{Expressing the spectrum spatial coordinates in FITS}
+
+FITS has a sophisticated mechanism for expressing celestial
+coordinates. However, it applies only to image axes or table
+columns. If you want to express a single celestial position in the
+header of a FITS binary table, the WCS conventions do not apply.
+You could add an extra pair of columns to the table giving the
+same position in each row, but that would be wasteful.
+
+Here we propose a local convention leveraging the existing
+WCS conventions:
+\begin{itemize}
+\item The keyword names for the coordinates are those used
+in the first four characters of the CTYPE values for the WCS paper:
+e.g. RA, DEC, GLON, GLAT.
+\item The coordinate system is identified by the keyword SKY\_UCD with
+values such as pos.eq, etc.
+\item The RADECSYS and EQUINOX keywords should be used when appropriate.
+\item Values are always in degrees.
+\item The VOCSID optional keyword is provided to allow VO coordinate
+system names used in Spectrum and STC to be propagated to FITS.
+Its value is not relevant in the FITS context.
+\end{itemize}
+
+
+
+\subsection{The SPECSYS keyword}
+
+We note the allowed values of the SPECSYS keyword from
+Greisen et al and the corresponding values from the VO STC:
+
+\vskip 0.1in
+
+\colorbox{iblue}{
+\begin{tabular}{lll}
+\hline
+FITS   & STC   & Meaning\\
+\hline
+TOPOCENT &TOPOCENTER & Topocenter\\
+GEOCENTR &GEOCENTER & Geocenter\\
+BARYCENT &BARYCENTER & Solar System Barycenter\\
+HELIOCEN &HELIOCENTER & Heliocenter\\
+LSRK     &LSRK & Kinematic local standard of rest\\
+LSRD     &LSRD & Dynamic local standard of rest\\
+GALACTOC &GALACTIC\_CENTER & Galactic center\\
+LOCALGRP &LOCAL\_GROUP\_CENTER & Local group barycenter\\
+CMBDIPOL &- & Frame of the Cosmic Microwave Background dipole\\
+SOURCE   &- & Source rest frame \\
+\hline
+\end{tabular}
+}
+
+\clearpage
+
+\subsection{An instance example}
+
+
+We summarize this with a sample FITS extension header.
+
+{  \footnotesize
+\begin{verbatim}
+XTENSION= 'BINTABLE'           / binary table extension
+BITPIX  =                    8 / 8-bit bytes
+NAXIS   =                    2 / 2-dimensional binary table
+NAXIS1  =                57344 / width of table in bytes
+NAXIS2  =                    1 / number of rows in table
+PCOUNT  =                    0 / size of special data area
+GCOUNT  =                    1 / one data group (required keyword)
+TFIELDS =                    7 / number of fields in each row
+EXTNAME = 'SPECTRUM '           / name of this binary table extension
+VOCLASS = 'Spectrum V1.0'      / VO Data Model
+DATALEN =        180           / Segment size
+VOSEGT  = 'Spectrum'           / Segment type
+VOCSID  = 'MY-ICRS-TOPO'          / Coord sys ID
+RADECSYS= 'FK5    '           / Not default - usually ICRS
+EQUINOX =  2.0000000000000E+03 / default
+TIMESYS = 'TT     '           / Time system
+MJDREF  =  0.0                 / [d] MJD zero point for times
+SPECSYS = 'TOPOCENT'            / Wavelengths are as observed
+VOPUB   = 'CfA Archive'        / VO Publisher authority
+VOREF   = '2006ApJ...999...99X'  / Bibcode for citation
+VOPUBID = 'ivo://cfa.harvard.edu' / VO Publisher ID URI
+VOVER   = '1.0'                   / VO Curation version
+CONTACT = 'Jonathan McDowell, CfA'/
+EMAIL   = 'jcm@cfa.harvard.edu'   /
+VORIGHTS= 'public'  /
+VODATE  = '2004-08-30'     /
+DS_IDPUB= 'ivo://cfa.harvard.edu/spec#10304' / Publisher DID for dataset
+COMMENT  DS_IDPUB usually the same as DS_IDENT?
+OBJECT  = 'ARP 220 '           / Source name
+OBJDESC = 'Merging galaxy Arp 220' / Source desc
+SRCCLASS= 'Galaxy'             /
+SPECTYPE= 'ULIRG'              /
+REDSHIFT=              0.01812  / Emission redshift
+RA_TARG      =     233.73791700     / [deg] Observer's specified target RA
+DEC_TARG     =      23.50333300     / [deg] Observer's specified target Dec
+TARGVAR =    0.2    /  20 percent variability amplitude
+TITLE   = 'Observations of Merging Galaxies' /
+AUTHOR  = 'MMT Archive'       / VO Creator
+COLLECT1= 'Misc Pointed Observations'  / Collection
+DS_IDENT= 'ivo://cfa.harvard.edu/spec#10304' / Publisher DID for dataset
+CR_IDENT= 'ivo://cfa.harvard.edu/tdc#MMT4302-102' / Creator internal ID for dataset
+DATE    = '2004-08-30T14:18:17' / Date and time of file creation
+VERSION =  2                     / Reprocessed 2004 Aug
+TELESCOP= 'MMT '              / Telescope  [Not part of Spectrum DM]
+INSTRUME= 'MMT/BCS '          / Instrument
+FILTER  = 'G220    '          / Grating  [Not part of Spectrum DM]
+CRETYPE = 'Archival'          / Not an on-the-fly dataset
+VOLOGO  = 'http://cfa.harvard.edu/vo/cfalogo.jpg' / VO Creator logo
+CONTRIB1= 'Jonathan McDowell'  / Contributor
+CONTRIB2= 'Wilhelm Herschel'  / Contributor
+CONTRIB3= 'Harlow Shapley'     / Contributor
+DSSOURCE= 'Pointed'   /  Survey or pointed, etc
+DER_SNR =         5.0  /   Estimate of signal-to-noise
+DER_Z   =       0.01845   /  Redshift measured in this spectrum
+DER_ZERR =       0.00010   /  Error in DER_Z
+TIMESDIM= 'T'                  / Time SIDim 
+SPECSDIM= '10-10 L'             / Spectral SIDim
+FLUXSDIM= '10+7 ML-1T-3'       / Flux SDim
+SYS_ERR =        0.05            / Fractional systematic error in flux
+FLUX_CAL= 'Calibrated'   /
+SPEC_ERR=        0.01 / Stat error in spec coord, in SPEC units
+SPEC_SYE=        0.001   /   Frac sys error in spec coord
+SPEC_CAL= 'Calibrated'
+SPEC_RES=              5.0  / [angstrom] Spectral resolution
+SPECBAND= 'Optical'    / SED.Bandpass
+SPEC_RP =             800.0  / Spectral resolving power
+SPEC_VAL=            4100.0  / [angstrom]  Characteristic spec coord
+SPEC_BW =            1800.0  / [angstrom]  Width of spectrum
+SPEC_FIL=               1.0  / No gaps between channels
+TIME_CAL = 'Calibrated'   /
+DATE-OBS= '2004-06-03T21:18:17' / Date and time of observation
+EXPOSURE =   1500.015         / [s] Effective exposure time
+TSTART   =  52984.301203      / [d] MJD
+TSTOP    =  52984.318564      / [d] MJD
+TMID     =  52984.309883     / [d] MJD mid expsoure
+SKY_CAL  = 'Calibrated'  /
+SKY_RES =              1.0  / [arcsec] Spatial.Resolution
+RA      =     233.73791       / [deg] Pointing position
+DEC     =      23.50333       / [deg] Pointing position
+APERTURE=       2.0           / [arcsec]  Aperture diameter/Slit width
+TIME     =  52984.309883      / [d] MJD of midpoint
+
+
+COMMENT  ---------------------------
+COMMENT  WCS Paper 3 Keywords
+1S4_1    = 'WAVE'            / Column name with spectral coord
+1CTYP4   = 'WAVE-TAB'        / Spectral coord is WAVE 
+1S5_1    = 'WAVE'            / Column name with spectral coord
+1CTYP5   = 'WAVE-TAB'        / Spectral coord is WAVE 
+1S6_1    = 'WAVE'            / Column name with spectral coord
+1CTYP6   = 'WAVE-TAB'        / Spectral coord is WAVE 
+1S7_1    = 'WAVE'            / Column name with spectral coord
+1CTYP7   = 'WAVE-TAB'        / Spectral coord is WAVE 
+COMMENT  ---------------------------
+TTYPE1 = 'WAVE'   / Wavelength
+TFORM1 = '180E'
+TUNIT1 = 'angstrom'
+TUCD1  = 'em.wl'                    /
+TDMIN1 = 3195.0 /
+TDMAX1 = 5005.0 /
+TUTYP1 = 'Spectrum.Data.SpectralAxis.Value'
+TTYPE2 = 'WAVE_LO' /
+TFORM2 = '180E'
+TUNIT2 = 'angstrom'
+TUTYP2 = 'Spectrum.Data.SpectralAxis.Accuracy.StatErrLow'
+TTYPE3 = 'WAVE_HI' /
+TFORM3 = '180E'
+TUNIT3 = 'angstrom'
+TUTYP3 = 'Spectrum.Data.SpectralAxis.Accuracy.StatErrHigh'
+TTYPE4 = 'FLUX' /
+TFORM4 = '180E'
+TUNIT4 = 'erg cm**(-2) s**(-1) angstrom**(-1)'
+TUTYP4 = 'Spectrum.Data.FluxAxis.Value'
+TUCD4  = 'phot.fluDens;em.wl'     / Type of Y axis: F-lambda
+TTYPE5 = 'ERR_LO' /
+TFORM5 = '180E'
+TUNIT5 = 'erg cm**(-2) s**(-1) angstrom**(-1)'
+TUTYP5 = 'Spectrum.Data.FluxAxis.Accuracy.StatErrLow'
+TTYPE6 = 'ERR_HI' /
+TFORM6 = '180E'
+TUNIT6 = 'erg cm**(-2) s**(-1) angstrom**(-1)'
+TUTYP6 = 'Spectrum.Data.FluxAxis.Accuracy.StarErrHigh'
+TTYPE7 = 'QUALITY' /
+TFORM7 = '180I'
+TUTYP7 = 'Spectrum.Data.FluxAxis.Quality'
+\end{verbatim}
+}
+
+The data would look like
+{\small
+\begin{verbatim}
+
+WAVE   WAVE_LO WAVE_HI FLUX  ERR_LO  ERR_HI  QUALITY
+3200.0 3195.0 3205.0 1.48E-12 2.0E-14 2.0E-14   0
+3210.0 3205.0 3215.0 1.52E-12 3.0E-14 3.0E-14   0
+3220.0 3215.0 3225.0 0.38E-12 0.38E-12 0.0      0                  
+3230.0 3225.0 3235.0 1.62E-12 3.0E-14 3.0E-14   0
+...
+5000.0 4995.0 5005.0 1.33E-11 3.0E-13 3.0E-13   1
+\end{verbatim}
+}
+
+% \subsection{Alternate FITS serialization}
+%
+% Some implementors may find the one-row-per-segment approach inconvenient. An
+% alternate `relational normalization' serialization, considered but
+%currently rejected by the VO group, is recorded here for information. It
+%would consist of two binary or ASCII tables, each with only scalar
+%columns. The Spectrum  table would contain the same scalar columns as
+%above, but the variable array columns would be moved to a second table,
+%called SpecData, and used as scalar columns arranged vertically. A new
+%integer column "OBS\_ID" would be added to each table; the values in the
+%Spectrum table would be unique and the corresponding  values in the
+%SpecData table would indicate which data points belonged to which rows
+%in the Spectrum table.
+
+
+
