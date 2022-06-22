@@ -4,6 +4,7 @@
 #
 # Binaries
 00spec11_clean
+00spec12_clean
 
 # LaTex products
 *.pdf
@@ -13,6 +14,9 @@
 *.out
 *.aux
 *.toc
+
+# OS
+.DS_Store
 
 # Original Spectrum model workspace
 Spectrum1.1.tar
