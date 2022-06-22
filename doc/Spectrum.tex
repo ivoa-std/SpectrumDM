@@ -61,36 +61,40 @@
 \definecolor{iblue}{rgb}{0.9,0.9,1.0}
 \color{dblue}
 \vskip 0.2in
-\par\noindent \htmtitle{IVOA Spectrum Data Model}{Version 1.1}
+\par\noindent \htmtitle{IVOA Spectrum Data Model}{Version 1.2}
 \Large
 \vskip 0.1in
-\par\noindent{\bf IVOA Proposed Recommendation 20111020}
+\par\noindent{\bf IVOA Working Draft 2022-06-22}
 \color{Black}
 \vskip 0.2in
 
 \normalsize
 
-\par\noindent{\bf This version (Mod 8)}
+\par\noindent{\bf Working group}
+
+Data Model Working Group
+
+\par\noindent{\bf This version (Mod 0)}
 
 { 
 \color{dblue}
-%\htmladdnormallink{http://www.ivoa.net/Documents/REC/DM/SpectrumDM-20111020.pdf}{}
-PR-SpectrumDM-1.1-20111020
+WD-SpectrumDM-1.2-20220622
 %\link{http://www.ivoa.net/Documents/latest/SpectrumDM.html}
 }
 
 \par\noindent{\bf Previous versions:}
 
 {\color{dblue}
-\url{http://www.ivoa.net/Documents/REC/DM/SpectrumDM-20110318.pdf}
-%\link{http://www.ivoa.net/Documents/PR/DM/SpectrumDM-20070913.html}
+  \url{https://www.ivoa.net/documents/SpectrumDM/20111120/REC-SpectrumDM-1.1-20111120.pdf}
+  
+  \url{https://www.ivoa.net/Documents/REC/DM/SpectrumDM-20071029.pdf}
 }
 
 \vskip 0.2in
 
 \noindent{\bf Editors:}
 
-Jonathan McDowell, Doug Tody
+Mark Cresitello-Dittmar
 
 \noindent{\bf Contributors:}
 
@@ -116,23 +120,9 @@ spectral or temporal associations.
 
 \subsection*{ Status of this document }
 
-This is a Proposed Recommendation, developed with the intention to support the
-Simple Spectral Access Protocol. 
-The working group seeks confirmation that comments have been
-addressed to the satisfaction of the full IVOA community. 
-
-This document has been developed with support from 
-
-the National Science
-Foundation's\footnote{\url{http://www.nsf.gov/}} Information Technology Research
-Program under Cooperative Agreement AST0122449 with The Johns Hopkins
-University, 
-from the UK Particle Physics and Astronomy Research Council
-(PPARC\footnote{\url{http://www.pparc.ac.uk}}) 
-and from the European Commission's
-Sixth Framework Program\footnote{\url{http://fp6.cordis.lu/fp6/home.cfm}}
-via the Optical Infrared Coordination Network (OPTICON\footnote{\url{http://www.astro-opticon.org}}).
-
+This is an IVOA Working Draft for review by IVOA members and other interested parties.
+It is a draft document and may be updated, replaced, or obsoleted by other documents at any time.
+It is inappropriate to use IVOA Working Drafts as reference materials or to cite them as other than "work in progress".
 
 The {\bf Virtual Observatory (VO)} is general term for a collection of
 federated resources that can be used to conduct astronomical research,
@@ -173,131 +163,17 @@ We distinguish in several places between the implementation proposed in
 this document, referred to as Version 1, and capabilities proposed for
 possible later implementation.
 
-This version fixes some issues coming from implementation feedback.
-Most fixes are minor and do not represent any fundamental changes with respect to the previous
-Recommendation. Modifications to UCDs (Table 1) can have an impact on implementations and/or validators.
-
+This version adds support for:
+\begin{itemize}
+  \item Order: associate a spectral order to each data point of the spectrum.
+  \item Upper/Lower limits: explicit specification of a limiting measurement.
+\end{itemize}
 
 
 \subsection{Change Log}
 
 \begin{verbatim}
-2011 Oct 20 V1.1 Mod 8 - Section 1 (Motivation): added scope of v1.1 changes.
-  Section 1.2 (Architecture): dropped references to SpectrumDM1.2.
-  References update. (As suggested by Christophe Arviset).
-
-2011 Oct 17  V1.1 Mod 7 - UCD updates suggested by S. Derriere.
-
-2011 Mar 19  V1.1 Mod 6  - Architecture section
-
-2011 Mar 3   V1.1 (1.04) Mod 5 - Typo corrections
-
-2011 Jan 19  V1.04 Mod 4 - Further minor updates for 2009 Dec B. Rino comments.
-
-2010 Dec 19  V1.04 Mod 3 - Further text clarifications to the previous changes.
-Note that there have been no changes to the XML schema.
-
-2010 Apr 29  V1.04 Mod 2 Updated to account for comments by B. Rino. 
- - added extra defatuls for missing utypes
-  in FITS (CoordSys.SpaceFrame.UCD, CoordSys.TimeFrame.UCD, CoordSys.SpectralFrame.UCD).           
- - added FITS SKY_REF keyword for missing utype CoordSys.SpaceFrame.RefPos
- - clarified meaning of '*' shorthand in listings of UCDs.
-
-2010 Apr 21  V1.04: Made clear that 'mandatory' is for the spectrum document use case
-and that other use cases can redfine which items are mandatory.
-
-2009 Apr  5  V1.03 Mod 1: Fixed typo for ESAC SI dimensional codes and corrected stat.error
-UCDs (stat.error must be primary).
-
-2007 Oct 29 V1.03: SpectrumDM 1.03 released as a Recommendation
-
-2007 Oct 28  V1.02 Rev 2: Corrected HTML version; corrected author list
-
-2007 Aug 26  V1.01 RC3 Rev 2 = V1.02 RC3 Rev 2
- - Minor edits and corrections to examples;
-clarification of IVOA identifiers; added NORMALIZED
-calibration option. (Date changed to Sep 13 for IVOA Doc submission only;
-version number changed at request of IVOA Doc Coord)
-
-2007 Jul 10  V1.01 RC3 Rev 1
- - Minor edits following RFC
-
-2007 May 15  V1.01 RC2 Rev 15
- - Proposed recommendation.
-
-2007 May  1  V1.01 RC2 Rev 14
- - Trivial cover formatting
-
-2007 Apr 30 V1.01 RC2 Rev 13
- - Added Support.Extent as suggested by A. Micol
- - Improved text in several places
-
-2007 Apr 26 V1.01 RC2 Rev 12
- - UCD time.expo updated to time.duration/stop/start;obs.exposure
- - Updated VOTABLE examples
-
-2007 Apr 25 V1.01 RC2 Rev 11
- - Included the correct file; Rev 10 was bogus
-
-2007 Apr 17 V1.01 RC2 Rev 10
- - Fixed errors in XSD and in text
- - Revised Characterization text
- - Added REST_Z FITS keyword for CoordSys.SpectralFrame.Redshift
-
-2007 Apr 12 V1.01 RC2 Rev 9
- - Incorporate D Tody comments
- - DataID.Title mandatory
- - Changes to recommended case of Utype fields e.g. Redshift not redshift.
- - Utypes involving stat.error changed to put the stat.error first.
-
-2007 Apr 4 V1.01 RC2 Rev 8
- - FITS keyword TMID added; TDMINn/TDMAXn
-
-2007 Apr 1 V1.01 RC2 Rev 7
- - Modifications for compatibility with Char working draft:
-   Moved Calibration utype from CharAxis.Accuracy to CharAxis
-   Added SamplingPrecision.SampleExtent and
-   SamplingPrecision.SamplingPrecisionRefVal.FillFactor
-   
- 
-2007 Feb 12 V1.01 RC2 Rev 5
- - Curation.Reference can have multiple instances
-
-
-2007 Jan 17 V1.01 RC2 Rev 4
- - Changed FITS keyword SIZE to DATALEN (D Tody request)
- - Added text describing use of non standard units.
-- Reformat units in Tables 2,3 to OGIP convention
-
-2006 Dec 11 V1.01 RC2 Rev 3
- - Fixd more typos in XSD and XML example
-
-2006 Dec 6 V1.01 RC2 Rev 2
- - Upgraded UCDs to version 1.21
- - Added SpectralAxis.ResPower and SPEC_RP keyword
-   for resolving power; added element to XSD.
- - XSD changed segmentType definition to put Data element at end of sequence.
- - XSD corrected type errors in a few cases in Curation type.
- - XSD added missing elements CreatorDID, Bandpass to DataID.
- - XML instance example corrected errors in Characterization axes. 
- - FITS keywords changed: CREATOR to AUTHOR; DER_ERR to DER_ZERR  
- - FITS added more TUTYPn keyword examples.
- - FITS added comment on VOCSID
- - Corrected mistakes in FITS and VOT examples
- - Clarified role of Aperture
- - Further clarified CreatorDID, PublisherDID, DatasetID distinction.
- - Clarifications and corrections in text
-
-2006 Oct 22 V1.0 RC1 (since V0.98d Rev 4)
-- Added table numbers
-- Changed some defaults in Table 1
-- Added flux UCDs for transmission curves, polarized flux
-- Amplified discussion of RedshiftFrame
-- Added Spectral location and bounds
-- Reorganized order of some sections
-- Further rationalization of FITS keywords, rewrote FITS section
-- Added TUCDn and TUTYPn
-
+2022 Jun 22 V1.2 Mod 0 - Document reset to WD for enhancement
 \end{verbatim}
 
 
@@ -344,6 +220,9 @@ spectral energy distributions (SED) which
 consist of multiple spectra and photometry points, usually for a single
 object. The 'SED' model will be described in
 a separate document which builds on the structures described here.
+
+TODO: Add new requirements leading to order and limits attributes.
+
 
 \section{Spectral Data Model summary}
 
