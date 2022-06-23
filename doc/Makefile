@@ -20,7 +20,7 @@ AUTHOR_EMAIL=
 
 # Source files for the TeX document (but the main file must always
 # be called $(DOCNAME).tex
-SOURCES = ${DOCNAME}.tex specvot.tex fits2.tex specxml2.tex tab.tex doug.vot
+SOURCES = ${DOCNAME}.tex specxml.tex specvot.tex specfits.tex fields_table.tex example_xml1.tex example_vot1.tex example_vot2.tex example_fits1.tex 
 
 # List of image files to be included in submitted package (anything that
 # can be rendered directly by common web browsers)
@@ -39,13 +39,15 @@ AUX_FILES = ${SCHEMA}
 FILES = ${SOURCES} ${SCHEMA} specrc3.html ${FIGURES}
 HFILES = SpectrumDM-${SDATE}.pdf SpectrumDM-${SDATE}.html ${SCHEMA} ${FIGURES}
 
+clean:
+	rm -f Spectrum.pdf Spectrum.ps Spectrum.log Spectrum.dvi Spectrum.out Spectrum.aux Spectrum.toc
 
 doc:	Spectrum.tex
 	latex Spectrum
 	latex Spectrum
 	dvips -o Spectrum.ps -P pdf Spectrum
 	ps2pdf Spectrum.ps Spectrum.pdf
-	cp Spectrum.pdf  SpectrumDM-${SDATE}.pdf
+	cp Spectrum.pdf SpectrumDM-${SDATE}.pdf
 
 html:	
 	vohtml Spectrum h
@@ -53,8 +55,8 @@ html:
 	cp h/Spectrum.html SpectrumDM-${SDATE}.html
 
 pack:
-	tar cvzf ${BASEDIR}/vospec.tgz ${FILES}
+	tar cvzf vospec.tgz ${FILES}
 
 ivoa:   doc html pack
-	tar cvzf ${BASEDIR}/ivoa.tgz ${HFILES} 
+	tar cvzf ivoa.tgz ${HFILES} 
 
