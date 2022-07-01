@@ -32,7 +32,7 @@ FIGURES = role_diagram.eps ivoa.jpg diagrams/specumln3.jpg diagrams/ndataf1.jpg 
 VECTORFIGURES = 
 
 # Additional files to distribute (e.g., CSS, schema files, examples...)
-SCHEMA = specxml.xsd
+SCHEMA = ../schema/Spectrum-1.01.xsd
 AUX_FILES = ${SCHEMA}
 
 # ================================================================================
