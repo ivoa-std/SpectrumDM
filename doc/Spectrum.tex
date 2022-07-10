@@ -65,7 +65,7 @@
 \Large
 \vskip 0.1in
 \par\noindent{\bf IVOA Working Draft 2022-06-22}
-\color{Black}
+\color{black}
 \vskip 0.2in
 
 \normalsize
@@ -274,29 +274,15 @@ In later sections we elaborate these concepts in detail, including some
 complications that we explicitly do not attempt to handle in this
 version.
 
-
+% Overview diagram:
 \begin{figure}[h]
-
-\colorbox{iblue}{
-\psfig{file=diagrams/specumln3.eps,width=6.0in}
-}
-
-
-
-
-\colorbox{iblue}{
-
-\begin{minipage}{6.0in}
-Figure 1: 
-UML class diagram for the spectral data model.
-
-The Characterization, Curation, DataID and Derived classes are 
-shown in detail below in diagram form and
-with further text description in Section 5.
-\end{minipage}
-}
+  \begin{center}
+    \includegraphics[width=\textwidth]{diagrams/spectrum.png}
+    \caption{UML class diagram for the spectral data model.  The Characterization, Curation, DataID and Derived classes are shown in
+      detail below in diagram form and with further text description in Section 5.
+    }
+  \end{center}
 \end{figure}
-
 
 \subsection{Use Cases and Required Fields}
 
@@ -351,71 +337,45 @@ for a single dataset, you must (in this version of the model)
 make two separate instances (VO resources).
 
 
-
-
+% Data diagram:
 \begin{figure}[h]
-
-\colorbox{iblue}{
-\psfig{file=diagrams/ndataf1.eps,width=6.0in}
-}
-{
-\colorbox{iblue}{
-\begin{minipage}{6.0in}
-Figure 2: Diagram for Data object
-
-\end{minipage}
-}
-}
-
-\colorbox{iblue}{
-\psfig{file=diagrams/ncharf2.eps,width=6.0in}
-}
-{
-\colorbox{iblue}{
-\begin{minipage}{6.0in}
-Figure 3: Diagram for Characterization object
-\end{minipage}
-}
-}
-
+  \begin{center}
+    \includegraphics[width=4.0in]{diagrams/data.png}
+    \caption{Diagram for Data object}
+  \end{center}
 \end{figure}
 
-
+% Characterization diagram:
 \begin{figure}[h]
-
-
-\colorbox{iblue}{
-\psfig{file=diagrams/specstc.eps,width=6.0in}
-}
-{
-\colorbox{iblue}{
-\begin{minipage}{6.0in}
-Figure 4: Diagram for CoordSys object
-
-\end{minipage}
-}
-}
+  \begin{center}
+  \includegraphics[width=6.0in]{diagrams/characterization.png}
+  \caption{Diagram for Characterization object}
+  \end{center}
 \end{figure}
 
-
+% CoordSys diagram:
 \begin{figure}[h]
-
-\colorbox{iblue}{
-\psfig{file=diagrams/specu3f.eps,width=6.0in}
-}
-{
-\colorbox{iblue}{
-\begin{minipage}{6.0in}
-Figure 5:  Diagram for remaining metadata:
-Curation, DataID, Derived, Target objects 
-
-\end{minipage}
-}
-}
+  \begin{center}
+  \includegraphics[width=4.25in]{diagrams/coordsys.png}
+  \caption{Diagram for CoordSys object}
+  \end{center}
 \end{figure}
 
+% Dataset diagram:
+\begin{figure}[h]
+  \begin{center}
+  \includegraphics[width=6.0in]{diagrams/dataset.png}
+  \caption{Diagram for remaining metadata: Curation, DataID, Derived, Target objects}
+  \end{center}
+\end{figure}
 
-
+% Datatypes diagram:
+\begin{figure}[h]
+  \begin{center}
+  \includegraphics[width=4.25in]{diagrams/datatypes.png}
+  \caption{Diagram for data types used in this model.}
+  \end{center}
+\end{figure}
 
 
 \clearpage

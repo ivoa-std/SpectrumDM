@@ -8,8 +8,8 @@ DOCNAME = Spectrum
 DOCVERSION = 1.2
 
 # Publication date, ISO format; update manually for "releases"
-DOCDATE = 2022-06-22
-SDATE = 20220622
+DOCDATE = 2022-07-10
+SDATE = 20220710
 
 # What is it you're writing: NOTE, WD, PR, REC, PEN, or EN
 DOCTYPE = WD
@@ -24,8 +24,8 @@ SOURCES = ${DOCNAME}.tex specxml.tex specvot.tex specfits.tex fields_table.tex e
 
 # List of image files to be included in submitted package (anything that
 # can be rendered directly by common web browsers)
-#FIGURES = role_diagram.svg
-FIGURES = role_diagram.eps ivoa.jpg diagrams/specumln3.jpg diagrams/ndataf1.jpg diagrams/ncharf2.jpg diagrams/specstc.jpg diagrams/specu3f.jpg
+#FIGURES = role_diagram.eps ivoa.jpg diagrams/specumln3.jpg diagrams/ndataf1.jpg diagrams/ncharf2.jpg diagrams/specstc.jpg diagrams/specu3f.jpg
+FIGURES = role_diagram.eps ivoa.jpg diagrams/spectrum.png diagrams/data.png diagrams/characterization.png diagrams/coordsys.png diagrams/dataset.png diagrams/datatypes.png
 
 # List of PDF figures (figures that must be converted to pixel images to
 # work in web browsers).
@@ -43,10 +43,8 @@ clean:
 	rm -f Spectrum.pdf Spectrum.ps Spectrum.log Spectrum.dvi Spectrum.out Spectrum.aux Spectrum.toc
 
 doc:	Spectrum.tex
-	latex Spectrum
-	latex Spectrum
-	dvips -o Spectrum.ps -P pdf Spectrum
-	ps2pdf Spectrum.ps Spectrum.pdf
+	pdflatex Spectrum
+	pdflatex Spectrum
 	cp Spectrum.pdf SpectrumDM-${SDATE}.pdf
 
 html:	
