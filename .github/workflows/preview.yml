@@ -61,6 +61,6 @@ jobs:
           It will be updated automatically after each merge of a PullRequest.
           **DO NOT PUBLISH THIS PRE-RELEASE!**"
           _Corresponding commit: ${{ github.sha }}_
-        assets: doc/${{ env.doc_name }}-draft.pdf
+        assets: doc/${{ env.doc_name }}.pdf
         replace_assets: true
         github_token: ${{ secrets.GITHUB_TOKEN }}
