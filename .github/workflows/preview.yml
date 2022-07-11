@@ -38,7 +38,7 @@ jobs:
       run: |
         ls -lrt
         test -f ${{ env.doc_name }}.pdf
-        test -f ${{ env.doc_name }}.bbl
+        #test -f ${{ env.doc_name }}.bbl
     
     - name: Move the auto-pdf-preview tag
       uses: weareyipyip/walking-tag-action@v2
