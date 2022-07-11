@@ -32,7 +32,7 @@ jobs:
         sudo snap install pdftk
     
     - name: Build the document
-      run: make ${{ env.doc_name }}-draft.pdf
+      run: make doc
     
     - name: Check the output
       run: |
