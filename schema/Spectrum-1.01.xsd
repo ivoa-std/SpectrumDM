@@ -196,6 +196,8 @@ value has minOccurs=0 so it can be omitted) -->
 <xs:element minOccurs="0" maxOccurs="1" name="BinLow" type="doubleParamType" />
 <xs:element minOccurs="0" maxOccurs="1" name="BinHigh" type="doubleParamType" />
 <xs:element minOccurs="0" maxOccurs="1" name="BinSize" type="doubleParamType" />
+<xs:element minOccurs="0" maxOccurs="1" name="UpperLimit" type="doubleParamType" />
+<xs:element minOccurs="0" maxOccurs="1" name="LowerLimit" type="doubleParamType" />
 <xs:element minOccurs="0" maxOccurs="1" name="StatError" type="doubleParamType" />
 <xs:element minOccurs="0" maxOccurs="1" name="StatErrLow" type="doubleParamType" />
 <xs:element minOccurs="0" maxOccurs="1" name="StatErrHigh" type="doubleParamType" />

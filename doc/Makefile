@@ -8,8 +8,8 @@ DOCNAME = Spectrum
 DOCVERSION = 1.2
 
 # Publication date, ISO format; update manually for "releases"
-DOCDATE = 2022-07-19
-SDATE = 20220719
+DOCDATE = 2022-07-20
+SDATE = 20220720
 
 # What is it you're writing: NOTE, WD, PR, REC, PEN, or EN
 DOCTYPE = WD

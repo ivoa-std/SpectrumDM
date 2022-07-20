@@ -240,20 +240,22 @@ Data.BackgroundModel.unit     &TUNITn              & meta.unit               & U
 \hline
 \multicolumn{4}{c}{Accuracy Fields - per data point (default to corresponding Spectrum.Char values)} \\
 \hline
-Data.FluxAxis.Accuracy.StatError   &TTYPEn = 'ERR'    & stat.error;phot.flux.density; em.*   & symmetric error & OPT & (Char)\\
-Data.FluxAxis.Accuracy.StatErrLow &TTYPEn='ERR\_LO'       & stat.error;phot.flux.density; em.*;stat.min     & Lower error & OPT & (Char)\\
-Data.FluxAxis.Accuracy.StatErrHigh&TTYPEn='ERR\_HI'       & stat.error;phot.flux.density; em.*;stat.max     & Upper error & OPT & (Char)\\
-Data.FluxAxis.Accuracy.SysError&TTYPEn='SYS\_ERR'        & stat.error.sys;phot.flux.density; em.{\it  ..}    & Systematic error & OPT  & (Char)\\
-Data.FluxAxis.Quality     &TTYPEn='QUALITY'   & meta.code.qual; phot.flux.density, em.*   & Quality mask& OPT    &  0\\
-Data.FluxAxis.Quality.n   &TTYPEn='QUALn'   &     & String value, for n = 0,1,2..; meaning of quality value &OPT & None \\
-Data.SpectralAxis.Accuracy.BinSize &TTYPEn='WAVE\_BIN',etc  & em.*;spect.binSize  & Wavelength bin size  & OPT & (Char)\\
-Data.SpectralAxis.Accuracy.BinLow  & TTYPEn ='WAVE\_LO',etc   & em.*;stat.min & Spectral coord bin lower end & OPT & \\
-Data.SpectralAxis.Accuracy.BinHigh & TTYPEn ='WAVE\_HI',etc   & em.*;stat.max  &Spectral coord bin upper end & OPT & \\
-Data.SpectralAxis.Accuracy.StatError&TTYPEn ='WAVE\_ERR',etc    &  stat.error;em.*  & Spectral coord measurement error & OPT & (Char)\\
-Data.SpectralAxis.Accuracy.StatErrLow&TTYPEn='WAVE\_ELO',etc    & stat.error; em.*;stat.min  & Spectral coord measurement lower error & OPT & (Char)\\
-Data.SpectralAxis.Accuracy.StatErrHigh&TTYPEn='WAVE\_EHI',etc   & stat.error; em.*;stat.max  & Spectral coord measurement upper error & OPT & (Char)\\
-Data.SpectralAxis.Accuracy.SysError &TTYPEn='WAVE\_SYE',etc        & stat.error.sys;em.*  & Spectral coord systematic error & OPT & (Char)\\
-Data.SpectralAxis.Resolution   & TTYPEn ='WAVE\_RES',etc  & spect.resolution; em.*   & Spectral resolution FWHM & OPT & (Char)\\
+Data.FluxAxis.Accuracy.LowerLimit      &TTYPEn='LOWER\_LIMIT'  & stat.error;phot.flux.density; em.*;stat.min     & Lower Limit      & OPT & (None)\\
+Data.FluxAxis.Accuracy.UpperLimit      &TTYPEn='UPPER\_LIMIT'  & stat.error;phot.flux.density; em.*;stat.max     & Upper Limit      & OPT & (None)\\
+Data.FluxAxis.Accuracy.StatError       &TTYPEn='ERR'           & stat.error;phot.flux.density; em.*              & symmetric error  & OPT & (Char)\\
+Data.FluxAxis.Accuracy.StatErrLow      &TTYPEn='ERR\_LO'       & stat.error;phot.flux.density; em.*;stat.min     & Lower error      & OPT & (Char)\\
+Data.FluxAxis.Accuracy.StatErrHigh     &TTYPEn='ERR\_HI'       & stat.error;phot.flux.density; em.*;stat.max     & Upper error      & OPT & (Char)\\
+Data.FluxAxis.Accuracy.SysError        &TTYPEn='SYS\_ERR'      & stat.error.sys;phot.flux.density; em.{\it  ..}  & Systematic error & OPT & (Char)\\
+Data.FluxAxis.Quality                  &TTYPEn='QUALITY'       & meta.code.qual; phot.flux.density, em.*         & Quality mask     & OPT &  0\\
+Data.FluxAxis.Quality.n                &TTYPEn='QUALn'         &                                                 & String value, for n = 0,1,2..; meaning of quality value &OPT & (None)\\
+Data.SpectralAxis.Accuracy.BinSize     &TTYPEn='WAVE\_BIN',etc & em.*;spect.binSize                              & Wavelength bin size             & OPT & (Char)\\
+Data.SpectralAxis.Accuracy.BinLow      &TTYPEn='WAVE\_LO',etc  & em.*;stat.min                                   & Spectral coord bin lower end    & OPT & \\
+Data.SpectralAxis.Accuracy.BinHigh     &TTYPEn='WAVE\_HI',etc  & em.*;stat.max                                   & Spectral coord bin upper end    & OPT & \\
+Data.SpectralAxis.Accuracy.StatError   &TTYPEn='WAVE\_ERR',etc & stat.error;em.*                                 & Spectral coord measurement error       & OPT & (Char)\\
+Data.SpectralAxis.Accuracy.StatErrLow  &TTYPEn='WAVE\_ELO',etc & stat.error; em.*;stat.min                       & Spectral coord measurement lower error & OPT & (Char)\\
+Data.SpectralAxis.Accuracy.StatErrHigh &TTYPEn='WAVE\_EHI',etc & stat.error; em.*;stat.max                       & Spectral coord measurement upper error & OPT & (Char)\\
+Data.SpectralAxis.Accuracy.SysError    &TTYPEn='WAVE\_SYE',etc & stat.error.sys;em.*                             & Spectral coord systematic error        & OPT & (Char)\\
+Data.SpectralAxis.Resolution           &TTYPEn='WAVE\_RES',etc & spect.resolution; em.*                          & Spectral resolution FWHM               & OPT & (Char)\\
 \end{tabular}
 
 \end{minipage}
