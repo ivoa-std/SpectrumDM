@@ -350,28 +350,44 @@ Data model field & FITS keyword& Source & Value if fixed \\
 \multicolumn{4}{c}{ Per-data-point values }\\
 \hline
 \\
-Data.FluxAxis.Value & TTYPEn & S & FLUX\\
-UTYPE of above ...               & TUTYPn & N & 'Spectrum.Data.FluxAxis.Value'\\\
-Data.FluxAxis.Unit & TUNITn& S\\
-Data.FluxAxis.ucd &   TUCDn  & N& (same as Char)\\
-Data.FluxAxis.Accuracy.StatError & TTYPEn  & N & ERR\\
+Data.FluxAxis.Value               & TTYPEn & S & FLUX\\
+UTYPE of above ...                & TUTYPn & N & 'Spectrum.Data.FluxAxis.Value'\\
+Data.FluxAxis.Unit                & TUNITn & S\\
+Data.FluxAxis.ucd                 & TUCDn  & N & (same as Char)\\
+Data.FluxAxis.Accuracy.LowerLimit & TTYPEn & N & LOWER\_LIMIT\\
+Data.FluxAxis.Accuracy.UpperLimit & TTYPEn & N & UPPER\_LIMIT\\ 
+Data.FluxAxis.Accuracy.StatError  & TTYPEn & N & ERR\\
 Data.FluxAxis.Accuracy.StatErrLow & TTYPEn & C & ERR\_LO\\
-Data.FluxAxis.Accuracy.StatErrHigh& TTYPEn& C & ERR\_HI\\ 
-Data.FluxAxis.Accuracy.SysError & TTYPEn & C & SYS\_ERR \\
-Data.FluxAxis.Quality & TTYPEn & C & QUALITY\\
-Data.FluxAxis.QualityN & TTYPEn & C & QUALn\\
-Data.SpectralAxis.Value  & TTYPEn & S & WAVE,ENER,FREQ\\
-UTYPE of above ...               & TUTYPn & N & 'Spectrum.Data.SpectralAxis.Value'\\
-Data.SpectralAxis.Unit & TUNITn & S & (same as Char)\\
-Data.SpectralAxis.ucd &  TUCDn &N & (same as Char) \\
-Data.SpectralAxis.Accuracy.BinSize& TTYPEn & N & WAVE\_BIN,ENER\_BIN, FREQ\_BIN\\
-Data.SpectralAxis.Accuracy.BinLow & TTYPEn & N & WAVE\_LO,ENER\_LO, FREQ\_LO \\
-Data.SpectralAxis.Accuracy.BinHigh& TTYPEn & N & WAVE\_HI,ENER\_HI, FREQ\_HI \\
-Data.SpectralAxis.Accuracy.StatError & TTYPEn& N & WAVE\_ERR,ENER\_ERR, FREQ\_ERR \\
-Data.SpectralAxis.Accuracy.StatErrLow& TTYPEn& N & WAVE\_ELO,ENER\_ELO, FREQ\_ELO \\
-Data.SpectralAxis.Accuracy.StatErrHigh & TTYPEn& N& WAVE\_EHI,ENER\_EHI, FREQ\_EHI \\
-Data.SpectralAxis.Accuracy.SysError & TTYPEn & N &  WAVE\_SYE,ENER\_SYE, FREQ\_SYE \\
-Data.SpectralAxis.Resolution & TTYPEn & N & WAVE\_RES,ENER\_RES, FREQ\_RES \\
+Data.FluxAxis.Accuracy.StatErrHigh& TTYPEn & C & ERR\_HI\\ 
+Data.FluxAxis.Accuracy.SysError   & TTYPEn & C & SYS\_ERR \\
+Data.FluxAxis.Quality             & TTYPEn & C & QUALITY\\
+Data.FluxAxis.QualityN            & TTYPEn & C & QUALn\\
+ & & & \\
+Data.SpectralAxis.Value                & TTYPEn & S & WAVE,ENER,FREQ\\
+UTYPE of above ...                     & TUTYPn & N & 'Spectrum.Data.SpectralAxis.Value'\\
+Data.SpectralAxis.Unit                 & TUNITn & S & (same as Char)\\
+Data.SpectralAxis.ucd                  & TUCDn  & N & (same as Char) \\
+Data.SpectralAxis.order                & TTYPEn & N & ORDER\\
+Data.SpectralAxis.relorder             & TTYPEn & N & RELORDER\\
+Data.SpectralAxis.Accuracy.BinSize     & TTYPEn & N & WAVE\_BIN,ENER\_BIN, FREQ\_BIN\\
+Data.SpectralAxis.Accuracy.BinLow      & TTYPEn & N & WAVE\_LO,ENER\_LO, FREQ\_LO \\
+Data.SpectralAxis.Accuracy.BinHigh     & TTYPEn & N & WAVE\_HI,ENER\_HI, FREQ\_HI \\
+Data.SpectralAxis.Accuracy.StatError   & TTYPEn & N & WAVE\_ERR,ENER\_ERR, FREQ\_ERR \\
+Data.SpectralAxis.Accuracy.StatErrLow  & TTYPEn & N & WAVE\_ELO,ENER\_ELO, FREQ\_ELO \\
+Data.SpectralAxis.Accuracy.StatErrHigh & TTYPEn & N & WAVE\_EHI,ENER\_EHI, FREQ\_EHI \\
+Data.SpectralAxis.Accuracy.SysError    & TTYPEn & N & WAVE\_SYE,ENER\_SYE, FREQ\_SYE \\
+Data.SpectralAxis.Resolution           & TTYPEn & N & WAVE\_RES,ENER\_RES, FREQ\_RES \\
+\\
+\end{tabular}
+\end{minipage}
+}
+
+\colorbox{iblue}{
+\begin{minipage}[l]{7.0in}
+\begin{tabular}{lllp{1.5in}} 
+Data model field & FITS keyword& Source & Value if fixed \\
+\hline
+\\
 Data.TimeAxis.Value & TTYPEn & C & TIME\\
 UTYPE of above ...               & TUTYPn & N & 'Spectrum.Data.TimeAxis.Value' \\
 Data.TimeAxis.Unit &  TUNITn& S  & (same as Char)\\
@@ -384,6 +400,7 @@ Data.TimeAxis.Accuracy.StatError & TTYPEn & N & TIME\_ERR \\
 Data.TimeAxis.Accuracy.StatErrLow & TTYPEn & N & TIME\_ELO \\
 Data.TimeAxis.Accuracy.StatErrHigh& TTYPEn & N & TIME\_EHI \\
 Data.TimeAxis.Accuracy.SysError & TTYPEn & N  & TIME\_SYE \\
+ & & & \\
 Data.BackgroundModel.Value & TTYPEn & N  & BGFLUX \\
 UTYPE of above ...               & TUTYPn & N & 'Spectrum.Data.BackgroundModel.Value'\\
 Data.BackgroundModel.Unit & TUNITn  &S&  (same as FluxAxis) \\
@@ -397,6 +414,7 @@ Data.BackgroundModel.Quality & TTYPEn & N & BGQUAL\\
 \end{tabular}
 \end{minipage}
 }
+
 }
 \vskip 0.2in
 \clearpage

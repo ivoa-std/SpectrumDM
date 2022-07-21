@@ -64,7 +64,7 @@
 \par\noindent \htmtitle{IVOA Spectrum Data Model}{Version 1.2}
 \Large
 \vskip 0.1in
-\par\noindent{\bf IVOA Working Draft 2022-06-22}
+\par\noindent{\bf IVOA Working Draft 2022-07-20}
 \color{black}
 \vskip 0.2in
 
@@ -74,11 +74,11 @@
 
 Data Model Working Group
 
-\par\noindent{\bf This version (Mod 0)}
+\par\noindent{\bf This version (Mod 2)}
 
 { 
 \color{dblue}
-WD-SpectrumDM-1.2-20220622
+WD-SpectrumDM-1.2-20220719
 %\link{http://www.ivoa.net/Documents/latest/SpectrumDM.html}
 }
 
@@ -173,6 +173,8 @@ This version adds support for:
 \subsection{Change Log}
 
 \begin{verbatim}
+2022 Jul 20 V1.2 Mod 2 - Add upper/lower limit elements
+2022 Jul 19 V1.2 Mod 1 - Add spectral order elements
 2022 Jun 22 V1.2 Mod 0 - Document reset to WD for enhancement
 \end{verbatim}
 
@@ -211,6 +213,8 @@ We need to represent a single 1-dimensional spectrum in sufficient
 detail to understand the differences between two spectra of the same
 object and between two spectra of different objects.
 
+We need to be able to identify and distinguish data points by spectral order.
+
 We need to represent time series photometry, with many photometry points
 of the same object at different times.
 
@@ -220,8 +224,6 @@ spectral energy distributions (SED) which
 consist of multiple spectra and photometry points, usually for a single
 object. The 'SED' model will be described in
 a separate document which builds on the structures described here.
-
-TODO: Add new requirements leading to order and limits attributes.
 
 
 \section{Spectral Data Model summary}
@@ -340,7 +342,7 @@ make two separate instances (VO resources).
 % Data diagram:
 \begin{figure}[h]
   \begin{center}
-    \includegraphics[width=4.0in]{diagrams/data.png}
+    \includegraphics[width=5.0in]{diagrams/data.png}
     \caption{Diagram for Data object}
   \end{center}
 \end{figure}
@@ -564,6 +566,23 @@ to the spectrum is rather indirect.
 
 Note 3: `em.wl;obs.atmos' (AWAV) is provided for air wavelengths. The basic spectral
 choices em.wl, em.freq, em.energy are understood to be vacuum values.
+
+\subsubsection{Spectral order}
+
+We define two elements for expressing the spectral order for each point.
+These elements only have meaning for Spectrum.Data (the per-data-point values).
+
+\begin{description}
+\item[order:]  The order number as defined by the instrument configuration.
+  It represents the ‘order of diffraction’, given by the number of wavelengths
+  of monochromatic light where the diffraction occurs with given geometric
+  (eg: angles of rays incidence, reflection) and physical (eg: spacing of
+  the grating grooves) conditions.
+
+\item[relorder:] Relative order is a processing dependent order, typically
+  counting from 1 and increasing as you go either towards red or blue.
+
+\end{description}
 
 
 \begin{flushleft}
@@ -822,16 +841,10 @@ error ellipse, but this is too complicated for the present model.
 We also use a very simple error model for the fluxes: we include plus and minus flux
 errors, and a quality flag. The errors are understood as
 1 sigma gaussian errors which are uncorrelated for different points
-in the spectrum. If the data provider has only upper limit
-information, it should be represented by setting the flux value and
-the lower error value equal to the limit, and the upper error value
-equal to zero (e.g.  5 (+0,-5)). In general applications
-may choose to render measurements as upper limits if the flux value
-is less than some multiple (e.g. 3) of the lower error.
+in the spectrum. 
 We also allow a systematic error value, assumed constant across
 a given spectrum and fully correlated (so that, e.g. it does not enter
 into estimating spectral slopes).
-
 
 {\bf CLARIFICATION: }  the two-sided errors StatErrLow and StatErrHigh are the plus/minus ERRORS,
 not the (value+error, value-error). In other words, if Value = 10 and there
@@ -848,7 +861,20 @@ SpectralCoord, Time, Sky and Flux are optional; however, omitting these fields
 indicates that the errors are unknown. Data providers are STRONGLY
 encouraged to provide explicit error measures whenever possible. 
 
- 
+\subsubsection{Statistical Limits}
+
+The UpperLimit and LowerLimit fields allow data providers to explicitly
+represent statistical limits on the flux values.  In many cases, it can
+be useful to provide both the measured flux, with associated errors, AND
+statistical limits.  For this reason, these limits may be supplied
+independently of the flux values themselves.
+
+{\bf NOTE: } The previous version of this model suggests representing upper 
+limits by setting the flux value and the lower error (StatErrLow) value 
+equal to the limit, and the upper error (StatErrHigh) value equal to
+zero (e.g.  5 (+0,-5)).  While this remains a valid representation, we 
+recommend data providers use the more explicit model elements whenever possible.
+
 
 \subsubsection{Resolution}
 
