@@ -117,8 +117,8 @@ value has minOccurs=0 so it can be omitted) -->
 <xs:complexContent mixed="false">
 <xs:extension base="sedCoordType">
 <xs:sequence>
-<xs:element minOccurs="0" maxOccurs="1" name="order" type="intParamType" />
-<xs:element minOccurs="0" maxOccurs="1" name="relorder" type="intParamType" />
+<xs:element minOccurs="0" maxOccurs="1" name="Order" type="intParamType" />
+<xs:element minOccurs="0" maxOccurs="1" name="RelOrder" type="intParamType" />
 </xs:sequence>
 </xs:extension>
 </xs:complexContent>

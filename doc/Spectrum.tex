@@ -173,12 +173,14 @@ This version adds support for:
 \subsection{Change Log}
 
 \begin{verbatim}
+2023 Mar 17 V1.2 Mod 3 - Correct case for order and relorder attributes
 2022 Jul 20 V1.2 Mod 2 - Add upper/lower limit elements
 2022 Jul 19 V1.2 Mod 1 - Add spectral order elements
 2022 Jun 22 V1.2 Mod 0 - Document reset to WD for enhancement
 \end{verbatim}
 
 
+\newpage
 \subsection{IVOA Architecture Context}
 
 \begin{figure}[h]
@@ -573,13 +575,13 @@ We define two elements for expressing the spectral order for each point.
 These elements only have meaning for Spectrum.Data (the per-data-point values).
 
 \begin{description}
-\item[order:]  The order number as defined by the instrument configuration.
+\item[Order:]  The order number as defined by the instrument configuration.
   It represents the ‘order of diffraction’, given by the number of wavelengths
   of monochromatic light where the diffraction occurs with given geometric
   (eg: angles of rays incidence, reflection) and physical (eg: spacing of
   the grating grooves) conditions.
 
-\item[relorder:] Relative order is a processing dependent order, typically
+\item[RelOrder:] Relative order is a processing dependent order, typically
   counting from 1 and increasing as you go either towards red or blue.
 
 \end{description}
