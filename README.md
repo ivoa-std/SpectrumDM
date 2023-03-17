@@ -1,4 +1,4 @@
-[![PDF-Preview](https://img.shields.io/badge/PDF-Preview-blue)](https://github.com/ivoa-std/SpectrumDM/releases/download/auto-pdf-preview/Spectrum-draft.pdf)
+[![PDF-Preview](https://img.shields.io/badge/PDF-Preview-blue)](https://github.com/ivoa-std/SpectrumDM/releases/download/auto-pdf-preview/Spectrum.pdf)
 
 
 # Spectum DM
