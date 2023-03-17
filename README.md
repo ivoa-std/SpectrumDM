@@ -1,3 +1,6 @@
+[![PDF-Preview](https://img.shields.io/badge/PDF-Preview-blue)](https://github.com/ivoa-std/SpectrumDM/releases/download/auto-pdf-preview/Spectrum-draft.pdf)
+
+
 # Spectum DM
 
 A data model describing the structure of spectrophotometric datasets with spectral and temporal coordinates and associated metadata.
