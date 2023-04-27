@@ -240,8 +240,8 @@ Data.BackgroundModel.unit     &TUNITn              & meta.unit               & U
 \hline
 \multicolumn{4}{c}{Accuracy Fields - per data point (default to corresponding Spectrum.Char values)} \\
 \hline
-Data.FluxAxis.Accuracy.LowerLimit      &TTYPEn='LOWER\_LIMIT'  & stat.error;phot.flux.density; em.*;stat.min     & Lower Limit      & OPT & (None)\\
-Data.FluxAxis.Accuracy.UpperLimit      &TTYPEn='UPPER\_LIMIT'  & stat.error;phot.flux.density; em.*;stat.max     & Upper Limit      & OPT & (None)\\
+Data.FluxAxis.Accuracy.LowerLimit      &TTYPEn='LOWER\_LIMIT'  & instr.saturation;phot.flux.density; stat.min    & Lower Limit      & OPT & (None)\\
+Data.FluxAxis.Accuracy.UpperLimit      &TTYPEn='UPPER\_LIMIT'  & instr.sensitivity;phot.flux.density; stat.max   & Upper Limit      & OPT & (None)\\
 Data.FluxAxis.Accuracy.StatError       &TTYPEn='ERR'           & stat.error;phot.flux.density; em.*              & symmetric error  & OPT & (Char)\\
 Data.FluxAxis.Accuracy.StatErrLow      &TTYPEn='ERR\_LO'       & stat.error;phot.flux.density; em.*;stat.min     & Lower error      & OPT & (Char)\\
 Data.FluxAxis.Accuracy.StatErrHigh     &TTYPEn='ERR\_HI'       & stat.error;phot.flux.density; em.*;stat.max     & Upper error      & OPT & (Char)\\
