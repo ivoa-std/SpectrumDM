@@ -35,7 +35,7 @@
 \newcommand{\nchange}[1]{{\color{ired} #1}}
 \newsavebox{\fmbox}
 \newenvironment{fmpage}
-     {\begin{lrbox}{\fmbox}\begin{minipage}{6.5in}}
+     {\begin{lrbox}{\fmbox}\begin{minipage}{6.75in}}
      {\end{minipage}\end{lrbox}\colorbox{iblue}{\fbox{\usebox{\fmbox}}}}
 
 \newenvironment{fmlpage}
@@ -64,7 +64,7 @@
 \par\noindent \htmtitle{IVOA Spectrum Data Model}{Version 1.2}
 \Large
 \vskip 0.1in
-\par\noindent{\bf IVOA Working Draft 2023-03-17}
+\par\noindent{\bf IVOA Working Draft 2023-04-27}
 \color{black}
 \vskip 0.2in
 
@@ -74,11 +74,11 @@
 
 Data Model Working Group
 
-\par\noindent{\bf This version (Mod 3)}
+\par\noindent{\bf This version (Mod 4)}
 
 { 
 \color{dblue}
-WD-SpectrumDM-1.2-20230317
+WD-SpectrumDM-1.2-20230427
 %\link{http://www.ivoa.net/Documents/latest/SpectrumDM.html}
 }
 
@@ -173,6 +173,7 @@ This version adds support for:
 \subsection{Change Log}
 
 \begin{verbatim}
+2023 Apr 27 V1.2 Mod 4 - Correct UTypes in VOTable example 1.
 2023 Mar 17 V1.2 Mod 3 - Correct case for order and relorder attributes
 2022 Jul 20 V1.2 Mod 2 - Add upper/lower limit elements
 2022 Jul 19 V1.2 Mod 1 - Add spectral order elements
