@@ -64,7 +64,7 @@
 \par\noindent \htmtitle{IVOA Spectrum Data Model}{Version 1.2}
 \Large
 \vskip 0.1in
-\par\noindent{\bf IVOA Proposed Recommendation 2023-09-07}
+\par\noindent{\bf IVOA Recommendation 2023-12-15}
 \color{black}
 \vskip 0.2in
 
@@ -74,11 +74,11 @@
 
 Data Model Working Group
 
-\par\noindent{\bf This version (Mod 4)}
+\par\noindent{\bf This version}
 
 { 
 \color{dblue}
-PR-SpectrumDM-1.2-20230907
+REC-SpectrumDM-1.2-20231215
 %\link{http://www.ivoa.net/Documents/latest/SpectrumDM.html}
 }
 
@@ -109,10 +109,15 @@ and the IVOA Data Access Layer and Data Model Working Groups.
 
 We present a data model describing the structure of spectrophotometric
 datasets with spectral and temporal coordinates and associated metadata.
-This data model may be used to represent 
-spectra, time series data,
+This data model may be used to represent spectra, time series data,
 segments of SED (Spectral Energy Distributions) and other
 spectral or temporal associations.
+
+Author's note:  This minor version update to the model satisfies a specific request.
+We acknowledge that there are elements to the model which do not follow current IVOA
+practices and would benefit from modernization. This was intentionally not done during
+this revision to minimize the impact on existing implementations.
+They can be addressed in a subsequent update to the model.
 
 \end{abstract}
 
@@ -450,8 +455,12 @@ frequency versus wavelength on the spectral coordinate `X-axis'.
 In the list of UCDs below, the notation "em.*" is used to indicate "either
 em.wl, em.freq or em.energy"; exactly one of these must be used for
 any one instantiation of the model (so you can't put a literal em.* in
-a UTYPE field for a spectrum document, you should put whichever of
+a UCD field in a spectrum document, you should put whichever of
 em.wl etc. is appropriate for the actual data.)
+
+The UCDs specified in this document are non-normative, and should be considered
+as suggested or example values to convey the intent. Users should take care to
+select and validate UCDs which are appropriate and valid for their data.
 
 The current list of valid UCDs is
 http://cdsweb.u-strasbg.fr/UCD/ucd1p-words.txt

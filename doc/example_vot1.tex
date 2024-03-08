@@ -50,7 +50,7 @@
 <GROUP utype="spec:Spectrum.Char">
  <GROUP utype="spec:Spectrum.Char.SpatialAxis">
    <PARAM name="SpatialAxisName" utype="spec:Spectrum.Char.SpatialAxis.name" ucd="pos.eq" 
-                                                                               value="Sky" unit="deg"/>
+                                                               datatype="char" value="Sky" unit="deg"/>
    <GROUP utype="spec:Spectrum.Char.SpatialAxis.Coverage">
     <GROUP utype="spec:Spectrum.Char.SpatialAxis.Coverage.Location">
      <PARAM name="SkyPos" utype="spec:Spectrum.Char.SpatialAxis.Coverage.Location.Value" ucd="pos.eq" 
@@ -64,7 +64,8 @@
  </GROUP>
 
  <GROUP utype="spec:Spectrum.Char.TimeAxis">
-  <PARAM name="TimeAxisName" utype="spec:Spectrum.Char.TimeAxis.Name" ucd="time" value="Time" unit="d"/>
+  <PARAM name="TimeAxisName" utype="spec:Spectrum.Char.TimeAxis.Name" ucd="time" 
+                                                                datatype="char" value="Time" unit="d"/>
   <GROUP utype="spec:Spectrum.Char.TimeAxis.Coverage">
    <GROUP utype="spec:Spectrum.Char.TimeAxis.Coverage.Location">
     <PARAM name="TimeObs" utype="spec:Spectrum.Char.TimeAxis.Coverage.Location.Value" 
@@ -87,7 +88,7 @@
 
  <GROUP utype="spec:Spectrum.Char.SpectralAxis">
   <PARAM name="SpectralAxisName" utype="spec:Spectrum.Char.SpectralAxis.Name" ucd="em.wl" 
-                                                                   value="Wavelength" unit="angstrom"/>
+                                                   datatype="char" value="Wavelength" unit="angstrom"/>
   <GROUP utype="spec:Spectrum.Char.SpectralAxis.Coverage">
    <GROUP utype="spec:Spectrum.Char.SpectralAxis.Coverage.Bounds">
     <PARAM name="SpectralExtent" utype="spec:Spectrum.Char.SpectralAxis.Coverage.Bounds.Extent" 
