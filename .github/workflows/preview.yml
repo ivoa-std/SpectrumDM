@@ -28,17 +28,16 @@ jobs:
     - name: Setup dependencies
       run: |
         sudo apt update
-        sudo apt install  texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended texlive-font-utils xsltproc latexmk cm-super
+        sudo apt install texlive-latex-base texlive-latex-recommended texlive-latex-extra texlive-fonts-recommended xsltproc latexmk cm-super
         sudo snap install pdftk
     
     - name: Build the document
-      run: make doc
+      run: make ${{ env.doc_name }}-draft.pdf
     
     - name: Check the output
       run: |
-        ls -lrt
-        test -f ${{ env.doc_name }}.pdf
-        #test -f ${{ env.doc_name }}.bbl
+        test -f ${{ env.doc_name }}-draft.pdf
+        test -f ${{ env.doc_name }}.bbl
     
     - name: Move the auto-pdf-preview tag
       uses: weareyipyip/walking-tag-action@v2
@@ -61,6 +60,6 @@ jobs:
           It will be updated automatically after each merge of a PullRequest.
           **DO NOT PUBLISH THIS PRE-RELEASE!**"
           _Corresponding commit: ${{ github.sha }}_
-        assets: doc/${{ env.doc_name }}.pdf
+        assets: doc/${{ env.doc_name }}-draft.pdf
         replace_assets: true
         github_token: ${{ secrets.GITHUB_TOKEN }}
