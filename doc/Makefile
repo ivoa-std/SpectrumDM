@@ -40,8 +40,16 @@ FILES = ${SOURCES} ${SCHEMA} specrc3.html ${FIGURES}
 HFILES = SpectrumDM-${SDATE}.pdf SpectrumDM-${SDATE}.html ${SCHEMA} ${FIGURES}
 
 clean:
-	rm -f Spectrum.pdf Spectrum.ps Spectrum.log Spectrum.dvi Spectrum.out Spectrum.aux Spectrum.toc
+	rm -f Spectrum-draft.pdf Spectrum.pdf Spectrum.ps Spectrum.log Spectrum.dvi Spectrum.out Spectrum.aux Spectrum.toc
 
+# Git workflow target - release
+Spectrum.pdf:	doc
+
+# Git workflow target - preview
+Spectrum-draft.pdf:	doc
+	cp Spectrum.pdf Spectrum-draft.pdf
+
+# development target
 doc:	Spectrum.tex
 	pdflatex Spectrum
 	pdflatex Spectrum
