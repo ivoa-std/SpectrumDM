@@ -35,7 +35,7 @@
 \newcommand{\nchange}[1]{{\color{ired} #1}}
 \newsavebox{\fmbox}
 \newenvironment{fmpage}
-     {\begin{lrbox}{\fmbox}\begin{minipage}{6.5in}}
+     {\begin{lrbox}{\fmbox}\begin{minipage}{6.75in}}
      {\end{minipage}\end{lrbox}\colorbox{iblue}{\fbox{\usebox{\fmbox}}}}
 
 \newenvironment{fmlpage}
@@ -52,7 +52,7 @@
 
 \vskip -1in
 \heol
-\psfig{file=ivoa.ps,width=5.0in}
+\psfig{file=ivoa.eps,width=5.0in}
 
 \definecolor{ipink}{rgb}{1.0,0.937,0.957}
 \definecolor{ired}{rgb}{1.0,0.5,0.5}
@@ -61,36 +61,40 @@
 \definecolor{iblue}{rgb}{0.9,0.9,1.0}
 \color{dblue}
 \vskip 0.2in
-\par\noindent \htmtitle{IVOA Spectrum Data Model}{Version 1.1}
+\par\noindent \htmtitle{IVOA Spectrum Data Model}{Version 1.2}
 \Large
 \vskip 0.1in
-\par\noindent{\bf IVOA Proposed Recommendation 20111020}
-\color{Black}
+\par\noindent{\bf IVOA Recommendation 2023-12-15}
+\color{black}
 \vskip 0.2in
 
 \normalsize
 
-\par\noindent{\bf This version (Mod 8)}
+\par\noindent{\bf Working group}
+
+Data Model Working Group
+
+\par\noindent{\bf This version}
 
 { 
 \color{dblue}
-%\htmladdnormallink{http://www.ivoa.net/Documents/REC/DM/SpectrumDM-20111020.pdf}{}
-PR-SpectrumDM-1.1-20111020
+REC-SpectrumDM-1.2-20231215
 %\link{http://www.ivoa.net/Documents/latest/SpectrumDM.html}
 }
 
 \par\noindent{\bf Previous versions:}
 
 {\color{dblue}
-\url{http://www.ivoa.net/Documents/REC/DM/SpectrumDM-20110318.pdf}
-%\link{http://www.ivoa.net/Documents/PR/DM/SpectrumDM-20070913.html}
+  \url{https://www.ivoa.net/documents/SpectrumDM/20111120/REC-SpectrumDM-1.1-20111120.pdf}
+  
+  \url{https://www.ivoa.net/Documents/REC/DM/SpectrumDM-20071029.pdf}
 }
 
 \vskip 0.2in
 
 \noindent{\bf Editors:}
 
-Jonathan McDowell, Doug Tody
+Mark Cresitello-Dittmar
 
 \noindent{\bf Contributors:}
 
@@ -105,10 +109,15 @@ and the IVOA Data Access Layer and Data Model Working Groups.
 
 We present a data model describing the structure of spectrophotometric
 datasets with spectral and temporal coordinates and associated metadata.
-This data model may be used to represent 
-spectra, time series data,
+This data model may be used to represent spectra, time series data,
 segments of SED (Spectral Energy Distributions) and other
 spectral or temporal associations.
+
+Author's note:  This minor version update to the model satisfies a specific request.
+We acknowledge that there are elements to the model which do not follow current IVOA
+practices and would benefit from modernization. This was intentionally not done during
+this revision to minimize the impact on existing implementations.
+They can be addressed in a subsequent update to the model.
 
 \end{abstract}
 
@@ -116,23 +125,11 @@ spectral or temporal associations.
 
 \subsection*{ Status of this document }
 
-This is a Proposed Recommendation, developed with the intention to support the
-Simple Spectral Access Protocol. 
-The working group seeks confirmation that comments have been
-addressed to the satisfaction of the full IVOA community. 
-
-This document has been developed with support from 
-
-the National Science
-Foundation's\footnote{\url{http://www.nsf.gov/}} Information Technology Research
-Program under Cooperative Agreement AST0122449 with The Johns Hopkins
-University, 
-from the UK Particle Physics and Astronomy Research Council
-(PPARC\footnote{\url{http://www.pparc.ac.uk}}) 
-and from the European Commission's
-Sixth Framework Program\footnote{\url{http://fp6.cordis.lu/fp6/home.cfm}}
-via the Optical Infrared Coordination Network (OPTICON\footnote{\url{http://www.astro-opticon.org}}).
-
+This is an IVOA Proposed Recommendation made available for
+public review. It is appropriate to reference this document
+only as a recommended standard that is under review and
+which may be changed before it is accepted as a full
+Recommendation.
 
 The {\bf Virtual Observatory (VO)} is general term for a collection of
 federated resources that can be used to conduct astronomical research,
@@ -173,140 +170,32 @@ We distinguish in several places between the implementation proposed in
 this document, referred to as Version 1, and capabilities proposed for
 possible later implementation.
 
-This version fixes some issues coming from implementation feedback.
-Most fixes are minor and do not represent any fundamental changes with respect to the previous
-Recommendation. Modifications to UCDs (Table 1) can have an impact on implementations and/or validators.
-
+This version adds support for:
+\begin{itemize}
+  \item Order: associate a spectral order to each data point of the spectrum.
+  \item Upper/Lower limits: explicit specification of a limiting measurement.
+\end{itemize}
 
 
 \subsection{Change Log}
 
 \begin{verbatim}
-2011 Oct 20 V1.1 Mod 8 - Section 1 (Motivation): added scope of v1.1 changes.
-  Section 1.2 (Architecture): dropped references to SpectrumDM1.2.
-  References update. (As suggested by Christophe Arviset).
-
-2011 Oct 17  V1.1 Mod 7 - UCD updates suggested by S. Derriere.
-
-2011 Mar 19  V1.1 Mod 6  - Architecture section
-
-2011 Mar 3   V1.1 (1.04) Mod 5 - Typo corrections
-
-2011 Jan 19  V1.04 Mod 4 - Further minor updates for 2009 Dec B. Rino comments.
-
-2010 Dec 19  V1.04 Mod 3 - Further text clarifications to the previous changes.
-Note that there have been no changes to the XML schema.
-
-2010 Apr 29  V1.04 Mod 2 Updated to account for comments by B. Rino. 
- - added extra defatuls for missing utypes
-  in FITS (CoordSys.SpaceFrame.UCD, CoordSys.TimeFrame.UCD, CoordSys.SpectralFrame.UCD).           
- - added FITS SKY_REF keyword for missing utype CoordSys.SpaceFrame.RefPos
- - clarified meaning of '*' shorthand in listings of UCDs.
-
-2010 Apr 21  V1.04: Made clear that 'mandatory' is for the spectrum document use case
-and that other use cases can redfine which items are mandatory.
-
-2009 Apr  5  V1.03 Mod 1: Fixed typo for ESAC SI dimensional codes and corrected stat.error
-UCDs (stat.error must be primary).
-
-2007 Oct 29 V1.03: SpectrumDM 1.03 released as a Recommendation
-
-2007 Oct 28  V1.02 Rev 2: Corrected HTML version; corrected author list
-
-2007 Aug 26  V1.01 RC3 Rev 2 = V1.02 RC3 Rev 2
- - Minor edits and corrections to examples;
-clarification of IVOA identifiers; added NORMALIZED
-calibration option. (Date changed to Sep 13 for IVOA Doc submission only;
-version number changed at request of IVOA Doc Coord)
-
-2007 Jul 10  V1.01 RC3 Rev 1
- - Minor edits following RFC
-
-2007 May 15  V1.01 RC2 Rev 15
- - Proposed recommendation.
-
-2007 May  1  V1.01 RC2 Rev 14
- - Trivial cover formatting
-
-2007 Apr 30 V1.01 RC2 Rev 13
- - Added Support.Extent as suggested by A. Micol
- - Improved text in several places
-
-2007 Apr 26 V1.01 RC2 Rev 12
- - UCD time.expo updated to time.duration/stop/start;obs.exposure
- - Updated VOTABLE examples
-
-2007 Apr 25 V1.01 RC2 Rev 11
- - Included the correct file; Rev 10 was bogus
-
-2007 Apr 17 V1.01 RC2 Rev 10
- - Fixed errors in XSD and in text
- - Revised Characterization text
- - Added REST_Z FITS keyword for CoordSys.SpectralFrame.Redshift
-
-2007 Apr 12 V1.01 RC2 Rev 9
- - Incorporate D Tody comments
- - DataID.Title mandatory
- - Changes to recommended case of Utype fields e.g. Redshift not redshift.
- - Utypes involving stat.error changed to put the stat.error first.
-
-2007 Apr 4 V1.01 RC2 Rev 8
- - FITS keyword TMID added; TDMINn/TDMAXn
-
-2007 Apr 1 V1.01 RC2 Rev 7
- - Modifications for compatibility with Char working draft:
-   Moved Calibration utype from CharAxis.Accuracy to CharAxis
-   Added SamplingPrecision.SampleExtent and
-   SamplingPrecision.SamplingPrecisionRefVal.FillFactor
-   
- 
-2007 Feb 12 V1.01 RC2 Rev 5
- - Curation.Reference can have multiple instances
-
-
-2007 Jan 17 V1.01 RC2 Rev 4
- - Changed FITS keyword SIZE to DATALEN (D Tody request)
- - Added text describing use of non standard units.
-- Reformat units in Tables 2,3 to OGIP convention
-
-2006 Dec 11 V1.01 RC2 Rev 3
- - Fixd more typos in XSD and XML example
-
-2006 Dec 6 V1.01 RC2 Rev 2
- - Upgraded UCDs to version 1.21
- - Added SpectralAxis.ResPower and SPEC_RP keyword
-   for resolving power; added element to XSD.
- - XSD changed segmentType definition to put Data element at end of sequence.
- - XSD corrected type errors in a few cases in Curation type.
- - XSD added missing elements CreatorDID, Bandpass to DataID.
- - XML instance example corrected errors in Characterization axes. 
- - FITS keywords changed: CREATOR to AUTHOR; DER_ERR to DER_ZERR  
- - FITS added more TUTYPn keyword examples.
- - FITS added comment on VOCSID
- - Corrected mistakes in FITS and VOT examples
- - Clarified role of Aperture
- - Further clarified CreatorDID, PublisherDID, DatasetID distinction.
- - Clarifications and corrections in text
-
-2006 Oct 22 V1.0 RC1 (since V0.98d Rev 4)
-- Added table numbers
-- Changed some defaults in Table 1
-- Added flux UCDs for transmission curves, polarized flux
-- Amplified discussion of RedshiftFrame
-- Added Spectral location and bounds
-- Reorganized order of some sections
-- Further rationalization of FITS keywords, rewrote FITS section
-- Added TUCDn and TUTYPn
-
+2023 Apr 27 V1.2 Mod 4 - Correct UTypes in VOTable example 1.
+                         Update UCD assignment for upper/lower limit elements
+2023 Mar 17 V1.2 Mod 3 - Correct case for order and relorder attributes
+2022 Jul 20 V1.2 Mod 2 - Add upper/lower limit elements
+2022 Jul 19 V1.2 Mod 1 - Add spectral order elements
+2022 Jun 22 V1.2 Mod 0 - Document reset to WD for enhancement
 \end{verbatim}
 
 
+\newpage
 \subsection{IVOA Architecture Context}
 
 \begin{figure}[h]
 
 \colorbox{iblue}{
-\psfig{file=sd.eps,width=6.0in}
+\psfig{file=role_diagram.eps,width=6.0in}
 }
 \caption{Spectrum DM in IVOA architecture}
 \end{figure}
@@ -335,6 +224,8 @@ We need to represent a single 1-dimensional spectrum in sufficient
 detail to understand the differences between two spectra of the same
 object and between two spectra of different objects.
 
+We need to be able to identify and distinguish data points by spectral order.
+
 We need to represent time series photometry, with many photometry points
 of the same object at different times.
 
@@ -344,6 +235,7 @@ spectral energy distributions (SED) which
 consist of multiple spectra and photometry points, usually for a single
 object. The 'SED' model will be described in
 a separate document which builds on the structures described here.
+
 
 \section{Spectral Data Model summary}
 
@@ -395,29 +287,15 @@ In later sections we elaborate these concepts in detail, including some
 complications that we explicitly do not attempt to handle in this
 version.
 
-
+% Overview diagram:
 \begin{figure}[h]
-
-\colorbox{iblue}{
-\psfig{file=specumln3.eps,width=6.0in}
-}
-
-
-
-
-\colorbox{iblue}{
-
-\begin{minipage}{6.0in}
-Figure 1: 
-UML class diagram for the spectral data model.
-
-The Characterization, Curation, DataID and Derived classes are 
-shown in detail below in diagram form and
-with further text description in Section 5.
-\end{minipage}
-}
+  \begin{center}
+    \includegraphics[width=\textwidth]{diagrams/spectrum.png}
+    \caption{UML class diagram for the spectral data model.  The Characterization, Curation, DataID and Derived classes are shown in
+      detail below in diagram form and with further text description in Section 5.
+    }
+  \end{center}
 \end{figure}
-
 
 \subsection{Use Cases and Required Fields}
 
@@ -472,72 +350,45 @@ for a single dataset, you must (in this version of the model)
 make two separate instances (VO resources).
 
 
-
-
+% Data diagram:
 \begin{figure}[h]
-
-\colorbox{iblue}{
-\psfig{file=ndataf1.eps,width=6.0in}
-}
-{
-\colorbox{iblue}{
-\begin{minipage}{6.0in}
-Figure 2: Diagram for Data object
-
-\end{minipage}
-}
-}
-
-\colorbox{iblue}{
-\psfig{file=ncharf2.eps,width=6.0in}
-}
-{
-\colorbox{iblue}{
-\begin{minipage}{6.0in}
-Figure 3: Diagram for Characterization object
-\end{minipage}
-}
-}
-
+  \begin{center}
+    \includegraphics[width=5.0in]{diagrams/data.png}
+    \caption{Diagram for Data object}
+  \end{center}
 \end{figure}
 
-
+% Characterization diagram:
 \begin{figure}[h]
-
-
-\colorbox{iblue}{
-%\psfig{file=spec97f4.eps,width=3.0in}
-\psfig{file=specstc.eps,width=6.0in}
-}
-{
-\colorbox{iblue}{
-\begin{minipage}{6.0in}
-Figure 4: Diagram for CoordSys object
-
-\end{minipage}
-}
-}
+  \begin{center}
+  \includegraphics[width=6.0in]{diagrams/characterization.png}
+  \caption{Diagram for Characterization object}
+  \end{center}
 \end{figure}
 
-
+% CoordSys diagram:
 \begin{figure}[h]
-
-\colorbox{iblue}{
-\psfig{file=specu3f.eps,width=6.0in}
-}
-{
-\colorbox{iblue}{
-\begin{minipage}{6.0in}
-Figure 5:  Diagram for remaining metadata:
-Curation, DataID, Derived, Target objects 
-
-\end{minipage}
-}
-}
+  \begin{center}
+  \includegraphics[width=4.25in]{diagrams/coordsys.png}
+  \caption{Diagram for CoordSys object}
+  \end{center}
 \end{figure}
 
+% Dataset diagram:
+\begin{figure}[h]
+  \begin{center}
+  \includegraphics[width=6.0in]{diagrams/dataset.png}
+  \caption{Diagram for remaining metadata: Curation, DataID, Derived, Target objects}
+  \end{center}
+\end{figure}
 
-
+% Datatypes diagram:
+\begin{figure}[h]
+  \begin{center}
+  \includegraphics[width=4.25in]{diagrams/datatypes.png}
+  \caption{Diagram for data types used in this model.}
+  \end{center}
+\end{figure}
 
 
 \clearpage
@@ -604,8 +455,12 @@ frequency versus wavelength on the spectral coordinate `X-axis'.
 In the list of UCDs below, the notation "em.*" is used to indicate "either
 em.wl, em.freq or em.energy"; exactly one of these must be used for
 any one instantiation of the model (so you can't put a literal em.* in
-a UTYPE field for a spectrum document, you should put whichever of
+a UCD field in a spectrum document, you should put whichever of
 em.wl etc. is appropriate for the actual data.)
+
+The UCDs specified in this document are non-normative, and should be considered
+as suggested or example values to convey the intent. Users should take care to
+select and validate UCDs which are appropriate and valid for their data.
 
 The current list of valid UCDs is
 http://cdsweb.u-strasbg.fr/UCD/ucd1p-words.txt
@@ -695,7 +550,7 @@ The FITS serialization is described in more detail in a later section.
 
 %\htwidth{700}
 
-\input{tab.tex}
+\input{fields_table.tex}
 
 %\htwidth{0}
 
@@ -726,6 +581,23 @@ to the spectrum is rather indirect.
 
 Note 3: `em.wl;obs.atmos' (AWAV) is provided for air wavelengths. The basic spectral
 choices em.wl, em.freq, em.energy are understood to be vacuum values.
+
+\subsubsection{Spectral order}
+
+We define two elements for expressing the spectral order for each point.
+These elements only have meaning for Spectrum.Data (the per-data-point values).
+
+\begin{description}
+\item[Order:]  The order number as defined by the instrument configuration.
+  It represents the ‘order of diffraction’, given by the number of wavelengths
+  of monochromatic light where the diffraction occurs with given geometric
+  (eg: angles of rays incidence, reflection) and physical (eg: spacing of
+  the grating grooves) conditions.
+
+\item[RelOrder:] Relative order is a processing dependent order, typically
+  counting from 1 and increasing as you go either towards red or blue.
+
+\end{description}
 
 
 \begin{flushleft}
@@ -984,16 +856,10 @@ error ellipse, but this is too complicated for the present model.
 We also use a very simple error model for the fluxes: we include plus and minus flux
 errors, and a quality flag. The errors are understood as
 1 sigma gaussian errors which are uncorrelated for different points
-in the spectrum. If the data provider has only upper limit
-information, it should be represented by setting the flux value and
-the lower error value equal to the limit, and the upper error value
-equal to zero (e.g.  5 (+0,-5)). In general applications
-may choose to render measurements as upper limits if the flux value
-is less than some multiple (e.g. 3) of the lower error.
+in the spectrum. 
 We also allow a systematic error value, assumed constant across
 a given spectrum and fully correlated (so that, e.g. it does not enter
 into estimating spectral slopes).
-
 
 {\bf CLARIFICATION: }  the two-sided errors StatErrLow and StatErrHigh are the plus/minus ERRORS,
 not the (value+error, value-error). In other words, if Value = 10 and there
@@ -1010,7 +876,20 @@ SpectralCoord, Time, Sky and Flux are optional; however, omitting these fields
 indicates that the errors are unknown. Data providers are STRONGLY
 encouraged to provide explicit error measures whenever possible. 
 
- 
+\subsubsection{Statistical Limits}
+
+The UpperLimit and LowerLimit fields allow data providers to explicitly
+represent statistical limits on the flux values.  In many cases, it can
+be useful to provide both the measured flux, with associated errors, AND
+statistical limits.  For this reason, these limits may be supplied
+independently of the flux values themselves.
+
+{\bf NOTE: } The previous version of this model suggests representing upper 
+limits by setting the flux value and the lower error (StatErrLow) value 
+equal to the limit, and the upper error (StatErrHigh) value equal to
+zero (e.g.  5 (+0,-5)).  While this remains a valid representation, we 
+recommend data providers use the more explicit model elements whenever possible.
+
 
 \subsubsection{Resolution}
 
@@ -1865,7 +1744,7 @@ http://www.ivoa.net/Documents/latest/UCD.html
 
 \clearpage
 
-\input{specxml2}
+\input{specxml}
 
 
 \clearpage
@@ -1896,6 +1775,6 @@ http://www.ivoa.net/Documents/latest/UCD.html
 }
 
 \clearpage
-\input{fits2}
+\input{specfits}
 
 \end{document}

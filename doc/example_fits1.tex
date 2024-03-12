@@ -1,0 +1,143 @@
+{  \footnotesize
+\begin{verbatim}
+XTENSION= 'BINTABLE'           / binary table extension
+BITPIX  =                    8 / 8-bit bytes
+NAXIS   =                    2 / 2-dimensional binary table
+NAXIS1  =                57344 / width of table in bytes
+NAXIS2  =                    1 / number of rows in table
+PCOUNT  =                    0 / size of special data area
+GCOUNT  =                    1 / one data group (required keyword)
+TFIELDS =                    7 / number of fields in each row
+EXTNAME = 'SPECTRUM '           / name of this binary table extension
+VOCLASS = 'Spectrum V1.0'      / VO Data Model
+DATALEN =        180           / Segment size
+VOSEGT  = 'Spectrum'           / Segment type
+VOCSID  = 'MY-ICRS-TOPO'          / Coord sys ID
+RADECSYS= 'FK5    '           / Not default - usually ICRS
+EQUINOX =  2.0000000000000E+03 / default
+TIMESYS = 'TT     '           / Time system
+MJDREF  =  0.0                 / [d] MJD zero point for times
+SPECSYS = 'TOPOCENT'            / Wavelengths are as observed
+VOPUB   = 'CfA Archive'        / VO Publisher authority
+VOREF   = '2006ApJ...999...99X'  / Bibcode for citation
+VOPUBID = 'ivo://cfa.harvard.edu' / VO Publisher ID URI
+VOVER   = '1.0'                   / VO Curation version
+CONTACT = 'Jonathan McDowell, CfA'/
+EMAIL   = 'jcm@cfa.harvard.edu'   /
+VORIGHTS= 'public'  /
+VODATE  = '2004-08-30'     /
+DS_IDPUB= 'ivo://cfa.harvard.edu/spec#10304' / Publisher DID for dataset
+COMMENT  DS_IDPUB usually the same as DS_IDENT?
+OBJECT  = 'ARP 220 '           / Source name
+OBJDESC = 'Merging galaxy Arp 220' / Source desc
+SRCCLASS= 'Galaxy'             /
+SPECTYPE= 'ULIRG'              /
+REDSHIFT=              0.01812  / Emission redshift
+RA_TARG      =     233.73791700     / [deg] Observer's specified target RA
+DEC_TARG     =      23.50333300     / [deg] Observer's specified target Dec
+TARGVAR =    0.2    /  20 percent variability amplitude
+TITLE   = 'Observations of Merging Galaxies' /
+AUTHOR  = 'MMT Archive'       / VO Creator
+COLLECT1= 'Misc Pointed Observations'  / Collection
+DS_IDENT= 'ivo://cfa.harvard.edu/spec#10304' / Publisher DID for dataset
+CR_IDENT= 'ivo://cfa.harvard.edu/tdc#MMT4302-102' / Creator internal ID for dataset
+DATE    = '2004-08-30T14:18:17' / Date and time of file creation
+VERSION =  2                     / Reprocessed 2004 Aug
+TELESCOP= 'MMT '              / Telescope  [Not part of Spectrum DM]
+INSTRUME= 'MMT/BCS '          / Instrument
+FILTER  = 'G220    '          / Grating  [Not part of Spectrum DM]
+CRETYPE = 'Archival'          / Not an on-the-fly dataset
+VOLOGO  = 'http://cfa.harvard.edu/vo/cfalogo.jpg' / VO Creator logo
+CONTRIB1= 'Jonathan McDowell'  / Contributor
+CONTRIB2= 'Wilhelm Herschel'  / Contributor
+CONTRIB3= 'Harlow Shapley'     / Contributor
+DSSOURCE= 'Pointed'   /  Survey or pointed, etc
+DER_SNR =         5.0  /   Estimate of signal-to-noise
+DER_Z   =       0.01845   /  Redshift measured in this spectrum
+DER_ZERR =       0.00010   /  Error in DER_Z
+TIMESDIM= 'T'                  / Time SIDim 
+SPECSDIM= '10-10 L'             / Spectral SIDim
+FLUXSDIM= '10+7 ML-1T-3'       / Flux SDim
+SYS_ERR =        0.05            / Fractional systematic error in flux
+FLUX_CAL= 'Calibrated'   /
+SPEC_ERR=        0.01 / Stat error in spec coord, in SPEC units
+SPEC_SYE=        0.001   /   Frac sys error in spec coord
+SPEC_CAL= 'Calibrated'
+SPEC_RES=              5.0  / [angstrom] Spectral resolution
+SPECBAND= 'Optical'    / SED.Bandpass
+SPEC_RP =             800.0  / Spectral resolving power
+SPEC_VAL=            4100.0  / [angstrom]  Characteristic spec coord
+SPEC_BW =            1800.0  / [angstrom]  Width of spectrum
+SPEC_FIL=               1.0  / No gaps between channels
+TIME_CAL = 'Calibrated'   /
+DATE-OBS= '2004-06-03T21:18:17' / Date and time of observation
+EXPOSURE =   1500.015         / [s] Effective exposure time
+TSTART   =  52984.301203      / [d] MJD
+TSTOP    =  52984.318564      / [d] MJD
+TMID     =  52984.309883     / [d] MJD mid expsoure
+SKY_CAL  = 'Calibrated'  /
+SKY_RES =              1.0  / [arcsec] Spatial.Resolution
+RA      =     233.73791       / [deg] Pointing position
+DEC     =      23.50333       / [deg] Pointing position
+APERTURE=       2.0           / [arcsec]  Aperture diameter/Slit width
+TIME     =  52984.309883      / [d] MJD of midpoint
+
+
+COMMENT  ---------------------------
+COMMENT  WCS Paper 3 Keywords
+1S4_1    = 'WAVE'            / Column name with spectral coord
+1CTYP4   = 'WAVE-TAB'        / Spectral coord is WAVE 
+1S5_1    = 'WAVE'            / Column name with spectral coord
+1CTYP5   = 'WAVE-TAB'        / Spectral coord is WAVE 
+1S6_1    = 'WAVE'            / Column name with spectral coord
+1CTYP6   = 'WAVE-TAB'        / Spectral coord is WAVE 
+1S7_1    = 'WAVE'            / Column name with spectral coord
+1CTYP7   = 'WAVE-TAB'        / Spectral coord is WAVE 
+COMMENT  ---------------------------
+TTYPE1 = 'WAVE'   / Wavelength
+TFORM1 = '180E'
+TUNIT1 = 'angstrom'
+TUCD1  = 'em.wl'                    /
+TDMIN1 = 3195.0 /
+TDMAX1 = 5005.0 /
+TUTYP1 = 'Spectrum.Data.SpectralAxis.Value'
+TTYPE2 = 'WAVE_LO' /
+TFORM2 = '180E'
+TUNIT2 = 'angstrom'
+TUTYP2 = 'Spectrum.Data.SpectralAxis.Accuracy.StatErrLow'
+TTYPE3 = 'WAVE_HI' /
+TFORM3 = '180E'
+TUNIT3 = 'angstrom'
+TUTYP3 = 'Spectrum.Data.SpectralAxis.Accuracy.StatErrHigh'
+TTYPE4 = 'FLUX' /
+TFORM4 = '180E'
+TUNIT4 = 'erg cm**(-2) s**(-1) angstrom**(-1)'
+TUTYP4 = 'Spectrum.Data.FluxAxis.Value'
+TUCD4  = 'phot.fluDens;em.wl'     / Type of Y axis: F-lambda
+TTYPE5 = 'ERR_LO' /
+TFORM5 = '180E'
+TUNIT5 = 'erg cm**(-2) s**(-1) angstrom**(-1)'
+TUTYP5 = 'Spectrum.Data.FluxAxis.Accuracy.StatErrLow'
+TTYPE6 = 'ERR_HI' /
+TFORM6 = '180E'
+TUNIT6 = 'erg cm**(-2) s**(-1) angstrom**(-1)'
+TUTYP6 = 'Spectrum.Data.FluxAxis.Accuracy.StarErrHigh'
+TTYPE7 = 'QUALITY' /
+TFORM7 = '180I'
+TUTYP7 = 'Spectrum.Data.FluxAxis.Quality'
+\end{verbatim}
+}
+
+The data would look like
+{\small
+\begin{verbatim}
+
+WAVE   WAVE_LO WAVE_HI FLUX  ERR_LO  ERR_HI  QUALITY
+3200.0 3195.0 3205.0 1.48E-12 2.0E-14 2.0E-14   0
+3210.0 3205.0 3215.0 1.52E-12 3.0E-14 3.0E-14   0
+3220.0 3215.0 3225.0 0.38E-12 0.38E-12 0.0      0                  
+3230.0 3225.0 3235.0 1.62E-12 3.0E-14 3.0E-14   0
+...
+5000.0 4995.0 5005.0 1.33E-11 3.0E-13 3.0E-13   1
+\end{verbatim}
+}

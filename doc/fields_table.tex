@@ -209,19 +209,21 @@ Char.SpatialAxis.Resolution     &   SKY\_RES &  pos.angResolution        & Spati
 \hline
 \multicolumn{4}{c}{Data Fields}\\
 \hline
-{\bf Data.FluxAxis.Value      } &TTYPEn = 'FLUX'             & (see sec 4.1, table 3)  & Flux values for points& MAN\\
-Data.FluxAxis.ucd               &TUCDn        &     meta.ucd               & ucd for flux & OPT & Char.FluxAxis.ucd\\
-Data.FluxAxis.unit              &TUNITn        &   meta.unit                 & Unit for flux& OPT & Char.FluxAxis.unit\\
-{\bf Data.SpectralAxis.Value      }   &TTYPEn ='WAVE' & (see sec 4.2, table 2) &  Spectral coordinates for points& MAN & (Char.SpectralAxis.Location)\\
- & or 'ENER' or 'FREQ' &&\\
-{Data.SpectralAxis.ucd    }  &TUCDn                 &   meta.ucd                 & ucd for spectral coord& OPT & Char.SpectralAxis.ucd\\
-{Data.SpectralAxis.unit   } &TUNITn          &         meta.unit           & Unit for spectral coord& OPT & Char.SpectralAxis.unit\\
-{Data.TimeAxis.Value      } & TTYPEn ='TIME'               &                    &Time coordinates for points & OPT & Char.TimeAxis.Location\\
-Data.TimeAxis.ucd           &TUCDn          &        meta.ucd            & ucd for time& OPT  & Char.TimeAxis.ucd\\
-Data.TimeAxis.unit          &TUNITn     &           meta.unit         & Unit for time& OPT &  Char.TimeAxis.Unit\\
-{Data.BackgroundModel.Value      } &TTYPEn='BGFLUX'& &Flux values for points& OPT &  No background model\\
-{Data.BackgroundModel.ucd }        &TUCDn              &       meta.ucd             & ucd for background flux & OPT & Points.FluxAxis.ucd\\
-{Data.BackgroundModel.unit      }  &TUNITn        &           meta.unit         & Unit for background flux& OPT & Points.FluxAxis.unit\\
+{\bf Data.FluxAxis.Value }    &TTYPEn = 'FLUX'     & (see sec 4.1, table 3)  & Flux values for points      & MAN\\
+Data.FluxAxis.ucd             &TUCDn               & meta.ucd                & ucd for flux                & OPT & Char.FluxAxis.ucd\\
+Data.FluxAxis.unit            &TUNITn              & meta.unit               & Unit for flux               & OPT & Char.FluxAxis.unit\\
+{\bf Data.SpectralAxis.Value }&TTYPEn ='WAVE'      & (see sec 4.2, table 2)  & Spectral coordinates for points& MAN & (Char.SpectralAxis.Location)\\
+                              & or 'ENER' or 'FREQ'&                         &\\
+Data.SpectralAxis.ucd         &TUCDn               & meta.ucd                & ucd for spectral coord      & OPT & Char.SpectralAxis.ucd\\
+Data.SpectralAxis.unit        &TUNITn              & meta.unit               & Unit for spectral coord     & OPT & Char.SpectralAxis.unit\\
+Data.SpectralAxis.Order       &TTYPEn = 'ORDER'    & instr.order             & Absolute spectral order     & OPT & (None)\\
+Data.SpectralAxis.RelOrder    &TTYPEn = 'RELORDER' & instr.order             & Relative spectral order     & OPT & (None)\\
+Data.TimeAxis.Value           & TTYPEn ='TIME'     &                         & Time coordinates for points & OPT & Char.TimeAxis.Location\\
+Data.TimeAxis.ucd             &TUCDn               & meta.ucd                & ucd for time                & OPT & Char.TimeAxis.ucd\\
+Data.TimeAxis.unit            &TUNITn              & meta.unit               & Unit for time               & OPT & Char.TimeAxis.Unit\\
+Data.BackgroundModel.Value    &TTYPEn='BGFLUX'     &                         & Flux values for points      & OPT & No background model\\
+Data.BackgroundModel.ucd      &TUCDn               & meta.ucd                & ucd for background flux     & OPT & Points.FluxAxis.ucd\\
+Data.BackgroundModel.unit     &TUNITn              & meta.unit               & Unit for background flux    & OPT & Points.FluxAxis.unit\\
 \end{tabular}
 
 \end{minipage}
@@ -238,20 +240,22 @@ Data.TimeAxis.unit          &TUNITn     &           meta.unit         & Unit for
 \hline
 \multicolumn{4}{c}{Accuracy Fields - per data point (default to corresponding Spectrum.Char values)} \\
 \hline
-Data.FluxAxis.Accuracy.StatError   &TTYPEn = 'ERR'    & stat.error;phot.flux.density; em.*   & symmetric error & OPT & (Char)\\
-Data.FluxAxis.Accuracy.StatErrLow &TTYPEn='ERR\_LO'       & stat.error;phot.flux.density; em.*;stat.min     & Lower error & OPT & (Char)\\
-Data.FluxAxis.Accuracy.StatErrHigh&TTYPEn='ERR\_HI'       & stat.error;phot.flux.density; em.*;stat.max     & Upper error & OPT & (Char)\\
-Data.FluxAxis.Accuracy.SysError&TTYPEn='SYS\_ERR'        & stat.error.sys;phot.flux.density; em.{\it  ..}    & Systematic error & OPT  & (Char)\\
-Data.FluxAxis.Quality     &TTYPEn='QUALITY'   & meta.code.qual; phot.flux.density, em.*   & Quality mask& OPT    &  0\\
-Data.FluxAxis.Quality.n   &TTYPEn='QUALn'   &     & String value, for n = 0,1,2..; meaning of quality value &OPT & None \\
-Data.SpectralAxis.Accuracy.BinSize &TTYPEn='WAVE\_BIN',etc  & em.*;spect.binSize  & Wavelength bin size  & OPT & (Char)\\
-Data.SpectralAxis.Accuracy.BinLow  & TTYPEn ='WAVE\_LO',etc   & em.*;stat.min & Spectral coord bin lower end & OPT & \\
-Data.SpectralAxis.Accuracy.BinHigh & TTYPEn ='WAVE\_HI',etc   & em.*;stat.max  &Spectral coord bin upper end & OPT & \\
-Data.SpectralAxis.Accuracy.StatError&TTYPEn ='WAVE\_ERR',etc    &  stat.error;em.*  & Spectral coord measurement error & OPT & (Char)\\
-Data.SpectralAxis.Accuracy.StatErrLow&TTYPEn='WAVE\_ELO',etc    & stat.error; em.*;stat.min  & Spectral coord measurement lower error & OPT & (Char)\\
-Data.SpectralAxis.Accuracy.StatErrHigh&TTYPEn='WAVE\_EHI',etc   & stat.error; em.*;stat.max  & Spectral coord measurement upper error & OPT & (Char)\\
-Data.SpectralAxis.Accuracy.SysError &TTYPEn='WAVE\_SYE',etc        & stat.error.sys;em.*  & Spectral coord systematic error & OPT & (Char)\\
-Data.SpectralAxis.Resolution   & TTYPEn ='WAVE\_RES',etc  & spect.resolution; em.*   & Spectral resolution FWHM & OPT & (Char)\\
+Data.FluxAxis.Accuracy.LowerLimit      &TTYPEn='LOWER\_LIMIT'  & instr.saturation;phot.flux.density; stat.min    & Lower Limit      & OPT & (None)\\
+Data.FluxAxis.Accuracy.UpperLimit      &TTYPEn='UPPER\_LIMIT'  & instr.sensitivity;phot.flux.density; stat.max   & Upper Limit      & OPT & (None)\\
+Data.FluxAxis.Accuracy.StatError       &TTYPEn='ERR'           & stat.error;phot.flux.density; em.*              & symmetric error  & OPT & (Char)\\
+Data.FluxAxis.Accuracy.StatErrLow      &TTYPEn='ERR\_LO'       & stat.error;phot.flux.density; em.*;stat.min     & Lower error      & OPT & (Char)\\
+Data.FluxAxis.Accuracy.StatErrHigh     &TTYPEn='ERR\_HI'       & stat.error;phot.flux.density; em.*;stat.max     & Upper error      & OPT & (Char)\\
+Data.FluxAxis.Accuracy.SysError        &TTYPEn='SYS\_ERR'      & stat.error.sys;phot.flux.density; em.{\it  ..}  & Systematic error & OPT & (Char)\\
+Data.FluxAxis.Quality                  &TTYPEn='QUALITY'       & meta.code.qual; phot.flux.density, em.*         & Quality mask     & OPT &  0\\
+Data.FluxAxis.Quality.n                &TTYPEn='QUALn'         &                                                 & String value, for n = 0,1,2..; meaning of quality value &OPT & (None)\\
+Data.SpectralAxis.Accuracy.BinSize     &TTYPEn='WAVE\_BIN',etc & em.*;spect.binSize                              & Wavelength bin size             & OPT & (Char)\\
+Data.SpectralAxis.Accuracy.BinLow      &TTYPEn='WAVE\_LO',etc  & em.*;stat.min                                   & Spectral coord bin lower end    & OPT & \\
+Data.SpectralAxis.Accuracy.BinHigh     &TTYPEn='WAVE\_HI',etc  & em.*;stat.max                                   & Spectral coord bin upper end    & OPT & \\
+Data.SpectralAxis.Accuracy.StatError   &TTYPEn='WAVE\_ERR',etc & stat.error;em.*                                 & Spectral coord measurement error       & OPT & (Char)\\
+Data.SpectralAxis.Accuracy.StatErrLow  &TTYPEn='WAVE\_ELO',etc & stat.error; em.*;stat.min                       & Spectral coord measurement lower error & OPT & (Char)\\
+Data.SpectralAxis.Accuracy.StatErrHigh &TTYPEn='WAVE\_EHI',etc & stat.error; em.*;stat.max                       & Spectral coord measurement upper error & OPT & (Char)\\
+Data.SpectralAxis.Accuracy.SysError    &TTYPEn='WAVE\_SYE',etc & stat.error.sys;em.*                             & Spectral coord systematic error        & OPT & (Char)\\
+Data.SpectralAxis.Resolution           &TTYPEn='WAVE\_RES',etc & spect.resolution; em.*                          & Spectral resolution FWHM               & OPT & (Char)\\
 \end{tabular}
 
 \end{minipage}

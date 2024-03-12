@@ -1,0 +1,80 @@
+
+\section{VOTABLE serialization}
+
+\subsection{Mapping Schema to VOTABLE}
+
+We reproduce below the XML schema instance example as a VOTABLE instance example.
+To go from the XML instance to the VOTABLE
+instance, we:
+\begin{itemize}
+\item  - map the top level element to a RESOURCE
+\item  - map all elements with simple content to PARAM
+\item  - map all elements with complex content to GROUP
+\item  - map the element names (with appropriate path) to values of the
+utype attribute,
+\item  - but, handle the FIELDS and Data elements in a special way.
+The FIELDS element is used to define the table fields and the Data
+element is used to define the table data. 
+\item  - but, also,  all the second level elements below RESOURCE
+except SPECTRUM map to an initial TABLE, while we map SPECTRUM 
+to a second TABLE.
+\item  - most of the elements extend the Param element, to which I have added
+an optional name attribute that I have not used in the instance.
+If this attribute is used, it can hold the name attributes of the PARAM and
+FIELD; otherwise the relevant attributes could be filled with the
+same value as the utype (without namespace prefix).
+
+\end{itemize}
+
+How can this be generalized to mapping an arbitrary data model
+schema to VOTABLE? The only tricky parts are 
+\begin{itemize}
+\item  {\bf Spotting where the tabledata parts are. } 
+We could require any DM schema that maps to VOTABLE
+to include elements called FIELDS and Data (perhaps ROWS would be 
+a better name), otherwise you would get a VOTABLE with no data section.
+\item  {\bf Spotting where to start the main TABLE (i.e. the fact that
+SPECTRUM is special). }  We could change the schema to
+have an explicit attribute, annotation or other marker to tell us this.
+\end{itemize}
+
+These issues will require further discussion for future models.
+
+\subsection{A VOTABLE instance}
+
+The VOTable version of Spectrum uses a single VOTable {\lcaret}TABLE{\rcaret}
+(Note that this may appear as one of many tables within an SED VOTable).
+The data model fields described above as arrays map to
+VOTable FIELDs, while the remaining fields map to PARAM.
+
+We use nested GROUP constructs to delimit data model objects within the
+main object, and PARAM and FIELD tags for attributes.
+The nesting beyond a single GROUP is optional, as for cases for which
+the utypes are unique within a group, the utypes can be used to infer
+the datamodel structure. See
+http://webtest.aoc.nrao.edu/ivoa-dal for a service returning VOTABLE
+Spectrum instances with only one level of GROUP.
+
+Names of fields and parameters are left to the data provider.
+The utype and ucd attributes are used to denote data model and UCD tags.
+The schema and namespace for the utypes is the XML schema given in section 8.4.
+We have made up arbitrary NAME attributes for the PARAM and these
+are not to be considered standard; the name fields are free
+to be whatever the data provider wants, allowing compatibility with
+local archive nomenclature. The NAME attributes for the FIELD elements
+are also not standardized (of course they must be the same as in the
+matching FIELDrefs); it is the utype attribute which is standardized.
+
+The one departure from the XML schema below is that the `Data'
+element and the individual `Point' elements are implicitly represented
+by the table structure itself. Perhaps a UTYPE attribute to the
+TABLEDATA element could be used to make this explicit.
+
+The examples below describe a single SPECTRUM.
+
+\input{example_vot1.tex}
+
+A second example, based on the reference SSAP proxy service for
+the JHU SDSS spectrum archive:
+
+\input{example_vot2.tex}

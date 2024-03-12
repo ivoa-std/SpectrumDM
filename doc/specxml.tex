@@ -5,9 +5,7 @@
 In the following XML schema, we implement the model fairly directly.
 
 Within a spectrum the data points are kept together in objects called Point.
-%with their general structure specified in a Fields object. 
-Also, we have included
-a CustomParams element to allow site-specific metadata to be added.
+Also, we have included a CustomParams element to allow site-specific metadata to be added.
 
 The Coverage.Location fields have been collapsed to simple values rather than SEDCoord elements; this should
 perhaps be extended in a future version.
@@ -46,23 +44,36 @@ elementFormDefault="qualified" jxb:version="1.0">
   </xs:appinfo>
  </xs:annotation>
 
+<!-- The top level element: an SED with one target and many segments -->
+<xs:element name="SED" nillable="true" type="sedType" />
+
+<xs:complexType name="sedType">
+<xs:sequence>
+<xs:element minOccurs="0" maxOccurs="1" name="Date" type="timeParamType" />
+<xs:element minOccurs="0" maxOccurs="1" name="Target" type="targetType" />
+<xs:element minOccurs="0" maxOccurs="1" name="CustomParams" type="arrayOfParamType" />
+<xs:element minOccurs="0" maxOccurs="1" name="Type" type="textParamType" />
+<xs:element minOccurs="0" maxOccurs="1" name="NSegments" type="intParamType" />
+<xs:element minOccurs="0" maxOccurs="unbounded" ref="BaseSegment"/>
+<xs:element minOccurs="0" maxOccurs="1" name="Creator" type="textParamType" />
+<xs:element minOccurs="0" maxOccurs="1" name="CreatorDID" type="textParamType" />
+<xs:element minOccurs="0" maxOccurs="1" name="SpectralMinWavelength" type="doubleParamType" />
+<xs:element minOccurs="0" maxOccurs="1" name="SpectralMaxWavelength" type="doubleParamType" />
+</xs:sequence>
+</xs:complexType>
+
+\end{verbatim}
+\end{fmppage}
+
+\begin{fmppage}
+\begin{verbatim}
+
 <!-- A single segment corresponding to a spectrum or single point -->
 
 <xs:element name="BaseSegment" type="segmentType"/>
 <xs:element name="Spectrum" type="spectrumType" substitutionGroup="BaseSegment"/>
 <xs:element name="Segment" type="spectrumType" substitutionGroup="BaseSegment"/>
 <xs:element name="TimeSeries" type="timeSeriesType" substitutionGroup="BaseSegment"/>
-
-<xs:complexType name="spectrumType">
-<xs:complexContent mixed="false">
-<xs:extension base="segmentType"/>
-</xs:complexContent>
-</xs:complexType>
-<xs:complexType name="timeSeriesType">
-<xs:complexContent mixed="false">
-<xs:extension base="segmentType"/>
-</xs:complexContent>
-</xs:complexType>
 
 <xs:complexType name="segmentType">
 <xs:complexContent mixed="false">
@@ -86,30 +97,23 @@ elementFormDefault="qualified" jxb:version="1.0">
 </xs:complexContent>
 </xs:complexType>
 
+<xs:complexType name="spectrumType">
+<xs:complexContent mixed="false">
+<xs:extension base="segmentType"/>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="timeSeriesType">
+<xs:complexContent mixed="false">
+<xs:extension base="segmentType"/>
+</xs:complexContent>
+</xs:complexType>
+
 \end{verbatim}
 \end{fmppage}
 
 \begin{fmppage}
 \begin{verbatim}
-
-<!-- The top level element: an SED with one target and many segments -->
-<xs:element name="SED" nillable="true" type="sedType" />
-
-<xs:complexType name="sedType">
-<xs:sequence>
-<xs:element minOccurs="0" maxOccurs="1" name="Date" type="timeParamType" />
-<xs:element minOccurs="0" maxOccurs="1" name="Target" type="targetType" />
-<xs:element minOccurs="0" maxOccurs="1" name="CustomParams" type="arrayOfParamType" />
-<xs:element minOccurs="0" maxOccurs="1" name="Type" type="textParamType" />
-<xs:element minOccurs="0" maxOccurs="1" name="NSegments" type="intParamType" />
-<xs:element minOccurs="0" maxOccurs="unbounded" ref="BaseSegment"/>
-<xs:element minOccurs="0" maxOccurs="1" name="Creator" type="textParamType" />
-<xs:element minOccurs="0" maxOccurs="1" name="CreatorDID" type="textParamType" />
-<xs:element minOccurs="0" maxOccurs="1" name="SpectralMinWavelength" type="doubleParamType" />
-<xs:element minOccurs="0" maxOccurs="1" name="SpectralMaxWavelength" type="doubleParamType" />
-</xs:sequence>
-</xs:complexType>
-
 
 <!-- Define the UCDs etc for the SED coordinate and the flux coordinate,
 and include a global to specify accuracy etc which happens to be
@@ -143,6 +147,17 @@ value has minOccurs=0 so it can be omitted) -->
 <xs:element minOccurs="0" maxOccurs="1" name="Accuracy" type="accuracyType" />
 <xs:element minOccurs="0" maxOccurs="1" name="Resolution" type="doubleParamType" />
 <xs:element minOccurs="0" maxOccurs="1" name="Quality" type="intParamType" />
+</xs:sequence>
+</xs:extension>
+</xs:complexContent>
+</xs:complexType>
+
+<xs:complexType name="spectralCoordType">
+<xs:complexContent mixed="false">
+<xs:extension base="sedCoordType">
+<xs:sequence>
+<xs:element minOccurs="0" maxOccurs="1" name="Order" type="intParamType" />
+<xs:element minOccurs="0" maxOccurs="1" name="RelOrder" type="intParamType" />
 </xs:sequence>
 </xs:extension>
 </xs:complexContent>
@@ -220,7 +235,6 @@ value has minOccurs=0 so it can be omitted) -->
 \begin{fmppage}
 \begin{verbatim}
 
-
 <!-- The error model. Bin entries will usually be omitted for the flux coordinate -->
 <xs:complexType name="accuracyType">
 <xs:complexContent mixed="false">
@@ -229,6 +243,8 @@ value has minOccurs=0 so it can be omitted) -->
 <xs:element minOccurs="0" maxOccurs="1" name="BinLow" type="doubleParamType" />
 <xs:element minOccurs="0" maxOccurs="1" name="BinHigh" type="doubleParamType" />
 <xs:element minOccurs="0" maxOccurs="1" name="BinSize" type="doubleParamType" />
+<xs:element minOccurs="0" maxOccurs="1" name="UpperLimit" type="doubleParamType" />
+<xs:element minOccurs="0" maxOccurs="1" name="LowerLimit" type="doubleParamType" />
 <xs:element minOccurs="0" maxOccurs="1" name="StatError" type="doubleParamType" />
 <xs:element minOccurs="0" maxOccurs="1" name="StatErrLow" type="doubleParamType" />
 <xs:element minOccurs="0" maxOccurs="1" name="StatErrHigh" type="doubleParamType" />
@@ -238,7 +254,6 @@ value has minOccurs=0 so it can be omitted) -->
 </xs:extension>
 </xs:complexContent>
 </xs:complexType>
-
 
 <!-- The Field type allows us to define what our axes are -->
 <xs:complexType name="arrayOfFieldType">
@@ -273,7 +288,7 @@ value has minOccurs=0 so it can be omitted) -->
 <xs:complexType name="pointType">
 <xs:sequence>
 <xs:element name="TimeAxis" minOccurs="0" maxOccurs="1" type="sedCoordType" />
-<xs:element name="SpectralAxis" minOccurs="0" maxOccurs="1" type="sedCoordType" />
+<xs:element name="SpectralAxis" minOccurs="0" maxOccurs="1" type="spectralCoordType" />
 <xs:element name="FluxAxis" minOccurs="0" maxOccurs="1" type="sedQuantityType" />
 <xs:element name="BackgroundModel" minOccurs="0" maxOccurs="1" type="sedQuantityType" />
 </xs:sequence>
@@ -694,7 +709,7 @@ value has minOccurs=0 so it can be omitted) -->
 
 \subsection{Instance example}
 
-\input{ex.xml}
+\input{example_xml1.tex}
 
 
 
