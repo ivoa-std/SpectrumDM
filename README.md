@@ -3,7 +3,7 @@
 
 # Spectum DM
 
-A data model describing the structure of spectrophotometric datasets with spectral and temporal coordinates and associated metadata.
+A data model describing the structure of spectrophotometric datasets with spectral and temporal coordinates and associated metadata. The PDF of the latest release can be found on the IVOA website: https://www.ivoa.net/documents/SpectrumDM/
 
 # Working on this Document
 
